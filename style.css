@@ -199,7 +199,7 @@ footer a:hover {
 
   .nav-links {
     display: none; /* نخفي القائمة افتراضياً */
-    flex-direction: column;
+    flex-direction: column; /* 👈 يخلي العناصر تحت بعض */
     background: #c0392b;
     position: absolute;
     top: 60px;
@@ -210,7 +210,14 @@ footer a:hover {
     z-index: 1000;
   }
 
+  .nav-links li {
+    margin: 10px 0; /* 👈 مسافة بين كل عنصر */
+  }
+
   .nav-links.show {
     display: flex; /* تظهر لما نضغط ☰ */
   }
 }
+
+
+/*All products*/

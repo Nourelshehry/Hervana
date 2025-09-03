@@ -1,0 +1,154 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: url('background.jpg') no-repeat center center/cover;
+  color: #fff;
+}
+
+/* Header */
+header {
+  display: flex;
+  justify-content: center; /* يوسّط العنصر */
+  align-items: center;
+  background: #c0392b;
+  padding: 20px 0;
+}
+
+header .logo a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 15px;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Mobile Navbar */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    font-size: 24px;
+    cursor: pointer;
+    color: white;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background: #c0392b;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+    z-index: 1000;
+  }
+
+  .nav-links li {
+    margin: 10px 0;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+
+/* Filters */
+.filters {
+  text-align: center;
+  padding: 20px;
+  background: rgba(192, 57, 43, 0.85);
+}
+
+.filters label {
+  margin: 0 5px;
+}
+
+.filters select,
+.filters input {
+  margin: 0 10px;
+  padding: 5px 8px;
+  border-radius: 5px;
+  border: none;
+}
+
+/* Products Section */
+.all-products {
+  text-align: center;
+  padding: 50px 20px;
+}
+
+.all-products h1 {
+  font-size: 36px;
+  margin-bottom: 40px;
+}
+
+/* Product Grid */
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.product-card {
+  background: rgba(192, 57, 43, 0.85);
+  padding: 20px;
+  border-radius: 10px;
+  width: 200px;
+  text-align: center;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.product-card button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background: #fff;
+  color: #c0392b;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Footer */
+footer {
+  background: #c0392b;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+footer a {
+  color: #fff;
+  text-decoration: none;
+  margin: 0 5px;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}

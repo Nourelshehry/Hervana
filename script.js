@@ -31,3 +31,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
   showSlide(current);
 });
+
+
+/*Allproducts*/
+
+function filterProducts(category) {
+  const products = document.querySelectorAll('.product');
+  products.forEach(product => {
+    if (category === 'all' || product.dataset.category === category) {
+      product.style.display = 'block';
+    } else {
+      product.style.display = 'none';
+    }
+  });
+}
+
+// التأكد من أن الضغط على اللوجو يرجع للصفحة الرئيسية بدون مشاكل
+document.querySelector('.logo').addEventListener('click', function(e){
+  // يمكن تعديل الرابط حسب الصفحة الرئيسية عندك
+  window.location.href = 'index.html';
+});
+
