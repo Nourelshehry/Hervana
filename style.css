@@ -177,12 +177,13 @@ footer a:hover {
 
 /* Responsive */
 /* الوضع العادي (ديسكتوب) */
+/* Desktop */
 .nav-links {
   display: flex;
   gap: 20px;
 }
 
-/* زر المنيو مخفي على الديسكتوب */
+/* زرار المنيو يختفي على الديسكتوب */
 .menu-toggle {
   display: none;
   font-size: 24px;
@@ -190,27 +191,25 @@ footer a:hover {
   color: white;
 }
 
-/* موبايل */
+/* Mobile */
 @media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* يظهر الزرار */
+  }
+
   .nav-links {
-    display: none;           /* نخفي القايمة */
+    display: none; /* نخفي القائمة افتراضياً */
     flex-direction: column;
     background: #c0392b;
     position: absolute;
-    top: 60px;               /* تحت الهيدر */
-    right: 0;
-    width: 200px;
-    padding: 15px;
-    border-radius: 0 0 10px 10px;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
   }
 
   .nav-links.active {
-    display: flex;          /* تظهر لما نضغط الزر */
-  }
-
-  .menu-toggle {
-    display: block;         /* زر القائمة يظهر */
+    display: flex; /* تظهر لما نضغط ☰ */
   }
 }
-
-
