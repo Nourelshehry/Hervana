@@ -207,9 +207,10 @@ footer a:hover {
     width: 100%;
     padding: 15px 0;
     text-align: center;
+ /* z-index: 1000;*/
   }
 
-  .nav-links.active {
+  .nav-links.show {
     display: flex; /* تظهر لما نضغط ☰ */
   }
 }
