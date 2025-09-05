@@ -11,7 +11,18 @@
   <!-- Header -->
   <header>
   <div class="logo"><a href="index.html">Hervana</a></div>
+   <div id="cart-btn">🛒 <span id="cart-count">0</span></div>
+
+  </div>
 </header>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</div>
+
 
 
   <!-- Filters -->
@@ -36,25 +47,25 @@
         <img src="Gift1.jpg" alt="Gift 1">
         <h3>Gift 1</h3>
         <p>$15.00</p>
-        <button>Order Now</button>
+<button class="add-to-cart" data-name="Red Lipstick" data-price="15">Add to Cart</button>
       </div>
       <div class="product-card" data-category="gift" data-price="20">
         <img src="Gift2.jpg" alt="Gift 2">
         <h3>Gift 2</h3>
         <p>$20.00</p>
-        <button>Order Now</button>
+<button class="add-to-cart" data-name="Red Lipstick" data-price="15">Add to Cart</button>
       </div>
       <div class="product-card" data-category="decor" data-price="25">
         <img src="Gift3.jpg" alt="Gift 3">
         <h3>Decor 1</h3>
         <p>$25.00</p>
-        <button>Order Now</button>
+<button class="add-to-cart" data-name="Red Lipstick" data-price="15">Add to Cart</button>
       </div>
       <div class="product-card" data-category="accessory" data-price="30">
         <img src="Gift4.jpg" alt="Gift 4">
         <h3>Accessory 1</h3>
         <p>$30.00</p>
-        <button>Order Now</button>
+<button class="add-to-cart" data-name="Red Lipstick" data-price="15">Add to Cart</button>
       </div>
     </div>
   </section>
@@ -70,5 +81,7 @@
   </footer>
 
   <script src="all-products.js"></script>
+<script src="cart.js"></script>
+
 </body>
 </html>

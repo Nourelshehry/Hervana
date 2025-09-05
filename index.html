@@ -21,7 +21,16 @@
     <li><a href="#">Contact Us</a></li>
   </ul>
 </nav>
+ <div id="cart-btn">🛒 <span id="cart-count">0</span></div>
+
 </header>
+
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</div>
 
 
   <!-- Hero Section with Slider -->
@@ -79,6 +88,7 @@
 
   <!-- JavaScript -->
   <script src="script.js"></script>
+  <script src="cart.js"></script>
 <!--
 <script>
   const menuToggle = document.getElementById("menu-toggle");
