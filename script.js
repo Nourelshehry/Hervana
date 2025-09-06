@@ -15,12 +15,9 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".prev").onclick = prevSlide;
   showSlide(current);
 
-  // Cart toggle handled in cart.js (overlay handled there)
-
   // Search bar functionality with debounce
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
-
   let debounceTimeout;
   searchInput.addEventListener("input", function(){
     clearTimeout(debounceTimeout);
@@ -30,18 +27,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const name = p.dataset.name.toLowerCase();
         p.style.display = name.includes(term) ? "block" : "none";
       });
-    }, 200); // 200ms delay for smoother typing
-  });
-});
-  const products = document.querySelectorAll(".product-card");
-  searchInput.addEventListener("input", function(){
-    const term = this.value.toLowerCase();
-    products.forEach(p => {
-      const name = p.dataset.name.toLowerCase();
-      p.style.display = name.includes(term) ? "block" : "none";
-    });
-  });
-});      p.style.display = name.includes(term) ? "block" : "none";
-    });
+    }, 200);
   });
 });
