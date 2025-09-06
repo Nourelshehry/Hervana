@@ -15,25 +15,24 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".prev").onclick = prevSlide;
   showSlide(current);
 
-  // Cart toggle
-  const cartBtn = document.getElementById("cart-btn");
-  const cartSidebar = document.getElementById("cart-sidebar");
-  const closeCart = document.getElementById("close-cart");
-  cartBtn.addEventListener("click", () => cartSidebar.classList.toggle("active"));
-  closeCart.addEventListener("click", () => cartSidebar.classList.remove("active"));
+  // Cart toggle handled in cart.js (overlay handled there)
 
-  // Cart count visibility
-  const cartCount = document.getElementById("cart-count");
-  const cartItems = document.getElementById("cart-items");
-  const updateCartCount = () => { 
-    const count = cartItems.children.length;
-    if(count>0){ cartCount.style.display='inline-block'; cartCount.textContent=count; } 
-    else { cartCount.style.display='none'; } 
-  }
-  updateCartCount();
-
-  // Search bar functionality
+  // Search bar functionality with debounce
   const searchInput = document.getElementById("search");
+  const products = document.querySelectorAll(".product-card");
+
+  let debounceTimeout;
+  searchInput.addEventListener("input", function(){
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      const term = searchInput.value.toLowerCase();
+      products.forEach(p => {
+        const name = p.dataset.name.toLowerCase();
+        p.style.display = name.includes(term) ? "block" : "none";
+      });
+    }, 200); // 200ms delay for smoother typing
+  });
+});
   const products = document.querySelectorAll(".product-card");
   searchInput.addEventListener("input", function(){
     const term = this.value.toLowerCase();
