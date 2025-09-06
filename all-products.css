@@ -26,7 +26,7 @@ header .logo a {
 .cart-icon {
   position: absolute;
   right: 20px;
-  font-size: 24px;
+  font-size: 20px;
   cursor: pointer;
   color: #fff;
 }
@@ -36,12 +36,12 @@ header .logo a {
 /* Filters & Search */
 .filters {
   text-align: center;
-  padding: 20px;
+  padding: 15px;
   background: rgba(192, 57, 43, 0.85);
 }
 
-.filters label { margin: 0 5px; }
-.filters select, .filters input { margin: 0 10px; padding: 5px 8px; border-radius: 5px; border: none; }
+.filters label { margin: 0 6px; }
+.filters select, .filters input { margin: 0 10px; padding: 6px 9px; border-radius: 4px; border: none; }
 .search-bar { width: 60%; max-width: 400px; margin-bottom: 10px; }
 
 /* Products Section */
