@@ -1,27 +1,40 @@
-const cartBtn = document.getElementById("cart-btn");
-const cartSidebar = document.getElementById("cart-sidebar");
-const cartClose = document.getElementById("cart-close");
-const cartItems = document.getElementById("cart-items");
+document.addEventListener("DOMContentLoaded", () => {
+  const cartBtn = document.getElementById("cart-btn");
+  const cartSidebar = document.getElementById("cart-sidebar");
+  const cartItems = document.getElementById("cart-items");
+  const cartCount = document.getElementById("cart-count");
 
-cartBtn.addEventListener("click", () => {
-  cartSidebar.style.transform = "translateX(0)";
-});
+  // إنشاء overlay
+  const overlay = document.createElement("div");
+  overlay.id = "cart-overlay";
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.background = "rgba(0,0,0,0.4)";
+  overlay.style.zIndex = "1500";
+  overlay.style.display = "none";
+  document.body.appendChild(overlay);
 
-cartClose.addEventListener("click", () => {
-  cartSidebar.style.transform = "translateX(100%)";
-});
+  let cart = [];
 
-// إضافة منتجات للعربة
-document.querySelectorAll(".add-to-cart").forEach(button => {
-  button.addEventListener("click", () => {
-    const product = button.closest(".product");
-    const title = product.querySelector("h3").textContent;
-    const item = document.createElement("p");
-    item.textContent = title;
-    cartItems.appendChild(item);
-    cartSidebar.style.transform = "translateX(0)";
-  });
-});
+  // فتح الكارت مع overlay
+  const openCart = () => {
+    cartSidebar.classList.add("active");
+    overlay.style.display = "block";
+  };
+
+  // إغلاق الكارت
+  const closeCart = () => {
+    cartSidebar.classList.remove("active");
+    overlay.style.display = "none";
+  };
+
+  cartBtn.addEventListener("click", openCart);
+  document.getElementById("close-cart").addEventListener("click", closeCart);
+  overlay.addEventListener("click", closeCart);
+
   // إضافة منتج للكارت
   function addToCart(productName, price) {
     cart.push({ productName, price });
@@ -33,10 +46,10 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
     cartItems.innerHTML = "";
     cart.forEach((item) => {
       const li = document.createElement("li");
-      li.textContent = `${item.productName} - $${item.price}`;
+      li.textContent = `${item.productName} - ${item.price} EGP`;
       cartItems.appendChild(li);
     });
-    if(cart.length > 0){
+    if (cart.length > 0) {
       cartCount.style.display = "inline-block";
       cartCount.textContent = cart.length;
     } else {
@@ -51,9 +64,7 @@ document.querySelectorAll(".add-to-cart").forEach(button => {
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
       addToCart(name, price);
-      // افتح الكارت عند إضافة منتج
-      cartSidebar.classList.add("active");
-      overlay.style.display = "block";
+      openCart(); // افتح الكارت عند إضافة منتج
     });
   });
 
