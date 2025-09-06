@@ -12,8 +12,8 @@ header {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  background: #F6DFEB;
-  color: #F6DFEB;
+  background: #E4BAD4;
+  color: #fff;
   padding: 10px 15px;
   z-index: 10;
 }
