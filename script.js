@@ -7,55 +7,39 @@ document.addEventListener("DOMContentLoaded", function () {
   // Hero slider
   const slides = document.querySelectorAll(".hero-slider img");
   let current = 0;
-
-  const showSlide = (index) => {
-    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
-  };
-
-  const nextSlide = () => {
-    current = (current + 1) % slides.length;
-    showSlide(current);
-  };
-
-  const prevSlide = () => {
-    current = (current - 1 + slides.length) % slides.length;
-    showSlide(current);
-  };
-
-  // Auto slide every 3 seconds
-  let slideInterval = setInterval(nextSlide, 3000);
-
-  document.querySelector(".hero .next").addEventListener("click", () => {
-    nextSlide();
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, 3000);
-  });
-
-  document.querySelector(".hero .prev").addEventListener("click", () => {
-    prevSlide();
-    clearInterval(slideInterval);
-    slideInterval = setInterval(nextSlide, 3000);
-  });
-
+  const showSlide = (index) => slides.forEach((slide, i) => slide.classList.toggle("active", i===index));
+  const nextSlide = () => { current=(current+1)%slides.length; showSlide(current); };
+  const prevSlide = () => { current=(current-1+slides.length)%slides.length; showSlide(current); };
+  setInterval(nextSlide, 3000);
+  document.querySelector(".next").onclick = nextSlide;
+  document.querySelector(".prev").onclick = prevSlide;
   showSlide(current);
 
-  // Search bar functionality with debounce
+  // Cart toggle
+  const cartBtn = document.getElementById("cart-btn");
+  const cartSidebar = document.getElementById("cart-sidebar");
+  const closeCart = document.getElementById("close-cart");
+  cartBtn.addEventListener("click", () => cartSidebar.classList.toggle("active"));
+  closeCart.addEventListener("click", () => cartSidebar.classList.remove("active"));
+
+  // Cart count visibility
+  const cartCount = document.getElementById("cart-count");
+  const cartItems = document.getElementById("cart-items");
+  const updateCartCount = () => { 
+    const count = cartItems.children.length;
+    if(count>0){ cartCount.style.display='inline-block'; cartCount.textContent=count; } 
+    else { cartCount.style.display='none'; } 
+  }
+  updateCartCount();
+
+  // Search bar functionality
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
-  let debounceTimeout;
-  searchInput.addEventListener("input", function () {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(() => {
-      const term = searchInput.value.toLowerCase();
-      products.forEach(p => {
-        const name = p.dataset.name.toLowerCase();
-        p.style.display = name.includes(term) ? "block" : "none";
-      });
-    }, 200);
-  });
-
-  // Optional: close nav menu when clicking a link (mobile friendly)
-  navLinks.querySelectorAll("a").forEach(link => {
-    link.addEventListener("click", () => navLinks.classList.remove("show"));
+  searchInput.addEventListener("input", function(){
+    const term = this.value.toLowerCase();
+    products.forEach(p => {
+      const name = p.dataset.name.toLowerCase();
+      p.style.display = name.includes(term) ? "block" : "none";
+    });
   });
 });
