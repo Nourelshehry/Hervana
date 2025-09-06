@@ -15,23 +15,6 @@ document.addEventListener("DOMContentLoaded", function () {
   document.querySelector(".prev").onclick = prevSlide;
   showSlide(current);
 
-  // Cart toggle
-  const cartBtn = document.getElementById("cart-btn");
-  const cartSidebar = document.getElementById("cart-sidebar");
-  const closeCart = document.getElementById("close-cart");
-  cartBtn.addEventListener("click", () => cartSidebar.classList.toggle("active"));
-  closeCart.addEventListener("click", () => cartSidebar.classList.remove("active"));
-
-  // Cart count visibility
-  const cartCount = document.getElementById("cart-count");
-  const cartItems = document.getElementById("cart-items");
-  const updateCartCount = () => { 
-    const count = cartItems.children.length;
-    if(count>0){ cartCount.style.display='inline-block'; cartCount.textContent=count; } 
-    else { cartCount.style.display='none'; } 
-  }
-  updateCartCount();
-
   // Search bar functionality
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
