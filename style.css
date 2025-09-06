@@ -239,7 +239,9 @@ footer a:hover {
   .logo {
     order: 1; /* أقصى الشمال */
   }
-
+.search-bar{
+  width: 80%;
+}
   .menu-cart {
     order: 2; /* على اليمين */
     display: flex;
