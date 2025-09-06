@@ -41,8 +41,8 @@ header .logo a {
 }
 
 .filters label { margin: 0 6px; }
-.filters select, .filters input { margin: 0 10px; padding: 6px 9px; border-radius: 4px; border: none; }
-.search-bar { width: 60%; max-width: 400px; margin-bottom: 10px; }
+.filters select, .filters input { margin: 0 15px; padding: 8px 10px; border-radius: 4px; border: none; }
+.search-bar { width: 60%; max-width: 400px; margin-bottom: 15px; }
 
 /* Products Section */
 .all-products { text-align: center; padding: 50px 20px; }
