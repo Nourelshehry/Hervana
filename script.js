@@ -1,25 +1,32 @@
-// قائمة الموبايل
-const toggle = document.querySelector('.mobile-menu-toggle');
-const nav = document.querySelector('.nav ul');
+document.addEventListener("DOMContentLoaded", function () {
+  // Menu toggle
+  const menuToggle = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav");
+  menuToggle.addEventListener("click", () => navLinks.classList.toggle("show"));
 
-toggle.addEventListener('click', () => {
-  nav.classList.toggle('active');
-});
-
-// سلايدر بسيط
-let slides = document.querySelectorAll('.slider-item');
-let current = 0;
-
-function showSlide(index) {
-  slides.forEach((slide, i) => {
-    slide.classList.remove('active');
-    if(i === index) slide.classList.add('active');
-  });
-}
-
-function nextSlide() {
-  current = (current + 1) % slides.length;
+  // Hero slider
+  const slides = document.querySelectorAll(".hero-slider img");
+  let current = 0;
+  const showSlide = (index) => slides.forEach((slide, i) => slide.classList.toggle("active", i===index));
+  const nextSlide = () => { current=(current+1)%slides.length; showSlide(current); };
+  const prevSlide = () => { current=(current-1+slides.length)%slides.length; showSlide(current); };
+  setInterval(nextSlide, 3000);
+  document.querySelector(".next").onclick = nextSlide;
+  document.querySelector(".prev").onclick = prevSlide;
   showSlide(current);
-}
 
-setInterval(nextSlide, 5000);
+  // Search bar functionality with debounce
+  const searchInput = document.getElementById("search");
+  const products = document.querySelectorAll(".product-card");
+  let debounceTimeout;
+  searchInput.addEventListener("input", function(){
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      const term = searchInput.value.toLowerCase();
+      products.forEach(p => {
+        const name = p.dataset.name.toLowerCase();
+        p.style.display = name.includes(term) ? "block" : "none";
+      });
+    }, 200);
+  });
+});
