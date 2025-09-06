@@ -2,8 +2,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-        background-image: url('Hervana.jpg')       no-repeat center center/cover;
-  color: #fff;
+          background: #ffe6f0;
+  color: #333;
 }
 
 /* Header */
