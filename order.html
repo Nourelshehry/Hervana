@@ -29,6 +29,11 @@
       </div>
 
       <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+      </div>
+
+      <div class="form-group">
         <label for="address">Address:</label>
         <textarea id="address" rows="3" required></textarea>
       </div>
@@ -60,7 +65,7 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   // init EmailJS
-  emailjs.init("YOUR_USER_ID"); // 🔹 بدليه بالـ User ID بتاعك من EmailJS
+  emailjs.init("YOUR_PUBLIC_KEY"); // 🔹 حطي الـ Public Key من EmailJS
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
@@ -86,6 +91,7 @@
 
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
     const address = document.getElementById("address").value;
 
     // تجهيز بيانات الأوردر
@@ -96,11 +102,12 @@
     }));
 
     const orderData = {
-      name,
-      phone,
-      address,
-      items,
-      total: total.toFixed(2)
+      from_name: name,
+      from_phone: phone,
+      from_email: email,
+      from_address: address,
+      order_total: total.toFixed(2),
+      order_items: items.map(i => `${i.name} x${i.quantity} = $${i.price * i.quantity}`).join("\n")
     };
 
     // تخزين الأوردر في localStorage (للـ admin.html)
@@ -109,7 +116,7 @@
     localStorage.setItem("orders", JSON.stringify(orders));
 
     // إرسال إيميل بالـ EmailJS
-    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", orderData)
+    emailjs.send("YOUR_SERVICE_ID", "template_3eu20q2", orderData)
       .then(() => {
         console.log("✅ Confirmation email sent!");
       })
