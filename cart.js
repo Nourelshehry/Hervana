@@ -56,45 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ربط أي زرار "Add to Cart"
-  const productButtons = document.querySelectorAll(".add-to-cart");
-  productButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
-      addToCart(name, price);
-    });
-  });
-
-  updateCart();
-});
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
-      addToCart(name, price);
-    });
-  });
-});  // إضافة منتج للكارت
-  function addToCart(productName, price) {
-    cart.push({ productName, price });
-    updateCart();
-  }
-
-  // تحديث الكارت والعداد
-  function updateCart() {
-    cartItems.innerHTML = "";
-    cart.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.productName} - $${item.price}`;
-      cartItems.appendChild(li);
-    });
-    if(cart.length > 0){
-      cartCount.style.display = "inline-block";
-      cartCount.textContent = cart.length;
-    } else {
-      cartCount.style.display = "none";
-    }
-  }
-
   // ربط أي زرار "Add to Cart" في الصفحة
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
@@ -109,44 +70,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   updateCart();
-});
-  // إضافة منتج للكارت
-  function addToCart(productName, price) {
-    cart.push({ productName, price });
-    updateCart();
-  }
-
-  // تحديث الكارت والعداد
-  function updateCart() {
-    cartItems.innerHTML = "";
-    cart.forEach((item) => {
-      const li = document.createElement("li");
-      li.textContent = `${item.productName} - $${item.price}`;
-      cartItems.appendChild(li);
-    });
-    if(cart.length > 0){
-      cartCount.style.display = "inline-block";
-      cartCount.textContent = cart.length;
-    } else {
-      cartCount.style.display = "none";
-    }
-  }
-
-  // ربط أي زرار "Add to Cart"
-  const productButtons = document.querySelectorAll(".add-to-cart");
-  productButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
-      addToCart(name, price);
-    });
-  });
-
-  updateCart();
-});
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
-      addToCart(name, price);
-    });
-  });
 });
