@@ -380,6 +380,7 @@ footer a:hover { text-decoration: underline; }
 }
 
 /* Thank You Box */
+/* Thank You Box */
 .thank-you {
   text-align: center;
   padding: 30px;
@@ -407,6 +408,4 @@ footer a:hover { text-decoration: underline; }
 .thank-you button:hover {
   background: #a93226;
 }
-.hidden {
-  display: none;
-}
+.hidden { display: none; }

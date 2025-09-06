@@ -56,7 +56,12 @@
   <p>&copy; 2025 Hervana. All rights reserved.</p>
 </footer>
 
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
+  // init EmailJS
+  emailjs.init("YOUR_USER_ID"); // 🔹 بدليه بالـ User ID بتاعك من EmailJS
+
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
@@ -75,7 +80,7 @@
   }
   totalElem.textContent = `Total: $${total.toFixed(2)}`;
 
-  // لما يعمل Confirm Order
+  // عند Confirm Order
   document.getElementById("order-form").addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -84,19 +89,33 @@
     const address = document.getElementById("address").value;
 
     // تجهيز بيانات الأوردر
+    const items = cart.map(item => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price
+    }));
+
     const orderData = {
-      customer: { name, phone, address },
-      items: cart,
-      total: total.toFixed(2),
-      date: new Date().toLocaleString()
+      name,
+      phone,
+      address,
+      items,
+      total: total.toFixed(2)
     };
 
-    // نخزنها في localStorage
+    // تخزين الأوردر في localStorage (للـ admin.html)
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push(orderData);
+    orders.push({ ...orderData, date: new Date().toLocaleString() });
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    // نفضي الكارت
+    // إرسال إيميل بالـ EmailJS
+    emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", orderData)
+      .then(() => {
+        console.log("✅ Confirmation email sent!");
+      })
+      .catch((err) => console.error("❌ Failed to send email:", err));
+
+    // تصفير الكارت
     localStorage.removeItem("cart");
 
     // إظهار رسالة شكراً
