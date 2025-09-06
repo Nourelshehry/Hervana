@@ -412,20 +412,21 @@ footer a:hover { text-decoration: underline; }
 }
 .added-message {
   position: fixed;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #27ae60;
+  bottom: -60px; /* تبدأ مختفية تحت */
+  right: 20px;
+  background: #e75480; /* 🌸 بينك غامق شيك */
   color: #fff;
-  padding: 10px 20px;
+  padding: 12px 18px;
   border-radius: 20px;
   font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
   opacity: 0;
-  transition: all 0.3s ease;
+  transition: all 0.4s ease;
   z-index: 3000;
 }
+
 .added-message.show {
-  top: 20px;
+  bottom: 20px; /* تطلع فوق */
   opacity: 1;
 }

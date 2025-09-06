@@ -7,8 +7,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // فتح و قفل الكارت
-  if (cartBtn) {
+  // فتح / قفل الكارت
+  if (cartBtn && cartSidebar) {
     cartBtn.addEventListener("click", () => {
       cartSidebar.classList.toggle("active");
     });
@@ -19,87 +19,120 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // دالة عرض رسالة "Added to Cart"
-  function showAddedMessage(productName) {
-    let msg = document.createElement("div");
-    msg.className = "added-message";
-    msg.textContent = `${productName} added to cart ✅`;
-    document.body.appendChild(msg);
-
-    setTimeout(() => {
-      msg.classList.add("show");
-    }, 50);
-
-    setTimeout(() => {
-      msg.classList.remove("show");
-      setTimeout(() => msg.remove(), 300);
-    }, 2000);
-  }
-
-  // Function لإضافة منتج
-  function addToCart(productName, price) {
-    const existing = cart.find(item => item.name === productName);
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
-    }
-    updateCart();
-    showAddedMessage(productName); // ✅ اظهار الرسالة
-  }
-
   // تحديث الكارت
   function updateCart() {
+    if (!cartItems || !cartCount) return;
+
     cartItems.innerHTML = "";
-    let total = 0;
+    let count = 0;
 
     cart.forEach((item, index) => {
       const li = document.createElement("li");
-      li.innerHTML = `
-        ${item.name} - $${item.price} x 
-        <button class="decrease" data-index="${index}">-</button>
-        ${item.quantity}
-        <button class="increase" data-index="${index}">+</button>
-      `;
-      cartItems.appendChild(li);
-      total += item.price * item.quantity;
-    });
+      li.style.display = "flex";
+      li.style.justifyContent = "space-between";
+      li.style.alignItems = "center";
 
-    cartCount.textContent = cart.length;
-    localStorage.setItem("cart", JSON.stringify(cart));
+      const info = document.createElement("span");
+      info.textContent = `${item.name} - $${item.price} x${item.quantity}`;
 
-    // أحداث زيادة/نقصان
-    document.querySelectorAll(".increase").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const i = btn.getAttribute("data-index");
-        cart[i].quantity++;
+      // زرار زيادة
+      const plusBtn = document.createElement("button");
+      plusBtn.textContent = "+";
+      plusBtn.style.margin = "0 5px";
+      plusBtn.onclick = () => {
+        item.quantity++;
         updateCart();
-      });
-    });
+      };
 
-    document.querySelectorAll(".decrease").forEach(btn => {
-      btn.addEventListener("click", () => {
-        const i = btn.getAttribute("data-index");
-        if (cart[i].quantity > 1) {
-          cart[i].quantity--;
+      // زرار نقصان
+      const minusBtn = document.createElement("button");
+      minusBtn.textContent = "-";
+      minusBtn.style.margin = "0 5px";
+      minusBtn.onclick = () => {
+        if (item.quantity > 1) {
+          item.quantity--;
         } else {
-          cart.splice(i, 1);
+          cart.splice(index, 1);
         }
         updateCart();
-      });
+      };
+
+      // زرار حذف
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "x";
+      removeBtn.style.marginLeft = "10px";
+      removeBtn.onclick = () => {
+        cart.splice(index, 1);
+        updateCart();
+      };
+
+      const controls = document.createElement("div");
+      controls.appendChild(minusBtn);
+      controls.appendChild(plusBtn);
+      controls.appendChild(removeBtn);
+
+      li.appendChild(info);
+      li.appendChild(controls);
+
+      cartItems.appendChild(li);
+
+      count += item.quantity;
     });
+
+    cartCount.textContent = count;
+    cartCount.style.display = count > 0 ? "inline-block" : "none";
+
+    localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // ربط أي زرار "Add to Cart" في أي صفحة
-  const productButtons = document.querySelectorAll(".add-to-cart");
-  productButtons.forEach((btn) => {
+  // إضافة منتج للكارت
+  function addToCart(name, price) {
+    const existing = cart.find(item => item.name === name);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push({ name, price: parseFloat(price), quantity: 1 });
+    }
+    updateCart();
+    showAddedMessage();
+  }
+
+  // ربط أزرار Add to Cart
+  document.querySelectorAll(".add-to-cart").forEach(btn => {
     btn.addEventListener("click", () => {
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
+      const name = btn.dataset.name;
+      const price = btn.dataset.price;
       addToCart(name, price);
     });
   });
 
-  // أول تحديث
+  // رسالة "Added to Cart"
+  function showAddedMessage() {
+    let msg = document.createElement("div");
+    msg.textContent = " Added to Cart! ❤️";
+    msg.style.position = "fixed";
+    msg.style.bottom = "20px";
+    msg.style.right = "20px";
+    msg.style.background = "#ff99cc"; // بينك
+    msg.style.color = "#fff";
+    msg.style.padding = "10px 15px";
+    msg.style.borderRadius = "8px";
+    msg.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+    msg.style.zIndex = "3000";
+    msg.style.opacity = "0";
+    msg.style.transition = "opacity 0.3s ease-in-out";
+    document.body.appendChild(msg);
+
+    // Fade in
+    setTimeout(() => (msg.style.opacity = "1"), 50);
+
+    // Fade out & remove
+    setTimeout(() => {
+      msg.style.opacity = "0";
+      setTimeout(() => msg.remove(), 300);
+    }, 1500);
+  }
+
+  // تحميل الكارت عند فتح الصفحة
   updateCart();
 });

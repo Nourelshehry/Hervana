@@ -25,18 +25,14 @@ header {
   cursor: pointer;
 }
 
-/* New header icons container */
-.header-icons {
+/* Cart + Menu wrapper */
+.menu-cart {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 
-.menu-toggle {
-  font-size: 24px;
-  cursor: pointer;
-}
-
+/* Cart button */
 #cart-btn {
   font-size: 22px;
   cursor: pointer;
@@ -49,10 +45,20 @@ header {
   border-radius: 50%;
   padding: 2px 6px;
   font-size: 12px;
-  margin-left: 5px;
+  position: absolute;
+  top: -8px;
+  right: -10px;
   display: none;
 }
 
+/* Menu toggle */
+.menu-toggle {
+  font-size: 24px;
+  cursor: pointer;
+  display: none; /* افتراضيًا مخفي */
+}
+
+/* Nav links */
 nav ul {
   list-style: none;
   margin: 0;
@@ -227,43 +233,80 @@ footer a:hover {
   cursor:pointer;
 }
 
-.added-message {
-  position: fixed;
-  top: -50px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #27ae60;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 3000;
-}
-.added-message.show {
-  top: 20px;
-  opacity: 1;
+/* =================== Mobile =================== */
+/* Mobile */
+@media (max-width: 768px) {
+  .logo {
+    order: 1; /* أقصى الشمال */
+  }
+
+  .menu-cart {
+    order: 2; /* على اليمين */
+    display: flex;
+    flex-direction: row-reverse; /* المينيو الأول بعده الكارت */
+    gap: 10px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    background: #c0392b;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    padding: 15px 0;
+    text-align: center;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
 }
 
-/* Responsive */
-@media(max-width:768px){
-  .nav-links {
-    display:none;
-    flex-direction:column;
-    background:#c0392b;
-    position:absolute;
-    top:60px;
-    left:0;
-    width:100%;
-    padding:15px 0;
-    text-align:center;
+/* Desktop */
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none !important; /* نخفي المينيو */
   }
-  .nav-links.show { display:flex; }
-  .product-card { width:90%; }
-  .hero-content h1 { font-size:28px; }
-  .hero-content p { font-size:16px; }
-  .search-bar { width:80%; font-size:14px; }
-  .hero { height:400px; }
+
+  header {
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .logo {
+    margin-right: auto; /* شمال */
+  }
+
+  .menu-cart {
+    margin-left: auto; /* يمين */
+    display: flex;
+    gap: 15px;
+  }
+
+  /* الكارت الأول ثم القايمة */
+  #cart-btn {
+    order: 1;
+  }
+
+  .nav-links {
+    order: 2;
+    display: flex !important;
+    margin-left: 15px;
+    gap: 15px;
+  }
+}
+
+
+/* Hover effects */
+#cart-btn:hover,
+.menu-toggle:hover {
+  color: #ff99cc; /* بينك فاتح */
+  transform: scale(1.1); /* تكبير بسيط */
+  transition: all 0.2s ease-in-out;
 }
