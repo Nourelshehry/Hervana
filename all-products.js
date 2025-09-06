@@ -1,11 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Navbar toggle
-  const menuToggle = document.getElementById("menu-toggle");
-  const navLinks = document.getElementById("nav");
-  menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("show");
-  });
-
   // Filters
   const categorySelect = document.getElementById("category");
   const priceInput = document.getElementById("price");
