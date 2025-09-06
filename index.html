@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,67 +8,74 @@
 </head>
 <body>
 
-  <!-- الهيدر ثابت -->
-  <header id="main-header">
+<!-- Hero Section مع العناصر فوقه -->
+<section class="hero">
+  <div class="hero-top">
     <div class="logo">Hervana</div>
-    <nav>
-      <ul class="menu">
-        <li><a href="#">الرئيسية</a></li>
-        <li><a href="#">المنتجات</a></li>
-        <li><a href="#">عن الموقع</a></li>
-        <li><a href="#">اتصل بنا</a></li>
+    <input type="text" id="search" placeholder="Search products..." class="search-bar">
+    <div id="cart-btn" class="cart-icon">🛒 <span id="cart-count">0</span></div>
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    <nav id="nav">
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="all-products.html">Products</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact Us</a></li>
       </ul>
     </nav>
-    <div id="cart-btn">🛒</div>
-  </header>
-
-  <!-- الكارت -->
-  <div id="cart-sidebar">
-    <div id="cart-close">×</div>
-    <h2>عربة التسوق</h2>
-    <div id="cart-items">
-      <p>لا توجد منتجات بعد</p>
-    </div>
   </div>
 
   <!-- السلايدر -->
-  <section id="hero-slider">
-    <div class="slide active">
-      <img src="Hervana.jpg" alt="Slide 1">
-      <div class="slide-text">منتج مميز</div>
-    </div>
-    <div class="slide">
-      <img src="Gift1.png" alt="Slide 2">
-      <div class="slide-text">منتج رائع آخر</div>
-    </div>
-    <div class="slide">
-      <img src="Gift2.png" alt="Slide 3">
-      <div class="slide-text">منتج جديد</div>
-    </div>
-    <button class="prev">‹</button>
-    <button class="next">›</button>
-  </section>
+  <div class="hero-slider">
+    <img src="Hervana.jpg" alt="Hervana" class="active">
+    <img src="Gift1.png" alt="Gift 1">
+    <img src="Gift2.png" alt="Gift 2">
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+  </div>
 
-  <!-- المنتجات -->
-  <main>
-    <section class="products">
-      <h2>منتجاتنا</h2>
-      <div class="product-list">
-        <div class="product">
-          <img src="https://via.placeholder.com/300" alt="منتج 1">
-          <h3>منتج 1</h3>
-          <button class="add-to-cart">أضف للعربة</button>
-        </div>
-        <div class="product">
-          <img src="https://via.placeholder.com/300" alt="منتج 2">
-          <h3>منتج 2</h3>
-          <button class="add-to-cart">أضف للعربة</button>
-        </div>
-      </div>
-    </section>
-  </main>
+  <!-- محتوى السلايدر -->
+  <div class="hero-content">
+    <h1>Welcome to Hervana</h1>
+    <p>Find the perfect gift for every occasion</p>
+    <a href="all-products.html"><button>Shop Now</button></a>
+  </div>
+</section>
 
-  <script src="script.js"></script>
-  <script src="cart.js"></script>
+<!-- Cart Sidebar -->
+<div class="cart-sidebar" id="cart-sidebar">
+  <button id="close-cart">✖</button>
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</div>
+
+<!-- Products Section -->
+<section class="products">
+  <h2>Featured Products</h2>
+  <div class="product-grid">
+    <div class="product-card" data-name="Gift 1" data-price="150">
+      <img src="https://via.placeholder.com/200" alt="Gift 1">
+      <h3>Gift 1</h3>
+      <p>150 EGP</p>
+      <button class="add-to-cart" data-name="Gift 1" data-price="150">Add to Cart</button>
+    </div>
+    <div class="product-card" data-name="Gift 2" data-price="200">
+      <img src="https://via.placeholder.com/200" alt="Gift 2">
+      <h3>Gift 2</h3>
+      <p>200 EGP</p>
+      <button class="add-to-cart" data-name="Gift 2" data-price="200">Add to Cart</button>
+    </div>
+    <div class="product-card" data-name="Gift 3" data-price="250">
+      <img src="https://via.placeholder.com/200" alt="Gift 3">
+      <h3>Gift 3</h3>
+      <p>250 EGP</p>
+      <button class="add-to-cart" data-name="Gift 3" data-price="250">Add to Cart</button>
+    </div>
+  </div>
+</section>
+
+<script src="script.js"></script>
+<script src="cart.js"></script>
 </body>
 </html>
