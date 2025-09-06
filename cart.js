@@ -1,39 +1,27 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const cartBtn = document.getElementById("cart-btn");
-  const cartSidebar = document.getElementById("cart-sidebar");
-  const cartItems = document.getElementById("cart-items");
-  const cartCount = document.getElementById("cart-count");
+const cartBtn = document.getElementById("cart-btn");
+const cartSidebar = document.getElementById("cart-sidebar");
+const cartClose = document.getElementById("cart-close");
+const cartItems = document.getElementById("cart-items");
 
-  // إنشاء overlay
-  const overlay = document.createElement("div");
-  overlay.id = "cart-overlay";
-  overlay.style.position = "fixed";
-  overlay.style.top = "0";
-  overlay.style.left = "0";
-  overlay.style.width = "100%";
-  overlay.style.height = "100%";
-  overlay.style.background = "rgba(0,0,0,0.4)";
-  overlay.style.zIndex = "1500";
-  overlay.style.display = "none";
-  document.body.appendChild(overlay);
+cartBtn.addEventListener("click", () => {
+  cartSidebar.style.transform = "translateX(0)";
+});
 
-  let cart = [];
+cartClose.addEventListener("click", () => {
+  cartSidebar.style.transform = "translateX(100%)";
+});
 
-  // فتح الكارت مع overlay
-  cartBtn.addEventListener("click", () => {
-    cartSidebar.classList.add("active");
-    overlay.style.display = "block";
+// إضافة منتجات للعربة
+document.querySelectorAll(".add-to-cart").forEach(button => {
+  button.addEventListener("click", () => {
+    const product = button.closest(".product");
+    const title = product.querySelector("h3").textContent;
+    const item = document.createElement("p");
+    item.textContent = title;
+    cartItems.appendChild(item);
+    cartSidebar.style.transform = "translateX(0)";
   });
-
-  // إغلاق الكارت
-  const closeCart = document.getElementById("close-cart");
-  const closeCartSidebar = () => {
-    cartSidebar.classList.remove("active");
-    overlay.style.display = "none";
-  };
-  closeCart.addEventListener("click", closeCartSidebar);
-  overlay.addEventListener("click", closeCartSidebar);
-
+});
   // إضافة منتج للكارت
   function addToCart(productName, price) {
     cart.push({ productName, price });
