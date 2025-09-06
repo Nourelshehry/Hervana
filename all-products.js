@@ -1,18 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Filters
   const categorySelect = document.getElementById("category");
-  const priceInput = document.getElementById("price");
+  const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
 
   function filterProducts() {
-    const category = categorySelect.value;
-    const maxPrice = priceInput.value ? parseFloat(priceInput.value) : Infinity;
+    const category = categorySelect.value.toLowerCase();
+    const searchTerm = searchInput.value.toLowerCase();
 
     products.forEach(product => {
-      const productCategory = product.getAttribute("data-category");
-      const productPrice = parseFloat(product.getAttribute("data-price"));
-
-      if ((category === "all" || category === productCategory) && productPrice <= maxPrice) {
+      const productCategory = product.getAttribute("data-category").toLowerCase();
+      const productName = product.getAttribute("data-name").toLowerCase();
+      if ((category === "all" || category === productCategory) && productName.includes(searchTerm)) {
         product.style.display = "block";
       } else {
         product.style.display = "none";
@@ -21,5 +19,5 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   categorySelect.addEventListener("change", filterProducts);
-  priceInput.addEventListener("input", filterProducts);
+  searchInput.addEventListener("input", filterProducts);
 });
