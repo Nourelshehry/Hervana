@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complete Your Order - Hervana</title>
+  <link rel="stylesheet" href="all-products.css">
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="index.html">Hervana</a></div>
+</header>
+
+<section class="order-section">
+  <div class="order-container">
+    <h1>Complete Your Order</h1>
+
+    <!-- Order Form -->
+    <form id="order-form">
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <textarea id="address" rows="3" required></textarea>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary-box">
+        <h3>Order Summary</h3>
+        <ul id="order-summary"></ul>
+        <p id="order-total"></p>
+      </div>
+
+      <button type="submit">Confirm Order</button>
+    </form>
+
+    <!-- Thank You Message -->
+    <div id="thank-you" class="thank-you hidden">
+      <h2>🎉 Thank You!</h2>
+      <p>Your order has been received. We’ll contact you soon!</p>
+      <button onclick="window.location.href='index.html'">Back to Home</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+</footer>
+
+<script>
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const summary = document.getElementById("order-summary");
+  const totalElem = document.getElementById("order-total");
+  let total = 0;
+
+  // عرض تفاصيل الأوردر
+  if (cart.length === 0) {
+    summary.innerHTML = "<li>Your cart is empty.</li>";
+  } else {
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
+      summary.appendChild(li);
+      total += item.price * item.quantity;
+    });
+  }
+  totalElem.textContent = `Total: $${total.toFixed(2)}`;
+
+  // لما يعمل Confirm Order
+  document.getElementById("order-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const address = document.getElementById("address").value;
+
+    // تجهيز بيانات الأوردر
+    const orderData = {
+      customer: { name, phone, address },
+      items: cart,
+      total: total.toFixed(2),
+      date: new Date().toLocaleString()
+    };
+
+    // نخزنها في localStorage
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push(orderData);
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    // نفضي الكارت
+    localStorage.removeItem("cart");
+
+    // إظهار رسالة شكراً
+    document.getElementById("order-form").classList.add("hidden");
+    document.getElementById("thank-you").classList.remove("hidden");
+  });
+</script>
+
+</body>
+</html>

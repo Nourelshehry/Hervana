@@ -11,24 +11,14 @@
 <!-- Header -->
 <header>
   <div class="logo"><a href="index.html">Hervana</a></div>
-  <div class="cart-icon" id="cart-btn">🛒 <span id="cart-count"></span></div>
 </header>
 
-<!-- Cart Sidebar -->
-<div id="cart-sidebar">
-  <button id="close-cart">✖</button>
-  <h2>Your Cart</h2>
-  <ul id="cart-items"></ul>
-  <button id="checkout-btn">Checkout</button>
-</div>
-
 <!-- Checkout Section -->
-<section class="all-products">
+<section class="checkout">
   <h1>Checkout</h1>
-
-  <ul id="checkout-list"></ul>
+  <div id="checkout-list"></div>
   <p id="total"></p>
-  <button id="pay-btn">Pay Now</button>
+  <button id="complete-btn">Complete Order</button>
 </section>
 
 <!-- Footer -->
@@ -42,38 +32,5 @@
 </footer>
 
 <script src="cart.js"></script>
-<script>
-  // عرض محتويات الكارت في صفحة checkout
-  const checkoutList = document.getElementById("checkout-list");
-  const totalElem = document.getElementById("total");
-
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  let total = 0;
-
-  if (cart.length === 0) {
-    checkoutList.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price}`;
-      checkoutList.appendChild(li);
-      total += item.price;
-    });
-  }
-
-  totalElem.textContent = `Total: $${total.toFixed(2)}`;
-
-  // محاكاة الدفع
-  document.getElementById("pay-btn").addEventListener("click", () => {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
-    }
-    alert(`Payment of $${total.toFixed(2)} completed successfully!`);
-    localStorage.removeItem("cart"); // مسح الكارت بعد الدفع
-    window.location.href = "index.html"; // رجوع للهوم
-  });
-</script>
-
 </body>
 </html>
