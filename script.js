@@ -1,27 +1,61 @@
-// SLIDER
-let currentSlide = 0;
-const slides = document.querySelectorAll("#hero-slider .slide");
-const prevBtn = document.querySelector("#hero-slider .prev");
-const nextBtn = document.querySelector("#hero-slider .next");
+document.addEventListener("DOMContentLoaded", function () {
+  // Menu toggle
+  const menuToggle = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav");
+  menuToggle.addEventListener("click", () => navLinks.classList.toggle("show"));
 
-function showSlide(index) {
-  slides.forEach((slide, i) => {
-    slide.classList.toggle("active", i === index);
+  // Hero slider
+  const slides = document.querySelectorAll(".hero-slider img");
+  let current = 0;
+
+  const showSlide = (index) => {
+    slides.forEach((slide, i) => slide.classList.toggle("active", i === index));
+  };
+
+  const nextSlide = () => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  };
+
+  const prevSlide = () => {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  };
+
+  // Auto slide every 3 seconds
+  let slideInterval = setInterval(nextSlide, 3000);
+
+  document.querySelector(".hero .next").addEventListener("click", () => {
+    nextSlide();
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 3000);
   });
-}
 
-prevBtn.addEventListener("click", () => {
-  currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-  showSlide(currentSlide);
+  document.querySelector(".hero .prev").addEventListener("click", () => {
+    prevSlide();
+    clearInterval(slideInterval);
+    slideInterval = setInterval(nextSlide, 3000);
+  });
+
+  showSlide(current);
+
+  // Search bar functionality with debounce
+  const searchInput = document.getElementById("search");
+  const products = document.querySelectorAll(".product-card");
+  let debounceTimeout;
+  searchInput.addEventListener("input", function () {
+    clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(() => {
+      const term = searchInput.value.toLowerCase();
+      products.forEach(p => {
+        const name = p.dataset.name.toLowerCase();
+        p.style.display = name.includes(term) ? "block" : "none";
+      });
+    }, 200);
+  });
+
+  // Optional: close nav menu when clicking a link (mobile friendly)
+  navLinks.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => navLinks.classList.remove("show"));
+  });
 });
-
-nextBtn.addEventListener("click", () => {
-  currentSlide = (currentSlide + 1) % slides.length;
-  showSlide(currentSlide);
-});
-
-// auto slide
-setInterval(() => {
-  currentSlide = (currentSlide + 1) % slides.length;
-  showSlide(currentSlide);
-}, 5000);
