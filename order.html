@@ -65,7 +65,7 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
   // init EmailJS
-  emailjs.init("YOUR_PUBLIC_KEY"); // 🔹 حطي الـ Public Key من EmailJS
+  emailjs.init("7hqQN_HKaAyPHjqYu"); // 🔹 حطي الـ Public Key من EmailJS
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
@@ -116,7 +116,7 @@
     localStorage.setItem("orders", JSON.stringify(orders));
 
     // إرسال إيميل بالـ EmailJS
-    emailjs.send("YOUR_SERVICE_ID", "template_3eu20q2", orderData)
+    emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
       .then(() => {
         console.log("✅ Confirmation email sent!");
       })
