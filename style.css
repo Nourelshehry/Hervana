@@ -6,6 +6,12 @@
   font-family: Arial, sans-serif;
 }
 
+/* BODY */
+body {
+  background-color: #fef3f3;
+  color: #333;
+}
+
 /* HEADER ثابت */
 #main-header {
   position: fixed;
@@ -24,6 +30,7 @@
 #main-header .logo {
   font-size: 1.5rem;
   font-weight: bold;
+  color: #ff66b2;
 }
 
 #main-header nav ul.menu {
@@ -38,10 +45,10 @@
   font-weight: 500;
 }
 
-/* CART Sidebar */
+/* CART */
 #cart-sidebar {
   position: fixed;
-  top: 60px;
+  top: 60px; /* ارتفاع الهيدر */
   right: 0;
   width: 300px;
   max-width: 80%;
@@ -62,11 +69,11 @@
 
 /* HERO SLIDER */
 #hero-slider {
-  margin-top: 60px;
+  margin-top: 60px; /* ارتفاع الهيدر */
   height: calc(100vh - 60px);
   width: 100%;
-  position: relative;
   overflow: hidden;
+  position: relative;
 }
 
 #hero-slider .slide {
@@ -140,4 +147,8 @@
   margin-top: 10px;
   padding: 5px 10px;
   cursor: pointer;
+  background-color: #ff66b2;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
