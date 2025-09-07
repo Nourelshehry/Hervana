@@ -2,7 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const categorySelect = document.getElementById("category");
   const searchInput = document.getElementById("search");
   const products = document.querySelectorAll(".product-card");
-
+  
+  // Menu toggle
+  const menuToggle = document.getElementById("menu-toggle");
+  const navLinks = document.getElementById("nav");
+  if (menuToggle) {
+    menuToggle.addEventListener("click", () => {
+      navLinks.classList.toggle("show");
+    });
+  }
   // فلترة المنتجات
   function filterProducts() {
     const category = categorySelect.value.toLowerCase();

@@ -9,23 +9,16 @@ document.addEventListener("DOMContentLoaded", () => {
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   // 🔹 فتح وقفل الكارت
-  const cartBtn = document.getElementById("cart-btn");
-const cartSidebar = document.getElementById("cart-sidebar");
-const closeCart = document.getElementById("close-cart");
-
-if (cartBtn && cartSidebar) {
-  cartBtn.addEventListener("click", () => {
-    console.log("Cart button clicked"); // Debug
-    cartSidebar.classList.toggle("active");
-  });
-}
-
-if (closeCart) {
-  closeCart.addEventListener("click", () => {
-    cartSidebar.classList.remove("active");
-  });
-}
-
+  if (cartBtn) {
+    cartBtn.addEventListener("click", () => {
+      cartSidebar.classList.toggle("active");
+    });
+  }
+  if (closeCart) {
+    closeCart.addEventListener("click", () => {
+      cartSidebar.classList.remove("active");
+    });
+  }
 
   // 🔹 عرض الكارت
   function renderCart() {

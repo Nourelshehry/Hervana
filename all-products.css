@@ -81,21 +81,23 @@ nav a {
 }
 
 .filters label {
-  margin: 0 6px;
+  margin: 15px;
 }
 
 .filters select,
 .filters input {
-  margin: 0 15px;
-  padding: 8px 10px;
+  margin: 0 20px;
+  padding: 10px 15px;
   border-radius: 4px;
   border: none;
+margin-top: 15px;
 }
 
 .search-bar {
   width: 60%;
   max-width: 400px;
-  margin-bottom: 15px;
+  margin-bottom: 17px;
+margin-top: 15px;
 }
 
 /* Products Section */
@@ -387,4 +389,21 @@ footer a:hover {
   bottom: 20px; /* تطلع فوق */
   opacity: 1;
 }
+}
+/* =================== Desktop =================== */
+@media (min-width: 769px) {
+  .menu-toggle {
+    display: none !important;
+  }
+
+  header {
+    justify-content: flex-start;
+    align-items: center;
+  }
+
+  .logo { margin-right: auto; }
+  .menu-cart { margin-left: auto; display: flex; gap: 15px; }
+
+  #cart-btn { order: 1; }
+  .nav-links { order: 2; display: flex !important; margin-left: 15px; gap: 15px; }
 }
