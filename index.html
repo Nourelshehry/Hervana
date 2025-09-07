@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hervana</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 
 <!-- Header -->
 <header>
-  <!-- اللوجو -->
   <div class="logo">Hervana</div>
-
-  <!-- المينيو والكارت -->
   <div class="menu-cart">
     <div class="menu-toggle" id="menu-toggle">&#9776;</div>
     <div id="cart-btn">🛒 <span id="cart-count"></span></div>
   </div>
-
-  <!-- القايمة -->
   <nav id="nav" class="nav-links">
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -30,25 +25,28 @@
   </nav>
 </header>
 
-
-
 <!-- Cart Sidebar -->
 <div class="cart-sidebar" id="cart-sidebar">
   <button id="close-cart">✖</button>
   <h2>Your Cart</h2>
   <ul id="cart-items"></ul>
-  <!--<button id="checkout-btn">Checkout</button>-->
+  <button id="checkout-btn">Checkout</button>
 </div>
 
+<!-- Added to cart message -->
+<div id="cart-message" class="cart-message">Added to cart!</div>
+
+<!-- Hero Section -->
 <section class="hero">
+  <!-- Search bar -->
   <div class="hero-search-container">
-    <input type="text" id="search" placeholder="Search products..." class="search-bar">
+    <input type="text" id="search" placeholder="Search products..." class="search-bar"/>
   </div>
 
   <div class="hero-slider">
-    <img src="Hervana.jpg" alt="Hervana" class="active">
-    <img src="Gift1.png" alt="Gift 1">
-    <img src="Gift2.png" alt="Gift 2">
+    <img src="Hervana.jpg" alt="Hervana" class="active"/>
+    <img src="Gift1.png" alt="Gift 1"/>
+    <img src="Gift2.png" alt="Gift 2"/>
   </div>
 
   <div class="hero-content">
@@ -60,32 +58,32 @@
   <button class="next">&#10095;</button>
 </section>
 
+<!-- Products Section -->
 <section class="products">
   <h2>Featured Products</h2>
   <div class="product-grid">
     <div class="product-card" data-name="Gift 1" data-price="150">
-      <img src="Gift1.png" alt="Gift 1">
+      <img src="https://via.placeholder.com/200" alt="Gift 1"/>
       <h3>Gift 1</h3>
       <p>150 EGP</p>
-<button class="add-to-cart" data-name="Gift 1" data-price="150" data-image="Gift1.png">Add to Cart</button>
+      <button class="add-to-cart" data-name="Gift 1" data-price="150">Add to Cart</button>
     </div>
-
     <div class="product-card" data-name="Gift 2" data-price="200">
-      <img src="Gift2.png" alt="Gift 2">
+      <img src="https://via.placeholder.com/200" alt="Gift 2"/>
       <h3>Gift 2</h3>
       <p>200 EGP</p>
-<button class="add-to-cart" data-name="Gift 2" data-price="150" data-image="Gift2.png">Add to Cart</button>
+      <button class="add-to-cart" data-name="Gift 2" data-price="200">Add to Cart</button>
     </div>
-
     <div class="product-card" data-name="Gift 3" data-price="250">
-      <img src="Gift3.png" alt="Gift 3">
+      <img src="https://via.placeholder.com/200" alt="Gift 3"/>
       <h3>Gift 3</h3>
       <p>250 EGP</p>
-<button class="add-to-cart" data-name="Gift 3" data-price="150" data-image="Gift3.png">Add to Cart</button>
+      <button class="add-to-cart" data-name="Gift 3" data-price="250">Add to Cart</button>
     </div>
   </div>
 </section>
 
+<!-- Footer -->
 <footer>
   <p>&copy; 2025 Hervana. All rights reserved.</p>
   <div class="social-links">
