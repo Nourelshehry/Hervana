@@ -1,135 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Complete Your Order - Hervana</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Order Confirmation</title>
   <link rel="stylesheet" href="all-products.css">
 </head>
 <body>
+  <header>
+    <h1>Order Confirmation</h1>
+  </header>
 
-<header>
-  <div class="logo"><a href="index.html">Hervana</a></div>
-</header>
+  <section class="order-section">
+    <div class="order-container">
+      <h2>Your Order</h2>
+      <ul id="order-summary"></ul>
+      <p>Total: $<span id="order-total">0</span></p>
 
-<section class="order-section">
-  <div class="order-container">
-    <h1>Complete Your Order</h1>
+      <form id="order-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required />
 
-    <!-- Order Form -->
-    <form id="order-form">
-      <div class="form-group">
-        <label for="name">Full Name:</label>
-        <input type="text" id="name" required>
-      </div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" required />
 
-      <div class="form-group">
-        <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" required>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-      </div>
-
-      <div class="form-group">
         <label for="address">Address:</label>
-        <textarea id="address" rows="3" required></textarea>
-      </div>
+        <textarea id="address" required></textarea>
 
-      <!-- Order Summary -->
-      <div class="order-summary-box">
-        <h3>Order Summary</h3>
-        <ul id="order-summary"></ul>
-        <p id="order-total"></p>
-      </div>
+        <button type="submit">Confirm Order</button>
+      </form>
+    </div>
+  </section>
 
-      <button type="submit">Confirm Order</button>
-    </form>
-
-    <!-- Thank You Message -->
-    <div id="thank-you" class="thank-you hidden">
-      <h2>🎉 Thank You!</h2>
-      <p>Your order has been received. We’ll contact you soon!</p>
-      <button onclick="window.location.href='index.html'">Back to Home</button>
+  <!-- رسالة الشكر -->
+  <div id="thank-you" class="thank-you">
+    <div class="thank-you-content">
+      <h2>شكراً لطلبك 🎉</h2>
+      <p>تم تأكيد الطلب وسنتواصل معك قريباً</p>
+      <button onclick="window.location.href='index.html'">العودة للرئيسية</button>
     </div>
   </div>
-</section>
 
-<footer>
-  <p>&copy; 2025 Hervana. All rights reserved.</p>
-</footer>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init("7hqQN_HKaAyPHjqYu");
+    })();
 
-<!-- EmailJS -->
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-  // init EmailJS
-  emailjs.init("7hqQN_HKaAyPHjqYu"); // 🔹 حطي الـ Public Key من EmailJS
+    const orderSummary = document.getElementById("order-summary");
+    const orderTotal = document.getElementById("order-total");
+    const orderForm = document.getElementById("order-form");
+    const thankYou = document.getElementById("thank-you");
 
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const summary = document.getElementById("order-summary");
-  const totalElem = document.getElementById("order-total");
-  let total = 0;
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // عرض تفاصيل الأوردر
-  if (cart.length === 0) {
-    summary.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
+    // عرض المنتجات
+    let total = 0;
     cart.forEach(item => {
       const li = document.createElement("li");
       li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
-      summary.appendChild(li);
+      orderSummary.appendChild(li);
       total += item.price * item.quantity;
     });
-  }
-  totalElem.textContent = `Total: $${total.toFixed(2)}`;
+    orderTotal.textContent = total.toFixed(2);
 
-  // عند Confirm Order
-  document.getElementById("order-form").addEventListener("submit", (e) => {
-    e.preventDefault();
+    // عند إرسال الفورم
+    orderForm.addEventListener("submit", function(e){
+      e.preventDefault();
 
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const email = document.getElementById("email").value;
-    const address = document.getElementById("address").value;
+      const orderData = {
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        address: document.getElementById("address").value,
+        items: cart.map(i => `${i.name} x${i.quantity}`).join(", "),
+        total: total
+      };
 
-    // تجهيز بيانات الأوردر
-    const items = cart.map(item => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: item.price
-    }));
+      // حفظ الطلبات في localStorage
+      let orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push(orderData);
+      localStorage.setItem("orders", JSON.stringify(orders));
 
-    const orderData = {
-      from_name: name,
-      from_phone: phone,
-      from_email: email,
-      from_address: address,
-      order_total: total.toFixed(2),
-      order_items: items.map(i => `${i.name} x${i.quantity} = $${i.price * i.quantity}`).join("\n")
-    };
-
-    // تخزين الأوردر في localStorage (للـ admin.html)
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push({ ...orderData, date: new Date().toLocaleString() });
-    localStorage.setItem("orders", JSON.stringify(orders));
-
-    // إرسال إيميل بالـ EmailJS
-    emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
-      .then(() => {
-        console.log("✅ Confirmation email sent!");
-      })
-      .catch((err) => console.error("❌ Failed to send email:", err));
-
-    // تصفير الكارت
-    localStorage.removeItem("cart");
-
-    // إظهار رسالة شكراً
-    document.getElementById("order-form").classList.add("hidden");
-    document.getElementById("thank-you").classList.remove("hidden");
-  });
-</script>
-
+      // إرسال عبر EmailJS
+      emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
+        .then(() => {
+          localStorage.removeItem("cart");
+          // إظهار الرسالة كمودال
+          thankYou.classList.add("show");
+        })
+        .catch(err => console.error("EmailJS error:", err));
+    });
+  </script>
 </body>
 </html>
