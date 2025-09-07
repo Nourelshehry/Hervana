@@ -1,76 +1,93 @@
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
-  const closeCart = document.getElementById("close-cart");
   const cartItems = document.getElementById("cart-items");
   const cartCount = document.getElementById("cart-count");
+  const closeCart = document.getElementById("close-cart");
   const checkoutBtn = document.getElementById("checkout-btn");
-  const cartMessage = document.getElementById("cart-message");
 
-  // استرجاع الكارت من localStorage
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  // فتح الكارت
-  if (cartBtn) {
-    cartBtn.addEventListener("click", () => {
-      cartSidebar.classList.toggle("active");
-    });
-  }
+  // 🔹 فتح وقفل الكارت
+  const cartBtn = document.getElementById("cart-btn");
+const cartSidebar = document.getElementById("cart-sidebar");
+const closeCart = document.getElementById("close-cart");
 
-  // قفل الكارت
-  if (closeCart) {
-    closeCart.addEventListener("click", () => {
-      cartSidebar.classList.remove("active");
-    });
-  }
+if (cartBtn && cartSidebar) {
+  cartBtn.addEventListener("click", () => {
+    console.log("Cart button clicked"); // Debug
+    cartSidebar.classList.toggle("active");
+  });
+}
 
-  // إظهار رسالة Added to Cart
-  function showCartMessage() {
-    if (cartMessage) {
-      cartMessage.style.display = "block";
-      setTimeout(() => {
-        cartMessage.style.display = "none";
-      }, 2000);
-    }
-  }
+if (closeCart) {
+  closeCart.addEventListener("click", () => {
+    cartSidebar.classList.remove("active");
+  });
+}
 
-  // تحديث الكارت
-  function updateCart() {
-    if (!cartItems || !cartCount) return;
 
+  // 🔹 عرض الكارت
+  function renderCart() {
+    if (!cartItems) return;
     cartItems.innerHTML = "";
-    let totalCount = 0;
+    let total = 0;
 
-    cart.forEach((item) => {
-      totalCount += item.quantity;
+    cart.forEach((item, index) => {
+      total += item.price * item.quantity;
+
       const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
+      li.innerHTML = `
+        <div class="cart-item">
+          <span>${item.name} - $${item.price}</span>
+          <div class="quantity-controls">
+            <button class="decrease" data-index="${index}">-</button>
+            <span>${item.quantity}</span>
+            <button class="increase" data-index="${index}">+</button>
+          </div>
+        </div>
+      `;
       cartItems.appendChild(li);
     });
 
-    if (totalCount > 0) {
-      cartCount.style.display = "inline-block";
-      cartCount.textContent = totalCount;
-    } else {
-      cartCount.style.display = "none";
+    if (cartCount) {
+      cartCount.textContent = cart.length;
+      cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // إضافة منتج
+  // 🔹 إضافة منتج للكارت
   function addToCart(productName, price) {
     const existing = cart.find((item) => item.name === productName);
     if (existing) {
-      existing.quantity += 1;
+      existing.quantity++;
     } else {
       cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
     }
-    updateCart();
-    showCartMessage();
+    renderCart();
+    showAddedMessage(productName);
   }
 
-  // ربط الأزرار Add to Cart
+  // 🔹 التحكم في الكمية
+  if (cartItems) {
+    cartItems.addEventListener("click", (e) => {
+      if (e.target.classList.contains("increase")) {
+        const index = e.target.dataset.index;
+        cart[index].quantity++;
+      } else if (e.target.classList.contains("decrease")) {
+        const index = e.target.dataset.index;
+        cart[index].quantity--;
+        if (cart[index].quantity <= 0) {
+          cart.splice(index, 1);
+        }
+      }
+      renderCart();
+    });
+  }
+
+  // 🔹 ربط أزرار Add to Cart
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -80,13 +97,23 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // زرار Checkout
+  // 🔹 رسالة Added to Cart
+  function showAddedMessage(productName) {
+    const msg = document.createElement("div");
+    msg.className = "added-msg";
+    msg.textContent = `${productName} added to cart!`;
+    document.body.appendChild(msg);
+    setTimeout(() => {
+      msg.remove();
+    }, 2000);
+  }
+
+  // 🔹 زرار Checkout
   if (checkoutBtn) {
     checkoutBtn.addEventListener("click", () => {
       window.location.href = "order.html";
     });
   }
 
-  // تحميل الكارت عند فتح الصفحة
-  updateCart();
+  renderCart();
 });
