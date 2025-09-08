@@ -231,27 +231,7 @@ footer a:hover {
 #cart-sidebar h2 { color:#c0392b; }
 #cart-items { list-style:none; padding:0; margin:15px 0; }
 #cart-items li { margin:8px 0; font-size:14px; }
-/* Added to cart message */
-.cart-message {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #ffb6c1; /* وردي */
-  color: #c0392b;
-  padding: 12px 20px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  display: none;
-  z-index: 3000;
-  font-weight: bold;
-  animation: fadeInOut 2.5s ease forwards;
-}
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-10px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-10px); }
-}
+
 #close-cart {
   position:absolute;
   top:10px;
@@ -392,4 +372,34 @@ footer a:hover {
   background: linear-gradient(135deg, #e75480, #c0392b); /* عكس التدرج */
   transform: scale(1.05);
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+/* Unified Added to Cart Message */
+#cart-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #444;
+  z-index: 1000;
+  display: none;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
