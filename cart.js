@@ -51,19 +51,21 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-// 🔹 إضافة منتج للكارت
-function addToCart(productName, price) {
-  const existing = cart.find((item) => item.name === productName);
-  if (existing) {
-    existing.quantity++;
-  } else {
-    cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
+  // 🔹 إضافة منتج للكارت
+  function addToCart(productName, price) {
+    const existing = cart.find((item) => item.name === productName);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
+    }
+    renderCart();
+    showCartMessage();
+    // افتح السايدبار بعد الإضافة
+    if (cartSidebar) {
+      cartSidebar.classList.add("active");
+    }
   }
-  renderCart();
-  showCartMessage();
-}
-  
-  
 
   // 🔹 التحكم في الكمية
   if (cartItems) {
@@ -82,29 +84,27 @@ function addToCart(productName, price) {
     });
   }
 
-  // 🔹 ربط أزرار Add to Cart
+  // 🔹 ربط أزرار Add to Cart (في أي صفحة)
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
       addToCart(name, price);
-
     });
   });
 
   // 🔹 رسالة Added to Cart
   function showCartMessage() {
-  const cartMessage = document.getElementById("cart-message");
-  if (cartMessage) {
-    cartMessage.style.display = "block";
-    setTimeout(() => {
-      cartMessage.style.display = "none";
-    }, 2000);
+    const cartMessage = document.getElementById("cart-message");
+    if (cartMessage) {
+      cartMessage.textContent = "✅ Added to cart!";
+      cartMessage.style.display = "block";
+      setTimeout(() => {
+        cartMessage.style.display = "none";
+      }, 2000);
+    }
   }
-}
-
-
 
   // 🔹 زرار Checkout
   if (checkoutBtn) {

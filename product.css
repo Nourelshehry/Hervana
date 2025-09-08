@@ -1,0 +1,125 @@
+/* ===== Product Page Layout ===== */
+.product-page {
+  padding: 40px 20px;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+/* ===== Images Section ===== */
+.product-images {
+  flex: 1 1 400px;
+}
+
+.product-images #main-image {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.image-thumbs {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.image-thumbs img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, border 0.2s;
+}
+
+.image-thumbs img:hover {
+  transform: scale(1.05);
+  border: 2px solid #c0392b;
+}
+
+/* ===== Product Details ===== */
+.product-details {
+  flex: 1 1 400px;
+}
+
+.product-details h1 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #c0392b;
+}
+
+.product-details p {
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.product-details .price {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.in-stock {
+  color: green;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: red;
+  font-weight: bold;
+}
+
+/* ===== Quantity Box ===== */
+.quantity-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.quantity-box input {
+  width: 70px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+/* ===== Buttons ===== */
+.add-to-cart {
+  display: inline-block;
+  padding: 15px 25px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.add-to-cart:hover {
+  background: #a93226;
+}
+
+.back-btn {
+  display: inline-block;
+  padding: 10px 18px;
+  background: #ffb6c1;
+  color: #333;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  margin-right: 20px;
+  transition: background 0.3s;
+}
+
+.back-btn:hover {
+  background: #f1948a;
+}
