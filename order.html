@@ -6,54 +6,56 @@
   <title>Complete Your Order - Hervana</title>
   <link rel="stylesheet" href="all-products.css"/>
   <style>
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}    /* Thank You Overlay */
-#thank-you {
-  position: fixed;
-  inset: 0; /* = top:0; right:0; bottom:0; left:0 */
-  width: 100vw;
-  height: 100vh;
-  background: rgba(255, 182, 193, 0.95); /* بينك شفاف */
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999999; /* يغطي أي عنصر */
-  text-align: center;
-  padding: 20px;
-  transition: opacity 0.3s ease-in-out;
-  opacity: 0;
-}
-#thank-you.show {
-  display: flex;
-  opacity: 1;
-}
-    
-#thank-you h2 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-  color: #c0392b;
-}
-#thank-you p {
-  font-size: 1.3em;
-  margin-bottom: 20px;
-}
-#thank-you button {
-  padding: 12px 25px;
-  background: #c0392b;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-#thank-you button:hover {
-  background: #a93226;
-}
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Thank You Overlay */
+    #thank-you {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 182, 193, 0.95); /* بينك شفاف */
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999999999;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.3s ease-in-out;
+      opacity: 0;
+    }
+    #thank-you.show {
+      display: flex;
+      opacity: 1;
+    }
+    #thank-you h2 {
+      font-size: 2.5em;
+      margin-bottom: 10px;
+      color: #c0392b;
+    }
+    #thank-you p {
+      font-size: 1.3em;
+      margin-bottom: 20px;
+    }
+    #thank-you button {
+      padding: 12px 25px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    #thank-you button:hover {
+      background: #a93226;
+    }
 
     .order-container {
       max-width: 500px;
@@ -95,11 +97,34 @@ html, body {
       border-radius: 6px;
       cursor: pointer;
       font-size: 16px;
+      width: 100%;
     }
     button[type="submit"]:hover {
       background: #a93226;
     }
-  
+
+    /* Shipping options */
+    .shipping-options {
+      margin-top: 15px;
+      text-align: left;
+    }
+    .shipping-option {
+      display: block;
+      background: #ffe6f0;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-weight: bold;
+      color: #c0392b;
+    }
+    .shipping-option:hover {
+      background: #ffccd9;
+    }
+    .shipping-option input {
+      margin-right: 8px;
+    }
   </style>
 </head>
 <body>
@@ -139,15 +164,30 @@ html, body {
         <h3>Order Summary</h3>
         <ul id="order-summary"></ul>
         <p id="order-total"></p>
+
+        <!-- Shipping Options -->
+        <div class="shipping-options">
+          <h4>Choose Shipping</h4>
+          <label class="shipping-option">
+            <input type="radio" name="shipping" value="50" required>
+            Inside Obour (50 EGP)
+          </label>
+          <label class="shipping-option">
+            <input type="radio" name="shipping" value="75">
+            Outside Obour (75 EGP)
+          </label>
+        </div>
+
+        <!-- Total with Shipping -->
+        <p id="final-total" style="font-weight:bold; margin-top:10px;"></p>
       </div>
 
       <button type="submit">Confirm Order</button>
     </form>
-
   </div>
 </section>
 
-<!-- Thank You Message لازم تبقى برا الكونتينر -->
+<!-- Thank You Message -->
 <div id="thank-you" class="thank-you hidden">
   <h2>🎉 Thank You!</h2>
   <p>Your order has been received ❤️!</p>
@@ -167,7 +207,9 @@ html, body {
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
+  const finalTotalElem = document.getElementById("final-total");
   let total = 0;
+  let shippingCost = 0;
 
   // عرض تفاصيل الأوردر
   if (cart.length === 0) {
@@ -180,11 +222,24 @@ html, body {
       total += item.price * item.quantity;
     });
   }
-  totalElem.textContent = `Total: $${total.toFixed(2)}`;
+  totalElem.textContent = `Products Total: $${total.toFixed(2)}`;
+
+  // تحديث final total مع الشحن
+  document.querySelectorAll('input[name="shipping"]').forEach(input => {
+    input.addEventListener("change", (e) => {
+      shippingCost = parseFloat(e.target.value);
+      finalTotalElem.textContent = `Final Total: $${(total + shippingCost).toFixed(2)}`;
+    });
+  });
 
   // عند Confirm Order
   document.getElementById("order-form").addEventListener("submit", (e) => {
     e.preventDefault();
+
+    if (!shippingCost) {
+      alert("Please select a shipping option!");
+      return;
+    }
 
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
@@ -199,7 +254,8 @@ html, body {
       email,
       address,
       items,
-      total: total.toFixed(2)
+      total: (total + shippingCost).toFixed(2),
+      shipping: shippingCost
     };
 
     // تخزين الأوردر في localStorage
@@ -220,13 +276,11 @@ html, body {
     // إظهار رسالة شكراً
     document.getElementById("order-form").style.display = "none";
     document.getElementById("thank-you").classList.add("show");
-document.getElementById("thank-you").classList.add("show");
-document.querySelector("header").style.display = "none";
-document.querySelector("footer").style.display = "none";
-      
-  
+    document.querySelector("header").style.display = "none";
+    document.querySelector("footer").style.display = "none";
   });
 </script>
 
 </body>
 </html>
+
