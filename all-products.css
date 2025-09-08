@@ -190,6 +190,21 @@ footer a:hover {
   margin-top: 0;
   color: #c0392b;
 }
+/* Cart item quantity buttons */
+.cart-item button {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  margin: 0 5px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.cart-item button:hover {
+  background: #a93226;
+}
 
 #cart-items {
   list-style: none;
