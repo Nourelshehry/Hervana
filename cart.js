@@ -91,15 +91,17 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // 🔹 رسالة Added to Cart
-  function showAddedMessage(productName) {
-    const msg = document.createElement("div");
-    msg.className = "added-msg";
-    msg.textContent = `${productName} added to cart!`;
-    document.body.appendChild(msg);
+  function showThankYouMessage(text = "Added to cart! ❤️") {
+  const thankYou = document.getElementById("thank-you");
+  if (thankYou) {
+    thankYou.textContent = text;
+    thankYou.style.display = "block";
     setTimeout(() => {
-      msg.remove();
+      thankYou.style.display = "none";
     }, 2000);
   }
+}
+
 
   // 🔹 زرار Checkout
   if (checkoutBtn) {
