@@ -11,35 +11,46 @@
       padding: 0;
       height: 100%;
       font-family: Arial, sans-serif;
+      background: #fdfdfd;
     }
 
-    /* Thank You Overlay */
+    /* ========== THANK YOU OVERLAY ========== */
     #thank-you {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(255, 182, 193, 0.95); /* بينك فاتح */
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 182, 193, 0.9); /* بينك شفاف */
       display: none;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      z-index: 999999999;
+      z-index: 999999;
       text-align: center;
       padding: 20px;
-      transition: opacity 0.3s ease-in-out;
       opacity: 0;
+      transition: opacity 0.3s ease-in-out;
     }
     #thank-you.show {
       display: flex;
       opacity: 1;
     }
+    #thank-you .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
+      width: 90%;
+    }
     #thank-you h2 {
-      font-size: 2.5em;
+      font-size: 2em;
       margin-bottom: 10px;
       color: #c0392b;
     }
     #thank-you p {
-      font-size: 1.3em;
+      font-size: 1.2em;
       margin-bottom: 20px;
+      color: #444;
     }
     #thank-you button {
       padding: 12px 25px;
@@ -55,6 +66,7 @@
       background: #a93226;
     }
 
+    /* ========== ORDER CONTAINER ========== */
     .order-container {
       max-width: 500px;
       margin: 40px auto;
@@ -81,12 +93,15 @@
       border: 1px solid #ccc;
       font-size: 14px;
     }
+
+    /* ========== ORDER SUMMARY ========== */
     .order-summary-box {
       background: #ffe6f0;
       padding: 15px;
       border-radius: 8px;
       margin: 20px 0;
     }
+
     button[type="submit"] {
       background: #c0392b;
       color: #fff;
@@ -101,26 +116,37 @@
       background: #a93226;
     }
 
-    /* Shipping options */
+    /* ========== SHIPPING OPTIONS AS CARDS ========== */
     .shipping-options {
-      margin-top: 15px;
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
     }
     .shipping-option {
-      display: block;
-      background: #ffccdc;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 8px;
+      flex: 1;
+      border: 2px solid #ffb6c1;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
       cursor: pointer;
+      background: #fff;
+      transition: all 0.3s ease;
       font-weight: bold;
       color: #c0392b;
-      transition: background 0.3s;
+      position: relative;
     }
     .shipping-option:hover {
-      background: #ffb3c9;
+      background: #ffe6f0;
     }
     .shipping-option input {
-      margin-right: 8px;
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .shipping-option.selected {
+      border-color: #c0392b;
+      background: #ffe6f0;
+      box-shadow: 0 0 10px rgba(192,57,43,0.3);
     }
   </style>
 </head>
@@ -161,22 +187,18 @@
         <h3>Order Summary</h3>
         <ul id="order-summary"></ul>
         <p id="order-total"></p>
+      </div>
 
-        <!-- Shipping Options -->
-        <div class="shipping-options">
-          <h4>Choose Shipping</h4>
-          <label class="shipping-option">
-            <input type="radio" name="shipping" value="50" required>
-            Inside Obour (50 EGP)
-          </label>
-          <label class="shipping-option">
-            <input type="radio" name="shipping" value="75">
-            Outside Obour (75 EGP)
-          </label>
-        </div>
-
-        <!-- Final Total -->
-        <p id="final-total" style="font-weight:bold; margin-top:10px;"></p>
+      <!-- Shipping Options -->
+      <div class="shipping-options">
+        <label class="shipping-option" data-price="50">
+          <input type="radio" name="shipping" value="inside" required>
+          Inside Obour <br> +50 EGP
+        </label>
+        <label class="shipping-option" data-price="75">
+          <input type="radio" name="shipping" value="outside" required>
+          Outside Obour <br> +75 EGP
+        </label>
       </div>
 
       <button type="submit">Confirm Order</button>
@@ -186,9 +208,11 @@
 
 <!-- Thank You Message -->
 <div id="thank-you">
-  <h2>🎉 Thank You!</h2>
-  <p>Your order has been received ❤️</p>
-  <button onclick="window.location.href='index.html'">Back to Home</button>
+  <div class="card">
+    <h2>🎉 Thank You!</h2>
+    <p>Your order has been received ❤️</p>
+    <button onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
 </div>
 
 <footer>
@@ -198,49 +222,51 @@
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-  emailjs.init("YOUR_USER_ID"); // حطي الـ ID بتاعك
+  // init EmailJS
+  emailjs.init("YOUR_USER_ID"); // استبدليها بالـ User ID من EmailJS
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
-  const finalTotalElem = document.getElementById("final-total");
   let total = 0;
-  let shippingCost = 0;
 
+  // عرض تفاصيل الأوردر
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
     cart.forEach(item => {
       const li = document.createElement("li");
-      li.textContent = `${item.name} - EGP ${item.price} x${item.quantity}`;
+      li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
       summary.appendChild(li);
       total += item.price * item.quantity;
     });
   }
-  totalElem.textContent = `Products Total: EGP ${total.toFixed(2)}`;
+  totalElem.textContent = `Total: $${total.toFixed(2)}`;
 
-  // تحديث الـ Final Total لما يختار الشحن
-  document.querySelectorAll('input[name="shipping"]').forEach(input => {
-    input.addEventListener("change", (e) => {
-      shippingCost = parseFloat(e.target.value);
-      finalTotalElem.textContent = `Final Total: EGP ${(total + shippingCost).toFixed(2)}`;
+  // Shipping options logic
+  const shippingOptions = document.querySelectorAll(".shipping-option");
+  let shippingCost = 0;
+  shippingOptions.forEach(option => {
+    option.addEventListener("click", () => {
+      shippingOptions.forEach(o => o.classList.remove("selected"));
+      option.classList.add("selected");
+      shippingCost = parseFloat(option.dataset.price);
+      totalElem.textContent = `Total: $${total.toFixed(2)} + ${shippingCost} EGP (Shipping)`;
     });
   });
 
+  // عند Confirm Order
   document.getElementById("order-form").addEventListener("submit", (e) => {
     e.preventDefault();
-
-    if (!shippingCost) {
-      alert("Please select a shipping option!");
-      return;
-    }
 
     const name = document.getElementById("name").value;
     const phone = document.getElementById("phone").value;
     const email = document.getElementById("email").value;
     const address = document.getElementById("address").value;
 
-    const items = cart.map(item => `${item.name} x${item.quantity} - EGP ${item.price}`).join(", ");
+    const items = cart.map(item => `${item.name} x${item.quantity} - $${item.price}`).join(", ");
+
+    const finalTotal = total + shippingCost;
 
     const orderData = {
       name,
@@ -248,24 +274,29 @@
       email,
       address,
       items,
-      total: (total + shippingCost).toFixed(2),
-      shipping: shippingCost
+      total: finalTotal.toFixed(2)
     };
 
+    // تخزين الأوردر في localStorage
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
     orders.push({ ...orderData, date: new Date().toLocaleString() });
     localStorage.setItem("orders", JSON.stringify(orders));
 
+    // إرسال إيميل بالـ EmailJS
     emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
-      .then(() => console.log("✅ Confirmation email sent!"))
+      .then(() => {
+        console.log("✅ Confirmation email sent!");
+      })
       .catch((err) => console.error("❌ Failed to send email:", err));
 
+    // تصفير الكارت
     localStorage.removeItem("cart");
 
+    // إخفاء كل حاجة وإظهار رسالة شكراً
     document.getElementById("order-form").style.display = "none";
-    document.getElementById("thank-you").classList.add("show");
     document.querySelector("header").style.display = "none";
     document.querySelector("footer").style.display = "none";
+    document.getElementById("thank-you").classList.add("show");
   });
 </script>
 
