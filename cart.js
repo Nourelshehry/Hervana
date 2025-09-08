@@ -60,7 +60,7 @@ function addToCart(productName, price) {
     cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
   }
   renderCart();
-  showThankYouMessage(`${productName} added to cart ❤️`);
+  showCartMessage()
 }
   
   
