@@ -355,31 +355,25 @@ footer a:hover {
 }
 
 /* Unified Added to Cart Message */
-#cart-message {
+.cart-message {
+  display: none; /* 👈 أهم حاجة */
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 20px 30px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  font-size: 1.1rem;
+  bottom: 20px;
+  right: 20px;
+  background: #4caf50;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
   font-weight: bold;
-  color: #444;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   z-index: 1000;
-  display: none;
-  animation: fadeIn 0.3s ease-out;
+  animation: fadeInOut 2s ease-in-out;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(10px); }
 }
