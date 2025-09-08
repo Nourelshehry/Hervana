@@ -436,3 +436,16 @@ footer a:hover {
   }
 }
 }
+
+.view-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #c0392b;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+.view-btn:hover {
+  background: #a93226;
+}
