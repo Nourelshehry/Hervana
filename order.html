@@ -7,39 +7,51 @@
   <link rel="stylesheet" href="all-products.css"/>
   <style>
     /* Thank You Overlay */
-    #thank-you {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 182, 193, 0.95); /* بينك فاتح شفاف */
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 5000;
-      text-align: center;
-      padding: 20px;
-    }
-    #thank-you.show { display: flex; }
-    #thank-you h2 {
-      font-size: 2em;
-      margin-bottom: 10px;
-      color: #c0392b;
-    }
-    #thank-you p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
-    #thank-you button {
-      padding: 12px 25px;
-      background: #c0392b;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+/* Thank You Overlay */
+#thank-you {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 182, 193, 0.95); /* بينك فاتح شفاف */
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  text-align: center;
+  padding: 20px;
+  transition: opacity 0.3s ease-in-out; /* ✨ انيميشن ناعم */
+  opacity: 0;
+}
+#thank-you.show {
+  display: flex;
+  opacity: 1;
+}
+#thank-you h2 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+  color: #c0392b;
+}
+#thank-you p {
+  font-size: 1.3em;
+  margin-bottom: 20px;
+}
+#thank-you button {
+  padding: 12px 25px;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s;
+}
+#thank-you button:hover {
+  background: #a93226;
+}
+
     .order-container {
       max-width: 500px;
       margin: 40px auto;
