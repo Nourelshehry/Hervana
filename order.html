@@ -15,36 +15,38 @@
     }
 
     /* ========== THANK YOU OVERLAY ========== */
-    #thank-you {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(255, 182, 193, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999999;
-      text-align: center;
-      padding: 20px;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
+  /* Thank You Overlay */
+#thank-you {
+  position: fixed;
+  inset: 0;
+  display: flex;              /* يخليها Flex */
+  justify-content: center;    /* أفقي في النص */
+  align-items: center;        /* رأسي في النص */
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 182, 193, 0.9);
+  z-index: 999999;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;       /* يمنع أي ضغط قبل الظهور */
+}
 
-    #thank-you.show {
-      display: flex;
-      opacity: 1;
-    }
+#thank-you.show {
+  opacity: 1;
+  pointer-events: auto;       /* لما يظهر يتفاعل */
+}
 
-    #thank-you .thank-card {
-      background: #fff;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-      max-width: 400px;
-      width: 90%;
-      animation: popIn 0.4s ease;
-    }
+#thank-you .thank-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  max-width: 400px;
+  width: 90%;
+  animation: popIn 0.4s ease;
+}
+
 
     #thank-you h2 {
       font-size: 2em;
