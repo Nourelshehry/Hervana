@@ -60,7 +60,7 @@ function addToCart(productName, price) {
     cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
   }
   renderCart();
-  showCartMessage()
+  showCartMessage();
 }
   
   
@@ -89,7 +89,6 @@ function addToCart(productName, price) {
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
       addToCart(name, price);
-showCartMessage();
 
     });
   });
