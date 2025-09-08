@@ -16,20 +16,21 @@
 
     /* ========== THANK YOU OVERLAY ========== */
     #thank-you {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(255, 182, 193, 0.9); /* بينك شفاف */
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999999;
-      text-align: center;
-      padding: 20px;
-      opacity: 0;
-      transition: opacity 0.3s ease-in-out;
-    }
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;   /* بدل 100vw */
+  background: rgba(255, 182, 193, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+  text-align: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
     #thank-you.show {
       display: flex;
       opacity: 1;
