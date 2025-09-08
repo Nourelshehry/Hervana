@@ -240,7 +240,11 @@ footer a:hover {
   .logo {
     order: 1;
   }
-
+/* اضيفي دا تحت الـ Mobile media query */
+.nav-links.show {
+  display: flex !important;
+}
+  
   .menu-cart {
     order: 2;
     display: flex;
