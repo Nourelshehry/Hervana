@@ -405,65 +405,8 @@ footer a:hover {
 }
 
 
-/* Thank You Message */
-.thank-you-message {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
-  padding: 30px 40px;
-  border-radius: 12px;
-  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
-  text-align: center;
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #444;
-  z-index: 1000;
-  animation: fadeIn 0.3s ease-out;
-}
 
-/* Animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translate(-50%, -60%);
-  }
-  to {
-    opacity: 1;
-    transform: translate(-50%, -50%);
-  }
-}
-
-
-  /* Unified Added to Cart Message */
-.cart-message {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #4caf50; /* أخضر مبهج */
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 500;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  display: none;
-  z-index: 2000;
-  animation: slideIn 0.3s ease-out;
-}
-
-/* Animation */
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+  
   /* Unified Added to Cart Message */
 .cart-message {
   position: fixed;
