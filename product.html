@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - Hervana</title>
+  <link rel="stylesheet" href="all-products.css"/>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #fdfdfd;
+    }
+
+    header {
+      background: #c0392b;
+      padding: 15px;
+      text-align: center;
+    }
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .product-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    .product-container img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    .product-container h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #c0392b;
+    }
+    .product-container p {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: #555;
+    }
+    .price {
+      font-size: 1.4rem;
+      color: #000;
+      font-weight: bold;
+      margin: 15px 0;
+    }
+    #stock-status {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+    .in-stock {
+      color: green;
+    }
+    .out-stock {
+      color: red;
+    }
+
+    button {
+      padding: 12px 20px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background: #a93226;
+    }
+    button:disabled {
+      background: gray;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html">Hervana</a>
+</header>
+
+<section class="product-container">
+  <img id="product-image" src="" alt="Product">
+  <h1 id="product-name"></h1>
+  <p id="product-description"></p>
+  <p class="price" id="product-price"></p>
+  <p id="stock-status"></p>
+  <button id="add-to-cart">Add to Cart</button>
+</section>
+
+<script>
+  // لو في منتجات متخزنة في localStorage نستخدمها، لو مش موجودة نستعمل الداتا الأساسية
+  let products = JSON.parse(localStorage.getItem("products")) || [
+    {id: 1, name: "Rose Candle", price: 200, description: "Beautifully scented rose candle.", image: "images/product1.jpg", stock: 3},
+    {id: 2, name: "Lavender Diffuser", price: 300, description: "Relaxing lavender home diffuser.", image: "images/product2.jpg", stock: 2},
+    {id: 3, name: "Vanilla Soap", price: 150, description: "Handmade vanilla soap bar.", image: "images/product3.jpg", stock: 0}
+  ];
+
+  // نجيب id المنتج من الرابط
+  const params = new URLSearchParams(window.location.search);
+  const productId = parseInt(params.get("id"));
+  const product = products.find(p => p.id === productId);
+
+  const imgElem = document.getElementById("product-image");
+  const nameElem = document.getElementById("product-name");
+  const descElem = document.getElementById("product-description");
+  const priceElem = document.getElementById("product-price");
+  const stockElem = document.getElementById("stock-status");
+  const btn = document.getElementById("add-to-cart");
+
+  if (product) {
+    imgElem.src = product.image;
+    nameElem.textContent = product.name;
+    descElem.textContent = product.description;
+    priceElem.textContent = `Price: ${product.price} EGP`;
+
+    if (product.stock > 0) {
+      stockElem.textContent = `In Stock: ${product.stock}`;
+      stockElem.classList.add("in-stock");
+    } else {
+      stockElem.textContent = "Out of Stock";
+      stockElem.classList.add("out-stock");
+      btn.disabled = true;
+    }
+
+    btn.addEventListener("click", () => {
+      if (product.stock > 0) {
+        // قللي المخزون واحد
+        product.stock -= 1;
+
+        // ضيفي المنتج للكارت
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existing = cart.find(item => item.id === product.id);
+        if (existing) {
+          existing.quantity += 1;
+        } else {
+          cart.push({...product, quantity: 1});
+        }
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        // حفظ المخزون الجديد
+        localStorage.setItem("products", JSON.stringify(products));
+
+        // تحديث حالة الواجهة
+        if (product.stock > 0) {
+          stockElem.textContent = `In Stock: ${product.stock}`;
+        } else {
+          stockElem.textContent = "Out of Stock";
+          stockElem.classList.remove("in-stock");
+          stockElem.classList.add("out-stock");
+          btn.disabled = true;
+        }
+
+        alert("✅ Added to cart!");
+      }
+    });
+  } else {
+    document.querySelector(".product-container").innerHTML = "<p>❌ Product not found.</p>";
+  }
+</script>
+
+</body>
+</html>

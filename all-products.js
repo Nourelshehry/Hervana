@@ -34,6 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
   if (categorySelect) categorySelect.addEventListener("change", filterProducts);
   if (searchInput) searchInput.addEventListener("input", filterProducts);
 
-
+});
 
   
