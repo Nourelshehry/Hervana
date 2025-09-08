@@ -346,26 +346,6 @@ footer a:hover {
   .hero-content p { font-size:16px; }
   .search-bar { width:80%; font-size:14px; }
 }
-#checkout-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #c0392b, #e75480); /* أحمر + بينك */
-  color: #fff;
-  border: none;
-  border-radius: 30px; /* زرار دائري ناعم */
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
-}
-
-#checkout-btn:hover {
-  background: linear-gradient(135deg, #e75480, #c0392b); /* عكس التدرج */
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-}
 
 
 /* =================== Desktop =================== */
@@ -392,4 +372,24 @@ footer a:hover {
   color: #ff99cc;
   transform: scale(1.1);
   transition: all 0.2s ease-in-out;
+}
+#checkout-btn {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #c0392b, #e75480); /* أحمر + بينك */
+  color: #fff;
+  border: none;
+  border-radius: 30px; /* زرار دائري ناعم */
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+}
+
+#checkout-btn:hover {
+  background: linear-gradient(135deg, #e75480, #c0392b); /* عكس التدرج */
+  transform: scale(1.05);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
