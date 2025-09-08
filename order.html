@@ -16,10 +16,8 @@
     /* Thank You Overlay */
     #thank-you {
       position: fixed;
-      inset: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(255, 182, 193, 0.95); /* بينك شفاف */
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(255, 182, 193, 0.95); /* بينك فاتح */
       display: none;
       flex-direction: column;
       justify-content: center;
@@ -106,21 +104,20 @@
     /* Shipping options */
     .shipping-options {
       margin-top: 15px;
-      text-align: left;
     }
     .shipping-option {
       display: block;
-      background: #ffe6f0;
+      background: #ffccdc;
       padding: 10px;
       border-radius: 8px;
       margin-bottom: 8px;
       cursor: pointer;
-      transition: 0.3s;
       font-weight: bold;
       color: #c0392b;
+      transition: background 0.3s;
     }
     .shipping-option:hover {
-      background: #ffccd9;
+      background: #ffb3c9;
     }
     .shipping-option input {
       margin-right: 8px;
@@ -178,7 +175,7 @@
           </label>
         </div>
 
-        <!-- Total with Shipping -->
+        <!-- Final Total -->
         <p id="final-total" style="font-weight:bold; margin-top:10px;"></p>
       </div>
 
@@ -188,9 +185,9 @@
 </section>
 
 <!-- Thank You Message -->
-<div id="thank-you" class="thank-you hidden">
+<div id="thank-you">
   <h2>🎉 Thank You!</h2>
-  <p>Your order has been received ❤️!</p>
+  <p>Your order has been received ❤️</p>
   <button onclick="window.location.href='index.html'">Back to Home</button>
 </div>
 
@@ -201,8 +198,7 @@
 <!-- EmailJS -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-  // init EmailJS
-  emailjs.init("YOUR_USER_ID"); // استبدليها بالـ User ID من EmailJS
+  emailjs.init("YOUR_USER_ID"); // حطي الـ ID بتاعك
 
   const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
@@ -211,28 +207,26 @@
   let total = 0;
   let shippingCost = 0;
 
-  // عرض تفاصيل الأوردر
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
     cart.forEach(item => {
       const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
+      li.textContent = `${item.name} - EGP ${item.price} x${item.quantity}`;
       summary.appendChild(li);
       total += item.price * item.quantity;
     });
   }
-  totalElem.textContent = `Products Total: $${total.toFixed(2)}`;
+  totalElem.textContent = `Products Total: EGP ${total.toFixed(2)}`;
 
-  // تحديث final total مع الشحن
+  // تحديث الـ Final Total لما يختار الشحن
   document.querySelectorAll('input[name="shipping"]').forEach(input => {
     input.addEventListener("change", (e) => {
       shippingCost = parseFloat(e.target.value);
-      finalTotalElem.textContent = `Final Total: $${(total + shippingCost).toFixed(2)}`;
+      finalTotalElem.textContent = `Final Total: EGP ${(total + shippingCost).toFixed(2)}`;
     });
   });
 
-  // عند Confirm Order
   document.getElementById("order-form").addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -246,7 +240,7 @@
     const email = document.getElementById("email").value;
     const address = document.getElementById("address").value;
 
-    const items = cart.map(item => `${item.name} x${item.quantity} - $${item.price}`).join(", ");
+    const items = cart.map(item => `${item.name} x${item.quantity} - EGP ${item.price}`).join(", ");
 
     const orderData = {
       name,
@@ -258,22 +252,16 @@
       shipping: shippingCost
     };
 
-    // تخزين الأوردر في localStorage
     let orders = JSON.parse(localStorage.getItem("orders")) || [];
     orders.push({ ...orderData, date: new Date().toLocaleString() });
     localStorage.setItem("orders", JSON.stringify(orders));
 
-    // إرسال إيميل بالـ EmailJS
     emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
-      .then(() => {
-        console.log("✅ Confirmation email sent!");
-      })
+      .then(() => console.log("✅ Confirmation email sent!"))
       .catch((err) => console.error("❌ Failed to send email:", err));
 
-    // تصفير الكارت
     localStorage.removeItem("cart");
 
-    // إظهار رسالة شكراً
     document.getElementById("order-form").style.display = "none";
     document.getElementById("thank-you").classList.add("show");
     document.querySelector("header").style.display = "none";
@@ -283,4 +271,3 @@
 
 </body>
 </html>
-
