@@ -227,29 +227,6 @@ footer a:hover {
   cursor: pointer;
 }
 
-/* Added to cart message */
-.cart-message {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #ffb6c1; /* وردي */
-  color: #c0392b;
-  padding: 12px 20px;
-  border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  display: none;
-  z-index: 3000;
-  font-weight: bold;
-  animation: fadeInOut 2.5s ease forwards;
-}
-
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(-10px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(-10px); }
-}
-
 /* =================== Mobile =================== */
 @media (max-width: 768px) {
   .logo {
@@ -388,27 +365,6 @@ footer a:hover {
 .hidden {
   display: none;
 }
-.added-message {
-  position: fixed;
-  bottom: -60px; /* تبدأ مختفية تحت */
-  right: 20px;
-  background: #e75480; /* 🌸 بينك غامق شيك */
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: bold;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  opacity: 0;
-  transition: all 0.4s ease;
-  z-index: 3000;
-}
-
-.added-message.show {
-  bottom: 20px; /* تطلع فوق */
-  opacity: 1;
-}
-}
 /* =================== Desktop =================== */
 @media (min-width: 769px) {
   .menu-toggle {
@@ -479,3 +435,61 @@ footer a:hover {
   }
 }
 
+
+  /* Unified Added to Cart Message */
+.cart-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50; /* أخضر مبهج */
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 2000;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+  /* Unified Added to Cart Message */
+.cart-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #4caf50; /* أخضر مبهج */
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 2000;
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+  
