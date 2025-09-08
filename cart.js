@@ -89,20 +89,22 @@ function addToCart(productName, price) {
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
       addToCart(name, price);
+showCartMessage();
+
     });
   });
 
   // 🔹 رسالة Added to Cart
-  function showThankYouMessage(text = "Added to cart! ❤️") {
-  const thankYou = document.getElementById("thank-you");
-  if (thankYou) {
-    thankYou.textContent = text;
-    thankYou.style.display = "block";
+  function showCartMessage() {
+  const cartMessage = document.getElementById("cart-message");
+  if (cartMessage) {
+    cartMessage.style.display = "block";
     setTimeout(() => {
-      thankYou.style.display = "none";
+      cartMessage.style.display = "none";
     }, 2000);
   }
 }
+
 
 
   // 🔹 زرار Checkout
