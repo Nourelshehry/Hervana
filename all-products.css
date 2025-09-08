@@ -147,6 +147,12 @@ margin-top: 15px;
   border: none;
   cursor: pointer;
   font-weight: bold;
+  width: 50%;
+  border-radius: 4px;
+  }
+
+  .product-card button:hover {
+  background: #a93226;
 }
 
 /* Footer */
@@ -439,12 +445,18 @@ footer a:hover {
 
 .view-btn {
   display: inline-block;
-  padding: 10px 20px;
+  padding: 10px 15px;   /* نفس مقاس add-to-cart */
+  margin: 5px 5px 0 0; /* نفس المسافة */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 14px;
   background: #c0392b;
   color: #fff;
-  border-radius: 6px;
-  text-decoration: none;
   transition: background 0.3s;
+  width: 50%;
+  font-weight: bold;
 }
 .view-btn:hover {
   background: #a93226;

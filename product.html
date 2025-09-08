@@ -27,6 +27,15 @@
       font-size: 1.5em;
       font-weight: bold;
     }
+    header nav a {
+      margin-left: 15px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    header nav a:hover {
+      text-decoration: underline;
+    }
 
     /* ===== Product Section ===== */
     .product-details {
@@ -88,22 +97,36 @@
       margin-bottom: 20px;
     }
 
-    /* ===== Add to Cart Button ===== */
-    #add-to-cart {
+    /* ===== Buttons ===== */
+    .btn {
+      display: inline-block;
+      padding: 12px 20px;
       background: #c0392b;
       color: #fff;
-      padding: 12px 20px;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       font-size: 16px;
+      text-decoration: none;
+      text-align: center;
+      transition: background 0.3s;
+      width: 100%;
+      margin-bottom: 10px;
     }
-    #add-to-cart:disabled {
+    .btn:hover {
+      background: #a93226;
+    }
+    .btn:disabled {
       background: #aaa;
       cursor: not-allowed;
     }
-    #add-to-cart:hover:not(:disabled) {
-      background: #a93226;
+    .btn-secondary {
+      background: #bdc3c7;
+      color: #2c3e50;
+      width: 92%;
+    }
+    .btn-secondary:hover {
+      background: #95a5a6;
     }
 
     /* ===== Cart Message ===== */
@@ -136,6 +159,10 @@
   <!-- ===== HEADER ===== -->
   <header>
     <div class="logo"><a href="index.html">Hervana</a></div>
+    <nav>
+      <a href="all-products.html">Products</a>
+      <a href="cart.html">Cart 🛒</a>
+    </nav>
   </header>
 
   <!-- ===== PRODUCT DETAILS ===== -->
@@ -150,7 +177,9 @@
       <p id="product-description"></p>
       <p class="price">Price: <span id="product-price"></span> EGP</p>
       <p id="product-stock"></p>
-      <button id="add-to-cart" disabled>Add to Cart</button>
+
+      <button id="add-to-cart" class="btn" disabled>Add to Cart</button>
+      <a href="all-products.html" class="btn btn-secondary">← Back to Products</a>
     </div>
   </section>
 
@@ -226,7 +255,7 @@
 
         // Show message
         const message = document.getElementById("cart-message");
-        message.textContent = `${product.name} added to cart!❤️`;
+        message.textContent = `${product.name} added to cart!`;
         message.style.display = "block";
         setTimeout(() => {
           message.style.display = "none";
@@ -234,6 +263,9 @@
       });
     }
   </script>
-
+<!-- Scripts -->
+<script src="cart.js"></script>
+<script src="all-products.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
