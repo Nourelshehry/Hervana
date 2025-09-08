@@ -60,7 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
       cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
     }
     renderCart();
-    showAddedMessage(productName);
+    showThankYouMessage("Added to cart! ❤️");
+    
   }
 
   // 🔹 التحكم في الكمية
