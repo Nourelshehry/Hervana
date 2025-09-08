@@ -356,24 +356,29 @@ footer a:hover {
 
 /* Unified Added to Cart Message */
 .cart-message {
-  display: none; /* 👈 أهم حاجة */
   position: fixed;
-  bottom: 20px;
+  top: 20px;
   right: 20px;
-  background: #4caf50;
+  background: #4caf50; /* أخضر مبهج */
   color: #fff;
-  padding: 12px 18px;
+  padding: 12px 20px;
   border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: bold;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  z-index: 1000;
-  animation: fadeInOut 2s ease-in-out;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  display: none;
+  z-index: 2000;
+  animation: slideIn 0.3s ease-out;
 }
 
-@keyframes fadeInOut {
-  0% { opacity: 0; transform: translateY(10px); }
-  10% { opacity: 1; transform: translateY(0); }
-  90% { opacity: 1; transform: translateY(0); }
-  100% { opacity: 0; transform: translateY(10px); }
+/* Animation */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
