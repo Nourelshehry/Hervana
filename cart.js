@@ -51,16 +51,19 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
-  // 🔹 إضافة منتج للكارت
-  function addToCart(productName, price) {
-    const existing = cart.find((item) => item.name === productName);
-    if (existing) {
-      existing.quantity++;
-    } else {
-      cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
-    }
-    renderCart()
+// 🔹 إضافة منتج للكارت
+function addToCart(productName, price) {
+  const existing = cart.find((item) => item.name === productName);
+  if (existing) {
+    existing.quantity++;
+  } else {
+    cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
   }
+  renderCart();
+  showThankYouMessage(`${productName} added to cart ❤️`);
+}
+  
+  
 
   // 🔹 التحكم في الكمية
   if (cartItems) {
