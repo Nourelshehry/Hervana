@@ -447,3 +447,35 @@ footer a:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 16px rgba(0,0,0,0.3);
 }
+
+
+/* Thank You Message */
+.thank-you-message {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #444;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -60%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
