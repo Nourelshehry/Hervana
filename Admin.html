@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Orders</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ffe6f0;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #c0392b;
+    }
+    .actions {
+      text-align: center;
+      margin-top: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th {
+      background: #c0392b;
+      color: #fff;
+      padding: 10px;
+      text-align: left;
+    }
+    td {
+      padding: 10px;
+      vertical-align: top;
+    }
+    .empty {
+      text-align: center;
+      margin-top: 50px;
+      color: #777;
+    }
+    button {
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin: 5px;
+    }
+    button:hover {
+      background: #a93226;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📦 Orders Dashboard</h1>
+
+  <div class="actions">
+    <button onclick="downloadCSV()">⬇️ Download CSV</button>
+  </div>
+
+  <div id="orders-container"></div>
+
+  <script>
+    function renderOrders() {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      const container = document.getElementById("orders-container");
+
+      if (orders.length === 0) {
+        container.innerHTML = "<p class='empty'>No orders found.</p>";
+        return;
+      }
+
+      let table = `
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Items</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      orders.forEach(order => {
+        table += `
+          <tr>
+            <td>${order.date}</td>
+            <td>${order.from_name}</td>
+            <td>${order.from_phone}</td>
+            <td>${order.from_email || "-"}</td>
+            <td>${order.from_address}</td>
+            <td><pre>${order.order_items}</pre></td>
+            <td>$${order.order_total}</td>
+          </tr>
+        `;
+      });
+
+      table += "</tbody></table>";
+      container.innerHTML = table;
+    }
+
+    function downloadCSV() {
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      if (orders.length === 0) {
+        alert("No orders to download!");
+        return;
+      }
+
+      const headers = ["Date","Name","Phone","Email","Address","Items","Total"];
+      const rows = orders.map(o => [
+        `"${o.date}"`,
+        `"${o.from_name}"`,
+        `"${o.from_phone}"`,
+        `"${o.from_email || "-"}"`,
+        `"${o.from_address}"`,
+        `"${o.order_items.replace(/\n/g, "; ")}"`,
+        `"${o.order_total}"`
+      ]);
+
+      let csvContent = headers.join(",") + "\n" + rows.map(r => r.join(",")).join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "orders.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    renderOrders();
+  </script>
+
+</body>
+</html>

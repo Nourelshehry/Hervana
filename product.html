@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Product - Hervana</title>
+  <link rel="stylesheet" href="all-products.css"/>
+  <link rel="stylesheet" href="product.css"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo"><a href="index.html">Hervana</a></div>
+    <nav>
+      <a href="all-products.html" class="back-btn">← Back to Products</a>
+      <button id="cart-btn">🛒 Cart <span id="cart-count"></span></button>
+    </nav>
+  </header>
+
+  <!-- Main Product Section -->
+  <main class="product-page">
+    <div class="product-images">
+      <div class="slider-container">
+        <div class="slider" id="slider"></div>
+        <button class="slider-btn prev">❮</button>
+        <button class="slider-btn next">❯</button>
+        <div class="slider-dots" id="slider-dots"></div>
+      </div>
+    </div>
+    <div class="product-details">
+      <h1 id="product-name"></h1>
+      <p id="product-description"></p>
+      <p class="price" id="product-price"></p>
+      <button class="add-to-cart" id="add-to-cart">Add to Cart</button>
+    </div>
+  </main>
+
+  <!-- Added to Cart Message -->
+  <div id="cart-message" class="cart-message">Added to cart!</div>
+
+  <!-- Sidebar Cart -->
+  <aside id="cart-sidebar" class="cart-sidebar">
+    <button id="close-cart">✖</button>
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <button id="checkout-btn">Checkout</button>
+  </aside>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+  <span class="close-lightbox">&times;</span>
+  <img id="lightbox-img" src="" alt="Product preview">
+</div>
+
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Hervana. All rights reserved.</p>
+  </footer>
+
+  <!-- Product JSON Data -->
+  <script type="application/json" id="product-data">
+    {
+      "id": "1",
+      "name": "Rose Quartz Necklace",
+      "description": "A delicate necklace with natural rose quartz stone, perfect for everyday wear.",
+      "price": 350,
+      "images": [
+        "images/gift11.jpg",
+        "images/gift12.jpg",
+        "images/gift13.jpg",
+        "images/gift14.jpg"
+      ],
+      "stock": 5
+    }
+  </script>
+
+  <script type="application/json" id="product-data">
+    {
+      "id": "p2",
+      "name": "Rose Quartz ",
+      "description": "A delicate necklace with natural rose quartz stone, perfect for everyday wear.",
+      "price": 450,
+      "images": [
+        "images/gift11.jpg",
+        "images/gift12.jpg",
+        "images/gift13.jpg",
+        "images/gift14.jpg"
+      ],
+      "stock": 1
+    }
+  </script>
+
+  <!-- Scripts -->
+  <script src="cart.js"></script>
+  <script src="product.js"></script>
+</body>
+</html>

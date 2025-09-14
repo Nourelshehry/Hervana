@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Complete Your Order - Hervana</title>
+  <link rel="stylesheet" href="all-products.css"/>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      background: #fdfdfd;
+    }
+
+    /* ========== THANK YOU OVERLAY ========== */
+  /* Thank You Overlay */
+#thank-you {
+  position: fixed;
+  inset: 0;
+  display: flex;              /* يخليها Flex */
+  justify-content: center;    /* أفقي في النص */
+  align-items: center;        /* رأسي في النص */
+  width: 100vw;
+  height: 100vh;
+  background: rgba(255, 182, 193, 0.9);
+  z-index: 999999;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  pointer-events: none;       /* يمنع أي ضغط قبل الظهور */
+}
+
+#thank-you.show {
+  opacity: 1;
+  pointer-events: auto;       /* لما يظهر يتفاعل */
+}
+
+#thank-you .thank-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  max-width: 400px;
+  width: 90%;
+  animation: popIn 0.4s ease;
+}
+
+
+    #thank-you h2 {
+      font-size: 2em;
+      margin-bottom: 10px;
+      color: #c0392b;
+    }
+
+    #thank-you p {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    #thank-you button {
+      padding: 12px 25px;
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+
+    #thank-you button:hover {
+      background: #a93226;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* ========== ORDER CONTAINER ========== */
+    .order-container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #c0392b;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    /* ========== ORDER SUMMARY ========== */
+    .order-summary-box {
+      background: #ffe6f0;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+
+    button[type="submit"] {
+      background: #c0392b;
+      color: #fff;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      background: #a93226;
+    }
+
+    /* ========== SHIPPING OPTIONS AS CARDS ========== */
+    .shipping-options {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .shipping-option {
+      flex: 1;
+      border: 2px solid #ffb6c1;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      background: #fff;
+      transition: all 0.3s ease;
+      font-weight: bold;
+      color: #c0392b;
+      position: relative;
+    }
+
+    .shipping-option:hover {
+      background: #ffe6f0;
+    }
+
+    .shipping-option input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .shipping-option.selected {
+      border-color: #c0392b;
+      background: #ffe6f0;
+      box-shadow: 0 0 10px rgba(192,57,43,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><a href="index.html">Hervana</a></div>
+</header>
+
+<section class="order-section">
+  <div class="order-container">
+    <h1>Complete Your Order</h1>
+
+    <!-- Order Form -->
+    <form id="order-form">
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" required/>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <textarea id="address" rows="3" required></textarea>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary-box">
+        <h3>Order Summary</h3>
+        <ul id="order-summary"></ul>
+        <p id="order-total"></p>
+      </div>
+
+      <!-- Shipping Options -->
+      <div class="shipping-options">
+        <label class="shipping-option" data-price="50">
+          <input type="radio" name="shipping" value="inside" required>
+          Inside Obour <br> +50 EGP
+        </label>
+        <label class="shipping-option" data-price="75">
+          <input type="radio" name="shipping" value="outside" required>
+          Outside Obour <br> +75 EGP
+        </label>
+      </div>
+
+      <button type="submit">Confirm Order</button>
+    </form>
+  </div>
+</section>
+
+<!-- Thank You Message -->
+<div id="thank-you">
+  <div class="thank-card">
+    <h2>🎉 Thank You!</h2>
+    <p>Your order has been received ❤️!</p>
+    <button onclick="window.location.href='index.html'">Back to Home</button>
+  </div>
+</div>
+
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+</footer>
+
+<!-- EmailJS -->
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+<script>
+  // init EmailJS
+  emailjs.init("YOUR_USER_ID"); // استبدليها بالـ User ID من EmailJS
+
+  const cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const summary = document.getElementById("order-summary");
+  const totalElem = document.getElementById("order-total");
+  let total = 0;
+
+  // عرض تفاصيل الأوردر
+  if (cart.length === 0) {
+    summary.innerHTML = "<li>Your cart is empty.</li>";
+  } else {
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - $${item.price} x${item.quantity}`;
+      summary.appendChild(li);
+      total += item.price * item.quantity;
+    });
+  }
+  totalElem.textContent = `Total: $${total.toFixed(2)}`;
+
+  // Shipping options logic
+  const shippingOptions = document.querySelectorAll(".shipping-option");
+  let shippingCost = 0;
+  shippingOptions.forEach(option => {
+    option.addEventListener("click", () => {
+      shippingOptions.forEach(o => o.classList.remove("selected"));
+      option.classList.add("selected");
+      shippingCost = parseFloat(option.dataset.price);
+      totalElem.textContent = `Total: $${total.toFixed(2)} + ${shippingCost} EGP (Shipping)`;
+    });
+  });
+
+  // عند Confirm Order
+  document.getElementById("order-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const email = document.getElementById("email").value;
+    const address = document.getElementById("address").value;
+
+    const items = cart.map(item => `${item.name} x${item.quantity} - $${item.price}`).join(", ");
+
+    const finalTotal = total + shippingCost;
+
+    const orderData = {
+      name,
+      phone,
+      email,
+      address,
+      items,
+      total: finalTotal.toFixed(2)
+    };
+
+    // تخزين الأوردر في localStorage
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push({ ...orderData, date: new Date().toLocaleString() });
+    localStorage.setItem("orders", JSON.stringify(orders));
+
+    // إرسال إيميل بالـ EmailJS
+    emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
+      .then(() => {
+        console.log("✅ Confirmation email sent!");
+      })
+      .catch((err) => console.error("❌ Failed to send email:", err));
+
+    // تصفير الكارت
+    localStorage.removeItem("cart");
+
+    // إخفاء كل حاجة وإظهار رسالة شكراً
+    document.getElementById("order-form").style.display = "none";
+    document.querySelector("header").style.display = "none";
+    document.querySelector("footer").style.display = "none";
+    document.getElementById("thank-you").classList.add("show");
+  });
+</script>
+
+</body>
+</html>

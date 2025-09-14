@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hervana - All Products</title>
+  <link rel="stylesheet" href="all-products.css"/>
+</head>
+<body>
+
+<!-- Header -->
+
+<header>
+  <div class="logo"><a href="index.html">Hervana</a></div>
+  <div class="menu-cart">
+    <div class="menu-toggle" id="menu-toggle">&#9776;</div>
+    <div id="cart-btn">🛒 <span id="cart-count"></span></div>
+  </div>
+  <nav id="nav" class="nav-links">
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="all-products.html">Products</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<!-- Cart Sidebar -->
+<div id="cart-sidebar" class="cart-sidebar">
+  <button id="close-cart">✖</button>
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</div>
+
+<!-- Search & Filters -->
+<section class="filters">
+  <!-- Search Bar -->
+  <input type="text" id="search" placeholder="Search products..." class="search-bar"/>
+  <label for="category">Category:</label>
+  <select id="category">
+    <option value="all">All</option>
+    <option value="gift">Gifts</option>
+    <option value="decor">Decor</option>
+    <option value="accessory">Accessories</option>
+  </select>
+</section>
+
+<!-- All Products Section -->
+<section class="all-products">
+  <h1>All Products</h1>
+  <div class="product-grid">
+    <div class="product-card" data-category="gift" data-name="Gift 1" data-price="15">
+      <img src="images/gift11.jpg" alt="Gift 1"/>
+      <h3>Gift 1</h3>
+      <p>$15.00</p>
+      <button class="add-to-cart" data-name="Gift 1" data-price="15">Add to Cart</button>
+        <a href="product.html?id=1" class="view-btn">View Details</a>
+    </div>
+    <div class="product-card" data-category="gift" data-name="Gift 2" data-price="20">
+      <img src="images/gift21.jpg" alt="Gift 2"/>
+      <h3>Gift 2</h3>
+      <p>$20.00</p>
+      <button class="add-to-cart" data-name="Gift 2" data-price="20">Add to Cart</button>
+        <a href="product.html?id=2" class="view-btn">View Details</a>
+
+    </div>
+    <div class="product-card" data-category="decor" data-name="Decor 1" data-price="25">
+      <img src="Gift3.jpg" alt="Decor 1"/>
+      <h3>Decor 1</h3>
+      <p>$25.00</p>
+      <button class="add-to-cart" data-name="Decor 1" data-price="25">Add to Cart</button>
+           <a href="product.html?id=3" class="view-btn">View Details</a>
+
+    </div>
+    <div class="product-card" data-category="accessory" data-name="Accessory 1" data-price="30">
+      <img src="Gift4.jpg" alt="Accessory 1"/>
+      <h3>Accessory 1</h3>
+      <p>$30.00</p>
+      <button class="add-to-cart" data-name="Accessory 1" data-price="30">Add to Cart</button>
+            <a href="product.html?id=4" class="view-btn">View Details</a>
+
+    </div>
+  </div>
+</section>
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+  <div class="social-links">
+    <a href="#">Facebook</a> |
+    <a href="#">Instagram</a> |
+    <a href="#">WhatsApp</a>
+  </div>
+</footer>
+
+<!-- Scripts -->
+<script src="cart.js"></script>
+<script src="all-products.js"></script>
+<script src="script.js"></script>
+
+  
+<!-- message added to cart -->
+  <div id="cart-message" class="cart-message">Added to cart ❤️</div>
+  
+
+</body>
+</html>
