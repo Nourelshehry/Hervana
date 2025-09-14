@@ -77,3 +77,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     productContainer.innerHTML = "<p>⚠️ Error loading product data.</p>";
   }
 });
+fetch('products.json')
+  .then(res => res.json())
+  .then(products => {
+      const container = document.getElementById('products-container');
+      products.forEach(product => {
+          const div = document.createElement('div');
+          div.textContent = product.name + " - " + product.price;
+          container.appendChild(div);
+      });
+  });
