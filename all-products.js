@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // ✅ جلب المنتجات من JSON على GitHub
-    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/main/products.json");
+    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
     const products = await response.json();
 
     // ✅ جلب المخزون المحدث من localStorage

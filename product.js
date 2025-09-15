@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // ✅ جلب البيانات من GitHub
-    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/main/products.json");
+    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
     const products = await response.json();
 
     const product = products.find(p => p.id == productId);
