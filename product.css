@@ -166,7 +166,7 @@
 }
 
 /* Header Fix */
-/* Base header */
+/* Header Base */
 header {
   display: flex;
   justify-content: space-between;
@@ -176,6 +176,11 @@ header {
   color: #fff;
 }
 
+/* Logo في النص */
+header .logo {
+  flex: 1;
+  text-align: center;
+}
 header .logo a {
   font-size: 1.4rem;
   font-weight: bold;
@@ -183,15 +188,15 @@ header .logo a {
   text-decoration: none;
 }
 
-/* Actions container */
+/* Actions (Back + Cart) */
 .header-actions {
+  width: 80px; /* يحافظ على توازن */
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
 }
 
-.back-btn, 
-#cart-btn {
+.back-btn, #cart-btn {
   background: none;
   border: none;
   color: #fff;
@@ -199,7 +204,16 @@ header .logo a {
   cursor: pointer;
 }
 
-.back-btn:hover,
+#cart-btn span {
+  background: #fff;
+  color: #c0392b;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  margin-left: 5px;
+}
+
+.back-btn:hover, 
 #cart-btn:hover {
   color: #f1f1f1;
 }
@@ -214,12 +228,7 @@ header .logo a {
     font-size: 1.2rem;
   }
 
-  .header-actions {
-    gap: 8px;
-  }
-
-  .back-btn, 
-  #cart-btn {
+  .back-btn, #cart-btn {
     font-size: 0.9rem;
   }
 }
