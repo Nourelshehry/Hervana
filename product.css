@@ -166,11 +166,12 @@
 }
 
 /* Header Fix */
+/* Base header */
 header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 20px;
+  padding: 12px 20px;
   background: #c0392b;
   color: #fff;
 }
@@ -182,30 +183,30 @@ header .logo a {
   text-decoration: none;
 }
 
-header .menu-cart {
+/* Actions container */
+.header-actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
-.back-btn {
+.back-btn, 
+#cart-btn {
   background: none;
   border: none;
   color: #fff;
   font-size: 1rem;
   cursor: pointer;
-  text-decoration: underline;
 }
 
-.back-btn:hover {
+.back-btn:hover,
+#cart-btn:hover {
   color: #f1f1f1;
 }
 
-/* Responsive Header */
+/* Responsive */
 @media (max-width: 768px) {
   header {
-    flex-direction: row;
-    justify-content: space-between;
     padding: 10px 15px;
   }
 
@@ -213,20 +214,12 @@ header .menu-cart {
     font-size: 1.2rem;
   }
 
-  header .menu-cart {
-    gap: 10px;
+  .header-actions {
+    gap: 8px;
   }
 
+  .back-btn, 
   #cart-btn {
-    margin-left: 0;
-    font-size: 1.2rem;
-  }
-
-  #cart-btn span {
-    margin-right: 0;
-  }
-
-  .back-btn {
     font-size: 0.9rem;
   }
 }
