@@ -168,25 +168,25 @@
 /* Header Fix */
 /* Header Base */
 header {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* شمال | لوجو | يمين */
   align-items: center;
   padding: 12px 20px;
   background: #c0392b;
   color: #fff;
 }
 
-/* Logo في النص */
 header .logo {
-  flex: 1;
   text-align: center;
 }
+
 header .logo a {
   font-size: 1.4rem;
   font-weight: bold;
   color: #fff;
   text-decoration: none;
 }
+
 
 /* Actions (Back + Cart) */
 .header-actions {

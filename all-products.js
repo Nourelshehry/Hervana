@@ -48,7 +48,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       // ✅ تفعيل زرار الكارت بعد العرض
       document.querySelectorAll(".add-to-cart").forEach(btn => {
         btn.addEventListener("click", () => {
-          addToCart(btn.dataset.name, btn.dataset.price);
+            addToCart(product.id, product.name, product.price, currentStock);
+
         });
       });
     }

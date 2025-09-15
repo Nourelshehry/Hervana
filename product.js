@@ -51,7 +51,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addToCartBtn = document.querySelector(".add-to-cart");
     if (addToCartBtn) {
       addToCartBtn.addEventListener("click", () => {
-        addToCart(product.name, product.price);
+            addToCart(product.id, product.name, product.price, currentStock);
+
       });
     }
 
