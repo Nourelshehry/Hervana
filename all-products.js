@@ -4,14 +4,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categorySelect = document.getElementById("category");
 
   try {
-    // جلب المنتجات من JSON
-    const response = await fetch("products.json");
+    // ✅ جلب المنتجات من JSON على GitHub
+    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/main/products.json");
     const products = await response.json();
 
-    // جلب المخزون المحدث من localStorage
+    // ✅ جلب المخزون المحدث من localStorage
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
 
-    // عرض المنتجات
+    // ✅ عرض المنتجات
     function displayProducts(filterText = "", filterCategory = "all") {
       productGrid.innerHTML = "";
 
@@ -25,7 +25,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
           const card = document.createElement("div");
           card.classList.add("product-card");
-          card.setAttribute("data-category", product.category);
+          card.setAttribute("data-category", product.category || "general");
+
           card.innerHTML = `
             <img src="${product.images[0]}" alt="${product.name}"/>
             <h3>${product.name}</h3>
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       });
 
-      // تفعيل زرار الكارت بعد العرض
+      // ✅ تفعيل زرار الكارت بعد العرض
       document.querySelectorAll(".add-to-cart").forEach(btn => {
         btn.addEventListener("click", () => {
           addToCart(btn.dataset.name, btn.dataset.price);
@@ -55,12 +56,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // أول تحميل
     displayProducts();
 
-    // البحث
+    // ✅ البحث
     searchInput.addEventListener("input", () => {
       displayProducts(searchInput.value, categorySelect.value);
     });
 
-    // الفلترة بالكاتيجوري
+    // ✅ الفلترة بالكاتيجوري
     categorySelect.addEventListener("change", () => {
       displayProducts(searchInput.value, categorySelect.value);
     });

@@ -8,11 +8,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   try {
-    // جلب البيانات من JSON
-    const response = await fetch("products.json");
+    // ✅ جلب البيانات من GitHub
+    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/main/products.json");
     const products = await response.json();
 
-    // البحث عن المنتج
     const product = products.find(p => p.id == productId);
 
     if (!product) {
@@ -20,70 +19,77 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
-    // جلب المخزون من localStorage (لو فيه تعديل)
-    let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
-    let currentStock = stockData[product.id] ?? product.stock;
+    // 🖼️ عرض البيانات
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-description").textContent = product.description;
+    document.getElementById("product-price").textContent = `EGP ${product.price}`;
 
-    // عرض بيانات المنتج
-    productContainer.innerHTML = `
-      <div class="product-details">
-        <div class="image-gallery">
-          <img id="main-image" src="${product.images[0]}" alt="${product.name}">
-          <div class="thumbnails">
-            ${product.images
-              .map(
-                (img, index) =>
-                  `<img src="${img}" class="thumbnail ${index === 0 ? "active" : ""}" data-index="${index}">`
-              )
-              .join("")}
-          </div>
-        </div>
-        <div class="info">
-          <h1>${product.name}</h1>
-          <p class="price">EGP ${product.price}</p>
-          <p class="description">${product.description}</p>
-          <p class="stock ${currentStock > 0 ? "in-stock" : "out-of-stock"}">
-            ${currentStock > 0 ? `In Stock: ${currentStock}` : "Out of Stock"}
-          </p>
-          ${
-            currentStock > 0
-              ? `<button id="add-to-cart" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>`
-              : `<button disabled>Out of Stock</button>`
-          }
-        </div>
-      </div>
-    `;
+    // 🖼️ تحميل الصور للسلايدر
+    const slider = document.getElementById("slider");
+    const dotsContainer = document.getElementById("slider-dots");
 
-    // تبديل الصور
-    const thumbnails = document.querySelectorAll(".thumbnail");
-    const mainImage = document.getElementById("main-image");
-    thumbnails.forEach((thumb) => {
-      thumb.addEventListener("click", () => {
-        mainImage.src = thumb.src;
-        thumbnails.forEach((t) => t.classList.remove("active"));
-        thumb.classList.add("active");
+    product.images.forEach((img, i) => {
+      const imageEl = document.createElement("img");
+      imageEl.src = img;
+      slider.appendChild(imageEl);
+
+      const dot = document.createElement("button");
+      if (i === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => moveToSlide(i));
+      dotsContainer.appendChild(dot);
+    });
+
+    let currentSlide = 0;
+    function moveToSlide(index) {
+      const slideWidth = slider.querySelector("img").clientWidth;
+      slider.style.transform = `translateX(-${index * slideWidth}px)`;
+      dotsContainer.querySelectorAll("button").forEach((d, i) => {
+        d.classList.toggle("active", i === index);
+      });
+      currentSlide = index;
+    }
+
+    // أزرار السلايدر
+    document.querySelector(".slider-btn.prev").addEventListener("click", () => {
+      moveToSlide((currentSlide - 1 + product.images.length) % product.images.length);
+    });
+    document.querySelector(".slider-btn.next").addEventListener("click", () => {
+      moveToSlide((currentSlide + 1) % product.images.length);
+    });
+
+    // زرار Add to Cart
+    document.getElementById("add-to-cart").addEventListener("click", () => {
+      if (typeof addToCart === "function") {
+        addToCart(product.name, product.price);
+      }
+    });
+
+    // ✅ Lightbox
+    const lightbox = document.getElementById("lightbox");
+    const lightboxImg = document.getElementById("lightbox-img");
+    const closeLightbox = document.querySelector(".close-lightbox");
+
+    slider.querySelectorAll("img").forEach(img => {
+      img.addEventListener("click", () => {
+        lightboxImg.src = img.src;
+        lightbox.classList.add("show");
       });
     });
 
-    // إضافة للكارت
-    const addToCartBtn = document.getElementById("add-to-cart");
-    if (addToCartBtn) {
-      addToCartBtn.addEventListener("click", () => {
-        addToCart(product.name, product.price);
+    if (closeLightbox) {
+      closeLightbox.addEventListener("click", () => {
+        lightbox.classList.remove("show");
       });
     }
+
+    lightbox.addEventListener("click", (e) => {
+      if (e.target === lightbox) {
+        lightbox.classList.remove("show");
+      }
+    });
+
   } catch (error) {
-    console.error("Error loading product:", error);
+    console.error("Error loading product data:", error);
     productContainer.innerHTML = "<p>⚠️ Error loading product data.</p>";
   }
 });
-fetch('products.json')
-  .then(res => res.json())
-  .then(products => {
-      const container = document.getElementById('products-container');
-      products.forEach(product => {
-          const div = document.createElement('div');
-          div.textContent = product.name + " - " + product.price;
-          container.appendChild(div);
-      });
-  });
