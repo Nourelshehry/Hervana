@@ -16,11 +16,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
 
     // ✅ تحويل productId لرقم لأن الـ JSON عندك بالأرقام
-    const product = products.find(p => p.id === parseInt(productId));
-
-    if (!product) {
-      productContainer.innerHTML = "<p>❌ Product not found.</p>";
-      return;
+  //  const product = products.find(p => p.id === parseInt(productId));
+//
+//    if (!product) {
+//      productContainer.innerHTML = "<p>❌ Product not found.</p>";
+  //    return;
     }
 
     let currentStock = stockData[product.id] ?? product.stock;
