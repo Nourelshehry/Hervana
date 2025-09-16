@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // cart.js (final, corrected)
+=======
+// cart.js
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
 
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
@@ -9,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartMessage = document.getElementById("cart-message");
 
+  // ✅ جلب الكارت من localStorage
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   // 🔹 فتح وقفل الكارت
@@ -24,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔹 عرض الكارت
+  // 🔹 عرض محتوى الكارت
   function renderCart() {
     if (!cartItems) return;
     cartItems.innerHTML = "";
@@ -47,21 +52,39 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItems.appendChild(li);
     });
 
+    // تحديث عداد الكارت
     if (cartCount) {
       cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
       cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
     }
 
+<<<<<<< HEAD
+=======
+    // تحديث localStorage
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
   // 🔹 إضافة منتج للكارت
+<<<<<<< HEAD
   function addToCart(productId, productName, price, stock) {
     const existing = cart.find((item) => item.id === productId);
     if (existing) {
       if (existing.quantity < stock) existing.quantity++;
     } else {
       cart.push({ id: productId, name: productName, price: parseFloat(price), quantity: 1 });
+=======
+  function addToCart(id, productName, price, stock) {
+    const existing = cart.find((item) => item.id === id);
+    if (existing) {
+      if (existing.quantity < stock) {
+        existing.quantity++;
+      } else {
+        alert("❌ لا يمكن إضافة أكثر من الكمية المتاحة في المخزون.");
+      }
+    } else {
+      cart.push({ id, name: productName, price: parseFloat(price), quantity: 1, stock });
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
     }
     renderCart();
     showCartMessage();
@@ -72,7 +95,15 @@ document.addEventListener("DOMContentLoaded", () => {
     cartItems.addEventListener("click", (e) => {
       if (e.target.classList.contains("increase")) {
         const index = e.target.dataset.index;
+<<<<<<< HEAD
         if (cart[index].quantity < (cart[index].stock ?? Infinity)) cart[index].quantity++;
+=======
+        if (cart[index].quantity < cart[index].stock) {
+          cart[index].quantity++;
+        } else {
+          alert("❌ وصلت للحد الأقصى من المخزون.");
+        }
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
       } else if (e.target.classList.contains("decrease")) {
         const index = e.target.dataset.index;
         cart[index].quantity--;
@@ -88,15 +119,22 @@ document.addEventListener("DOMContentLoaded", () => {
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+<<<<<<< HEAD
       const id = parseInt(btn.dataset.id);
       const name = btn.dataset.name;
       const price = btn.dataset.price;
       const stock = parseInt(btn.dataset.stock) || Infinity;
+=======
+      const id = parseInt(btn.getAttribute("data-id")); // ✅ ربط الـ id
+      const name = btn.getAttribute("data-name");
+      const price = btn.getAttribute("data-price");
+      const stock = parseInt(btn.getAttribute("data-stock")) || 99; // fallback لو مفيش stock
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
       addToCart(id, name, price, stock);
     });
   });
 
-  // 🔹 رسالة Added to Cart
+  // 🔹 رسالة "تمت الإضافة للكارت"
   function showCartMessage() {
     if (cartMessage) {
       cartMessage.style.display = "block";

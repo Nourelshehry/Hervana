@@ -15,11 +15,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   try {
     const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/refs/heads/master/products.json");
     const products = await response.json();
+<<<<<<< HEAD
     const product = products.find(p => p.id === productId);
 
     if (!product) {
       document.querySelector(".product-page").innerHTML = "<p>❌ Product not found.</p>";
       return;
+=======
+
+    // ✅ جلب المخزون المحدث من localStorage
+    let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
+
+    // ✅ تحويل productId لرقم لأن الـ JSON عندك بالأرقام
+  //  const product = products.find(p => p.id === parseInt(productId));
+//
+//    if (!product) {
+//      productContainer.innerHTML = "<p>❌ Product not found.</p>";
+  //    return;
+>>>>>>> ac9228b89c85f93c4eb6e9a601ad73e38728a217
     }
 
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
