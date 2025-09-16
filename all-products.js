@@ -1,3 +1,5 @@
+//all-products.js
+
 document.addEventListener("DOMContentLoaded", async () => {
   const productGrid = document.querySelector(".product-grid");
   const searchInput = document.getElementById("search");

@@ -1,56 +1,65 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const productId = new URLSearchParams(window.location.search).get("id");
-  const productContainer = document.getElementById("product-container");
+  const productId = parseInt(new URLSearchParams(window.location.search).get("id"));
+  const productNameEl = document.getElementById("product-name");
+  const productDescEl = document.getElementById("product-description");
+  const productPriceEl = document.getElementById("product-price");
+  const addToCartBtn = document.getElementById("add-to-cart");
+  const sliderEl = document.getElementById("slider");
+  const sliderDots = document.getElementById("slider-dots");
 
-  if (!productId) {
-    productContainer.innerHTML = "<p>❌ Product not found.</p>";
-    return;
-  }
+  if (!productId) return;
 
   try {
     const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
     const products = await response.json();
 
+    const product = products.find(p => p.id === productId);
+    if (!product) return;
+
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
-
-    const product = products.find(p => p.id === parseInt(productId));
-    if (!product) {
-      productContainer.innerHTML = "<p>❌ Product not found.</p>";
-      return;
-    }
-
     let currentStock = stockData[product.id] ?? product.stock;
 
-    productContainer.innerHTML = `
-      <div class="product-detail">
-        <div class="image-slider">
-          ${product.images.map(img => `<img src="${img}" alt="${product.name}">`).join("")}
-        </div>
-        <div class="product-info">
-          <h2>${product.name}</h2>
-          <p>${product.description}</p>
-          <p><strong>Price:</strong> EGP ${product.price}</p>
-          <p class="stock ${currentStock > 0 ? "in-stock" : "out-of-stock"}">
-            ${currentStock > 0 ? `In Stock: ${currentStock}` : "Out of Stock"}
-          </p>
-          ${
-            currentStock > 0
-              ? `<button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-stock="${currentStock}">Add to Cart</button>`
-              : `<button disabled>Out of Stock</button>`
-          }
-        </div>
-      </div>
-    `;
+    // ملء البيانات
+    productNameEl.textContent = product.name;
+    productDescEl.textContent = product.description;
+    productPriceEl.textContent = `EGP ${product.price}`;
+    if (currentStock <= 0) addToCartBtn.disabled = true;
 
-    const addToCartBtn = document.querySelector(".add-to-cart");
+    // ربط Add to Cart
     if (addToCartBtn) {
-      addToCartBtn.addEventListener("click", () => {
-        addToCart(product.id, product.name, product.price, currentStock);
-      });
+      addToCartBtn.dataset.id = product.id;
+      addToCartBtn.dataset.name = product.name;
+      addToCartBtn.dataset.price = product.price;
     }
 
-  } catch (error) {
-    console.error("Error loading product:", error);
-    productContainer.innerHTML = "<p>⚠️ Error loading product data.</p>";
+    // Slider الصور
+    sliderEl.innerHTML = product.images.map((img, idx) =>
+      `<img src="${img}" alt="${product.name}" style="display:${idx===0?'block':'none'};">`
+    ).join("");
+
+    sliderDots.innerHTML = product.images.map((_, idx) =>
+      `<button class="${idx===0?'active':''}" data-index="${idx}"></button>`
+    ).join("");
+
+    let currentIndex = 0;
+    function showSlide(index) {
+      const slides = sliderEl.querySelectorAll("img");
+      slides.forEach((s, i) => s.style.display = i === index ? "block" : "none");
+      sliderDots.querySelectorAll("button").forEach((b, i) => b.classList.toggle("active", i === index));
+      currentIndex = index;
+    }
+
+    document.querySelector(".next")?.addEventListener("click", () => {
+      showSlide((currentIndex + 1) % product.images.length);
+    });
+    document.querySelector(".prev")?.addEventListener("click", () => {
+      showSlide((currentIndex - 1 + product.images.length) % product.images.length);
+    });
+    sliderDots.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => showSlide(parseInt(btn.dataset.index)));
+    });
+
+  } catch (err) {
+    console.error(err);
   }
 });
