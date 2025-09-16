@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ✅ جلب المخزون المحدث من localStorage
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
 
-    // ✅ تحويل productId لرقم لأن الـ JSON عندك بالأرقام
+    // ✅ البحث عن المنتج باستخدام ID
     const product = products.find(p => p.id === parseInt(productId));
 
     if (!product) {
@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       return;
     }
 
+    // ✅ تحديد المخزون الحالي
     let currentStock = stockData[product.id] ?? product.stock;
 
     // ✅ بناء HTML للمنتج
@@ -40,7 +41,13 @@ document.addEventListener("DOMContentLoaded", async () => {
           </p>
           ${
             currentStock > 0
-              ? `<button class="add-to-cart" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>`
+              ? `<button class="add-to-cart" 
+                     data-id="${product.id}" 
+                     data-name="${product.name}" 
+                     data-price="${product.price}" 
+                     data-stock="${currentStock}">
+                   Add to Cart
+                 </button>`
               : `<button disabled>Out of Stock</button>`
           }
         </div>
@@ -51,8 +58,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addToCartBtn = document.querySelector(".add-to-cart");
     if (addToCartBtn) {
       addToCartBtn.addEventListener("click", () => {
-            addToCart(product.id, product.name, product.price, currentStock);
-
+        addToCart(
+          product.id,
+          product.name,
+          product.price,
+          currentStock
+        );
       });
     }
 

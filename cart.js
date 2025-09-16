@@ -45,21 +45,33 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItems.appendChild(li);
     });
 
+    // 🔹 تحديث عدد العناصر
     if (cartCount) {
       cartCount.textContent = cart.length;
       cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
     }
 
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
+    // حفظ التعديلات
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
 
   // 🔹 إضافة منتج للكارت
-  function addToCart(productName, price) {
-    const existing = cart.find((item) => item.name === productName);
+  function addToCart(productId, productName, price, stock) {
+    let existing = cart.find((item) => item.id === productId);
     if (existing) {
+      if (existing.quantity < stock) {
         existing.quantity++;
       } else {
-      cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
+        alert("⚠️ Not enough stock available!");
+      }
+    } else {
+      cart.push({
+        id: productId,
+        name: productName,
+        price: parseFloat(price),
+        quantity: 1,
+        stock: stock
+      });
     }
     renderCart();
     showCartMessage();
@@ -68,11 +80,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 التحكم في الكمية
   if (cartItems) {
     cartItems.addEventListener("click", (e) => {
+      const index = e.target.dataset.index;
       if (e.target.classList.contains("increase")) {
-        const index = e.target.dataset.index;
-        cart[index].quantity++;
+        if (cart[index].quantity < cart[index].stock) {
+          cart[index].quantity++;
+        } else {
+          alert("⚠️ Stock limit reached!");
+        }
       } else if (e.target.classList.contains("decrease")) {
-        const index = e.target.dataset.index;
         cart[index].quantity--;
         if (cart[index].quantity <= 0) {
           cart.splice(index, 1);
@@ -80,15 +95,17 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       renderCart();
     });
-    }
+  }
 
   // 🔹 ربط أزرار Add to Cart
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+      const id = parseInt(btn.getAttribute("data-id"));
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
-      addToCart(name, price);
+      const stock = parseInt(btn.getAttribute("data-stock"));
+      addToCart(id, name, price, stock);
     });
   });
 
@@ -105,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 زرار Checkout
   if (checkoutBtn) {
     checkoutBtn.addEventListener("click", () => {
-      window.location.href = "order.html";
+      window.location.href = "checkout.html";
     });
   }
 
