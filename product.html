@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Product - Hervana</title>
-  <link rel="stylesheet" href="all-products.css"/>
-  <link rel="stylesheet" href="product.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Detail - Hervana</title>
+<link rel="stylesheet" href="product.css">
 </head>
 <body>
 
 <header>
   <div class="header-actions">
-    <button class="back-btn" onclick="window.location.href='all-products.html'">← Back</button>
+    <button class="back-btn" onclick="window.history.back()">← Back</button>
   </div>
   <div class="logo"><a href="index.html">Hervana</a></div>
   <div class="header-actions">
@@ -19,21 +18,8 @@
   </div>
 </header>
 
-<main class="product-page">
-  <div class="product-images">
-    <div class="slider-container">
-      <div class="slider" id="slider"></div>
-      <button class="slider-btn prev">❮</button>
-      <button class="slider-btn next">❯</button>
-      <div class="slider-dots" id="slider-dots"></div>
-    </div>
-  </div>
-  <div class="product-details">
-    <h1 id="product-name"></h1>
-    <p id="product-description"></p>
-    <p class="price" id="product-price"></p>
-    <button class="add-to-cart" id="add-to-cart">Add to Cart</button>
-  </div>
+<main id="product-container">
+  <!-- المنتج هيظهر هنا -->
 </main>
 
 <div id="cart-message" class="cart-message">Added to cart!</div>

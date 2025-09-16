@@ -18,7 +18,14 @@
   </div>
 </header>
 
-<main id="product-container" class="products-grid">
+<section class="filters">
+  <input type="text" id="search" placeholder="Search products..." class="search-bar"/>
+  <select id="category">
+    <option value="all">All Categories</option>
+  </select>
+</section>
+
+<main class="product-grid">
   <!-- المنتجات هتتعرض هنا ديناميكي -->
 </main>
 
@@ -36,31 +43,6 @@
 </footer>
 
 <script src="cart.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
-  const container = document.getElementById("product-container");
-
-  try {
-    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
-    const products = await response.json();
-
-    container.innerHTML = products.map(product => `
-      <div class="product-card">
-        <img src="${product.images[0]}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.description}</p>
-        <p><strong>EGP ${product.price}</strong></p>
-        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
-        <button onclick="window.location.href='product.html?id=${product.id}'">View Details</button>
-      </div>
-    `).join("");
-
-  } catch (err) {
-    container.innerHTML = "<p>⚠️ Failed to load products.</p>";
-    console.error(err);
-  }
-});
-</script>
-
+<script src="all-products.js"></script>
 </body>
 </html>

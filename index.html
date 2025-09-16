@@ -1,101 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hervana</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hervana - Home</title>
+  <link rel="stylesheet" href="all-products.css"/>
 </head>
-
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="logo">Hervana</div>
-    <div class="menu-cart">
-      <div class="menu-toggle" id="menu-toggle">&#9776;</div>
-      <div id="cart-btn">🛒 <span id="cart-count">0</span></div>
-    </div>
-    <nav id="nav" class="nav-links">
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="all-products.html">Products</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Contact Us</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <!-- Cart Sidebar -->
-  <div id="cart-sidebar" class="cart-sidebar">
-    <button id="close-cart">✖</button>
-    <h2>Your Cart</h2>
-    <ul id="cart-items"></ul>
-    <button id="checkout-btn">Checkout</button>
+<!-- Header -->
+<header>
+  <div class="logo"><a href="index.html">Hervana</a></div>
+  <div class="menu-cart">
+    <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
   </div>
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="hero-search-container">
-      <input type="text" id="search" placeholder="Search products..." class="search-bar" />
-    </div>
+</header>
 
-    <div class="hero-slider">
-      <img src="Hervana.jpg" alt="Hervana" class="active" />
-      <img src="Gift1.png" alt="Gift 1" />
-      <img src="Gift2.png" alt="Gift 2" />
-    </div>
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Welcome to Hervana</h1>
+    <p>Your favorite place for quality products!</p>
+    <a href="all-products.html" class="view-btn">Shop Now</a>
+  </div>
+</section>
 
-    <div class="hero-content">
-      <h1>Welcome to Hervana</h1>
-      <p>Find the perfect gift for every occasion</p>
-      <a href="all-products.html"><button>Shop Now</button></a>
-    </div>
-    <button class="prev">&#10094;</button>
-    <button class="next">&#10095;</button>
-  </section>
+<!-- Categories & Search -->
+<section class="filters">
+  <input type="text" id="search" placeholder="Search products..." class="search-bar"/>
+  <select id="category">
+    <option value="all">All Categories</option>
+  </select>
+</section>
 
-  <!-- Products Section -->
-  <section class="products">
-    <h2>Featured Products</h2>
-    <div class="product-grid">
-      <div class="product-card" data-name="Gift 1">
-        <img src="https://via.placeholder.com/200" alt="Gift 1" />
-        <h3>Gift 1</h3>
-        <p>150 EGP</p>
-        <button class="add-to-cart" data-name="Gift 1" data-price="150">Add to Cart</button>
-      </div>
-      <div class="product-card" data-name="Gift 2">
-        <img src="https://via.placeholder.com/200" alt="Gift 2" />
-        <h3>Gift 2</h3>
-        <p>200 EGP</p>
-        <button class="add-to-cart" data-name="Gift 2" data-price="200">Add to Cart</button>
-      </div>
-      <div class="product-card" data-name="Gift 3">
-        <img src="https://via.placeholder.com/200" alt="Gift 3" />
-        <h3>Gift 3</h3>
-        <p>250 EGP</p>
-        <button class="add-to-cart" data-name="Gift 3" data-price="250">Add to Cart</button>
-      </div>
-    </div>
-  </section>
+<!-- Products Grid -->
+<main class="product-grid">
+  <!-- Products loaded dynamically from JSON -->
+</main>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Hervana. All rights reserved.</p>
-    <div class="social-links">
-      <a href="#">Facebook</a> |
-      <a href="#">Instagram</a> |
-      <a href="#">WhatsApp</a>
-    </div>
-  </footer>
+<!-- Cart Sidebar -->
+<aside id="cart-sidebar" class="cart-sidebar">
+  <button id="close-cart">✖</button>
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</aside>
 
-  <script src="script.js"></script>
-  <script src="cart.js"></script>
+<!-- Added to Cart Message -->
+<div id="cart-message" class="cart-message">Added to cart!</div>
 
-  <!--message added to cart -->
-  <div id="cart-message" class="cart-message">Added to cart ❤️</div>
-  
+<!-- Footer -->
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+  <div class="social-links">
+    <a href="#">Facebook</a> |
+    <a href="#">Instagram</a> |
+    <a href="#">WhatsApp</a>
+  </div>
+</footer>
+
+<!-- JS -->
+<script src="cart.js"></script>
+<script src="script.js"></script>
+
 </body>
-
 </html>
