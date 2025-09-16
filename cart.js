@@ -1,3 +1,5 @@
+// cart.js
+
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
@@ -7,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartMessage = document.getElementById("cart-message");
 
+  // ✅ جلب الكارت من localStorage
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
   // 🔹 فتح وقفل الكارت
@@ -22,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔹 عرض الكارت
+  // 🔹 عرض محتوى الكارت
   function renderCart() {
     if (!cartItems) return;
     cartItems.innerHTML = "";
@@ -45,21 +48,27 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItems.appendChild(li);
     });
 
+    // تحديث عداد الكارت
     if (cartCount) {
       cartCount.textContent = cart.length;
       cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
     }
 
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
+    // تحديث localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }
 
   // 🔹 إضافة منتج للكارت
-  function addToCart(productName, price) {
-    const existing = cart.find((item) => item.name === productName);
+  function addToCart(id, productName, price, stock) {
+    const existing = cart.find((item) => item.id === id);
     if (existing) {
+      if (existing.quantity < stock) {
         existing.quantity++;
       } else {
-      cart.push({ name: productName, price: parseFloat(price), quantity: 1 });
+        alert("❌ لا يمكن إضافة أكثر من الكمية المتاحة في المخزون.");
+      }
+    } else {
+      cart.push({ id, name: productName, price: parseFloat(price), quantity: 1, stock });
     }
     renderCart();
     showCartMessage();
@@ -70,7 +79,11 @@ document.addEventListener("DOMContentLoaded", () => {
     cartItems.addEventListener("click", (e) => {
       if (e.target.classList.contains("increase")) {
         const index = e.target.dataset.index;
-        cart[index].quantity++;
+        if (cart[index].quantity < cart[index].stock) {
+          cart[index].quantity++;
+        } else {
+          alert("❌ وصلت للحد الأقصى من المخزون.");
+        }
       } else if (e.target.classList.contains("decrease")) {
         const index = e.target.dataset.index;
         cart[index].quantity--;
@@ -80,19 +93,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       renderCart();
     });
-    }
+  }
 
   // 🔹 ربط أزرار Add to Cart
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+      const id = parseInt(btn.getAttribute("data-id")); // ✅ ربط الـ id
       const name = btn.getAttribute("data-name");
       const price = btn.getAttribute("data-price");
-      addToCart(name, price);
+      const stock = parseInt(btn.getAttribute("data-stock")) || 99; // fallback لو مفيش stock
+      addToCart(id, name, price, stock);
     });
   });
 
-  // 🔹 رسالة Added to Cart
+  // 🔹 رسالة "تمت الإضافة للكارت"
   function showCartMessage() {
     if (cartMessage) {
       cartMessage.style.display = "block";
