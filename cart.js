@@ -1,3 +1,5 @@
+// cart.js (final, corrected)
+
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
@@ -34,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.innerHTML = `
         <div class="cart-item">
-          <span>${item.name} - ${item.price} EGP</span>
+          <span>${item.name} - EGP ${item.price}</span>
           <div class="quantity-controls">
             <button class="decrease" data-index="${index}">-</button>
             <span>${item.quantity}</span>
@@ -45,33 +47,21 @@ document.addEventListener("DOMContentLoaded", () => {
       cartItems.appendChild(li);
     });
 
-    // 🔹 تحديث عدد العناصر
     if (cartCount) {
-      cartCount.textContent = cart.length;
+      cartCount.textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
       cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
     }
 
-    // حفظ التعديلات
     localStorage.setItem("cart", JSON.stringify(cart));
   }
 
   // 🔹 إضافة منتج للكارت
   function addToCart(productId, productName, price, stock) {
-    let existing = cart.find((item) => item.id === productId);
+    const existing = cart.find((item) => item.id === productId);
     if (existing) {
-      if (existing.quantity < stock) {
-        existing.quantity++;
-      } else {
-        alert("⚠️ Not enough stock available!");
-      }
+      if (existing.quantity < stock) existing.quantity++;
     } else {
-      cart.push({
-        id: productId,
-        name: productName,
-        price: parseFloat(price),
-        quantity: 1,
-        stock: stock
-      });
+      cart.push({ id: productId, name: productName, price: parseFloat(price), quantity: 1 });
     }
     renderCart();
     showCartMessage();
@@ -80,14 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 التحكم في الكمية
   if (cartItems) {
     cartItems.addEventListener("click", (e) => {
-      const index = e.target.dataset.index;
       if (e.target.classList.contains("increase")) {
-        if (cart[index].quantity < cart[index].stock) {
-          cart[index].quantity++;
-        } else {
-          alert("⚠️ Stock limit reached!");
-        }
+        const index = e.target.dataset.index;
+        if (cart[index].quantity < (cart[index].stock ?? Infinity)) cart[index].quantity++;
       } else if (e.target.classList.contains("decrease")) {
+        const index = e.target.dataset.index;
         cart[index].quantity--;
         if (cart[index].quantity <= 0) {
           cart.splice(index, 1);
@@ -97,14 +84,14 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // 🔹 ربط أزرار Add to Cart
+  // 🔹 ربط أزرار Add to Cart في الصفحة
   const productButtons = document.querySelectorAll(".add-to-cart");
   productButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      const id = parseInt(btn.getAttribute("data-id"));
-      const name = btn.getAttribute("data-name");
-      const price = btn.getAttribute("data-price");
-      const stock = parseInt(btn.getAttribute("data-stock"));
+      const id = parseInt(btn.dataset.id);
+      const name = btn.dataset.name;
+      const price = btn.dataset.price;
+      const stock = parseInt(btn.dataset.stock) || Infinity;
       addToCart(id, name, price, stock);
     });
   });
@@ -122,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 🔹 زرار Checkout
   if (checkoutBtn) {
     checkoutBtn.addEventListener("click", () => {
-      window.location.href = "checkout.html";
+      window.location.href = "order.html";
     });
   }
 
