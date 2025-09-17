@@ -1,4 +1,4 @@
-/* Body */
+/* ===================== Body ===================== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -7,7 +7,7 @@ body {
   color: #333;
 }
 
-/* Header */
+/* ===================== Header ===================== */
 header {
   display: flex;
   justify-content: space-between;
@@ -25,14 +25,12 @@ header {
   cursor: pointer;
 }
 
-/* Cart + Menu wrapper */
 .menu-cart {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-/* Cart button */
 #cart-btn {
   font-size: 22px;
   cursor: pointer;
@@ -51,14 +49,12 @@ header {
   display: none;
 }
 
-/* Menu toggle */
 .menu-toggle {
   font-size: 24px;
   cursor: pointer;
   display: none;
 }
 
-/* Nav links */
 nav ul {
   list-style: none;
   margin: 0;
@@ -73,7 +69,7 @@ nav a {
   font-weight: bold;
 }
 
-/* Hero Section */
+/* ===================== Hero Section ===================== */
 .hero {
   position: relative;
   height: 500px;
@@ -102,8 +98,14 @@ nav a {
   text-align:center;
 }
 
-.hero-content h1 { font-size:36px; text-shadow:2px 2px 5px rgba(0,0,0,0.3);}
-.hero-content p { font-size:18px; text-shadow:1px 1px 3px rgba(0,0,0,0.3);}
+.hero-content h1 {
+  font-size:36px;
+  text-shadow:2px 2px 5px rgba(0,0,0,0.3);
+}
+.hero-content p {
+  font-size:18px;
+  text-shadow:1px 1px 3px rgba(0,0,0,0.3);
+}
 .hero-content button {
   margin-top:15px;
   padding:12px 25px;
@@ -114,7 +116,7 @@ nav a {
   font-size:16px;
 }
 
-/* Hero slider buttons */
+/* Slider buttons */
 .hero .prev, .hero .next {
   position:absolute;
   top:50%;
@@ -150,7 +152,7 @@ nav a {
   font-size: 14px;
 }
 
-/* Products Section */
+/* ===================== Products Section ===================== */
 .products {
   padding: 40px 20px;
   text-align: center;
@@ -189,9 +191,14 @@ nav a {
   color:#fff;
   border:none;
   cursor:pointer;
+  transition: transform 0.2s;
 }
 
-/* Footer */
+.product-card button:hover {
+  transform: scale(1.05);
+}
+
+/* ===================== Footer ===================== */
 footer {
   background:#c0392b;
   color:#fff;
@@ -210,7 +217,7 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* Cart Sidebar */
+/* ===================== Cart Sidebar ===================== */
 .cart-sidebar {
   position: fixed;
   top:0;
@@ -228,7 +235,6 @@ footer a:hover {
 
 .cart-sidebar.active { right:0; }
 
-#cart-sidebar h2 { color:#c0392b; }
 #cart-items { list-style:none; padding:0; margin:15px 0; }
 #cart-items li { margin:8px 0; font-size:14px; }
 
@@ -264,42 +270,11 @@ footer a:hover {
   border-radius: 4px;
 }
 
-
-
-
-/* =================== Mobile =================== */
+/* ===================== Responsive ===================== */
 @media (max-width: 768px) {
-  .logo {
-    order: 1; /* شمال */
-  }
-
-  .menu-cart {
-    order: 2; /* يمين */
-    display: flex;
-    flex-direction: row-reverse; /* المينيو الأول ثم الكارت */
-    gap: 10px;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .nav-links {
-    display: none;
-    flex-direction: column;
-    background: #c0392b;
-    position: absolute;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    padding: 15px 0;
-    text-align: center;
-  }
-
-  .nav-links.show {
-    display: flex;
-  }
-
+  .menu-toggle { display:block; }
+  .nav-links { display:none; flex-direction:column; background:#c0392b; position:absolute; top:60px; left:0; width:100%; padding:15px 0; text-align:center; }
+  .nav-links.show { display:flex; }
   .product-card { width:90%; }
   .hero { height:400px; }
   .hero-content h1 { font-size:28px; }
@@ -307,59 +282,44 @@ footer a:hover {
   .search-bar { width:80%; font-size:14px; }
 }
 
-
-/* =================== Desktop =================== */
 @media (min-width: 769px) {
-  .menu-toggle {
-    display: none !important;
-  }
-
-  header {
-    justify-content: flex-start;
-    align-items: center;
-  }
-
-  .logo { margin-right: auto; }
-  .menu-cart { margin-left: auto; display: flex; gap: 15px; }
-
-  #cart-btn { order: 1; }
-  .nav-links { order: 2; display: flex !important; margin-left: 15px; gap: 15px; }
+  .menu-toggle { display:none !important; }
+  header { justify-content:flex-start; align-items:center; }
+  .logo { margin-right:auto; }
+  .menu-cart { margin-left:auto; display:flex; gap:15px; }
+  .nav-links { display:flex !important; margin-left:15px; gap:15px; }
 }
 
 /* Hover effects */
-#cart-btn:hover,
-.menu-toggle:hover {
-  color: #ff99cc;
-  transform: scale(1.1);
-  transition: all 0.2s ease-in-out;
-}
+#cart-btn:hover, .menu-toggle:hover { color:#ff99cc; transform: scale(1.1); transition: all 0.2s ease-in-out; }
+
 #checkout-btn {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #c0392b, #e75480); /* أحمر + بينك */
-  color: #fff;
-  border: none;
-  border-radius: 30px; /* زرار دائري ناعم */
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  width:100%;
+  padding:14px;
+  background:linear-gradient(135deg, #c0392b, #e75480);
+  color:#fff;
+  border:none;
+  border-radius:30px;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  margin-top:15px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
 }
 
 #checkout-btn:hover {
-  background: linear-gradient(135deg, #e75480, #c0392b); /* عكس التدرج */
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+  background: linear-gradient(135deg, #e75480, #c0392b);
+  transform:scale(1.05);
+  box-shadow:0 6px 16px rgba(0,0,0,0.3);
 }
 
-/* Unified Added to Cart Message */
+/* ===================== Added to Cart Message ===================== */
 .cart-message {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #FFB6C1; /* أخضر مبهج */
+  background: #FFB6C1;
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;
@@ -371,14 +331,7 @@ footer a:hover {
   animation: slideIn 0.3s ease-out;
 }
 
-/* Animation */
 @keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
+  from { opacity:0; transform:translateX(50px); }
+  to { opacity:1; transform:translateX(0); }
 }

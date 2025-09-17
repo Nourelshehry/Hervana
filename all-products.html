@@ -8,43 +8,59 @@
 </head>
 <body>
 
-  <!-- Header -->
-  <header>
-    <div class="logo"><a href="index.html">Hervana</a></div>
-    <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-  </header>
-
-  <!-- Filters -->
-  <div class="filters">
-    <input type="text" id="search" placeholder="Search products...">
-    <select id="category">
-      <option value="all">All Categories</option>
-    </select>
+<header>
+  <div class="header-actions">
+    <button class="back-btn" onclick="window.location.href='index.html'">← Back</button>
   </div>
+  <div class="logo"><a href="index.html">Hervana</a></div>
+  <div class="header-actions">
+    <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
+  </div>
+</header>
 
-  <!-- Products Grid -->
-  <main class="all-products">
-    <h1>Our Products</h1>
-    <div class="product-grid"></div>
-  </main>
+<main id="product-container" class="products-grid">
+  <!-- المنتجات هتتعرض هنا ديناميكي -->
+</main>
 
-  <!-- Added to Cart Message -->
-  <div id="cart-message" class="cart-message">Added to cart!</div>
+<div id="cart-message" class="cart-message">Added to cart!</div>
 
-  <!-- Sidebar Cart -->
-  <aside id="cart-sidebar" class="cart-sidebar">
-    <button id="close-cart">✖</button>
-    <h2>Your Cart</h2>
-    <ul id="cart-items"></ul>
-    <button id="checkout-btn">Checkout</button>
-  </aside>
+<aside id="cart-sidebar" class="cart-sidebar">
+  <button id="close-cart">✖</button>
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn">Checkout</button>
+</aside>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Hervana. All rights reserved.</p>
-  </footer>
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+</footer>
 
-  <script src="all-products.js"></script>
-  <script src="cart.js"></script>
+<script src="cart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const container = document.getElementById("product-container");
+
+  try {
+    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
+    const products = await response.json();
+
+    container.innerHTML = products.map(product => `
+      <div class="product-card">
+        <img src="${product.images[0]}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <p><strong>EGP ${product.price}</strong></p>
+        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
+        <button onclick="window.location.href='product.html?id=${product.id}'">View Details</button>
+      </div>
+    `).join("");
+
+  } catch (err) {
+    container.innerHTML = "<p>⚠️ Failed to load products.</p>";
+    console.error(err);
+  }
+});
+</script>
+
 </body>
 </html>
