@@ -335,3 +335,22 @@ footer a:hover {
   from { opacity:0; transform:translateX(50px); }
   to { opacity:1; transform:translateX(0); }
 }
+
+
+
+#checkout-btn {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+#checkout-btn:hover {
+  background: #c0392b;
+}

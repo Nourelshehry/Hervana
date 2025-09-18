@@ -1,8 +1,23 @@
+// ✅ إنشاء userId فريد لكل مستخدم (لو مش موجود)
+function getUserId() {
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+    localStorage.setItem("userId", userId);
+  }
+  return userId;
+}
+
+const userId = getUserId();
+const cartKey = `cart_${userId}`;
+const stockKey = `productStock_${userId}`;
+const ordersKey = `orders_${userId}`;
+
 document.addEventListener("DOMContentLoaded", async () => {
   const productGrid = document.querySelector(".product-grid");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
-  let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
+  let stockData = JSON.parse(localStorage.getItem(stockKey)) || {};
 
   // Fetch products.json
   let products = [];
@@ -77,9 +92,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (categorySelect) categorySelect.addEventListener("change", () => displayProducts(searchInput?.value || "", categorySelect.value));
 });
 
-// Add to Cart function
+// ✅ Add to Cart function
 function addToCart(id, name, price, stock) {
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
   let existing = cart.find(item => item.id === id);
 
   if (existing) {
@@ -89,7 +104,7 @@ function addToCart(id, name, price, stock) {
     cart.push({ id, name, price, quantity: 1 });
   }
 
-  localStorage.setItem("cart", JSON.stringify(cart));
+  localStorage.setItem(cartKey, JSON.stringify(cart));
 
   // Show cart message
   const cartMessage = document.getElementById("cart-message");
@@ -101,10 +116,10 @@ function addToCart(id, name, price, stock) {
   updateCartCount();
 }
 
-// Update cart count
+// ✅ Update cart count
 function updateCartCount() {
   const cartCount = document.getElementById("cart-count");
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
   if (cartCount) {
     cartCount.textContent = cart.reduce((acc, item) => acc + item.quantity, 0);
     cartCount.style.display = cart.length ? "inline-block" : "none";

@@ -92,3 +92,37 @@ header {
     font-size: 0.9rem;
   }
 }
+
+.add-to-cart {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.add-to-cart:hover {
+  background: #c0392b;
+}
+
+
+#checkout-btn {
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+#checkout-btn:hover {
+  background: #c0392b;
+}

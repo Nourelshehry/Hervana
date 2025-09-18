@@ -1,3 +1,4 @@
+// cart.js (استبدل الملف بالكامل بهذا المحتوى)
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
@@ -7,107 +8,123 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartMessage = document.getElementById("cart-message");
 
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-  // فتح/غلق الكارت
-  if (cartBtn) {
-    cartBtn.addEventListener("click", () => {
-      if (cartSidebar) cartSidebar.classList.add("active");
-    });
-  }
-
-  if (closeCart) {
-    closeCart.addEventListener("click", () => {
-      if (cartSidebar) cartSidebar.classList.remove("active");
-    });
-  }
-
-  // عرض الكارت
-  function renderCart() {
-    if (cartItems) {
-      cartItems.innerHTML = "";
-      let total = 0;
-
-      cart.forEach((item, index) => {
-        total += item.price * item.quantity;
-        const li = document.createElement("li");
-        li.innerHTML = `
-          <div class="cart-item">
-            <span>${item.name} - ${item.price} EGP</span>
-            <div class="quantity-controls">
-              <button class="decrease" data-index="${index}">-</button>
-              <span>${item.quantity}</span>
-              <button class="increase" data-index="${index}">+</button>
-            </div>
-          </div>
-        `;
-        cartItems.appendChild(li);
-      });
-
-      if (cartCount) {
-        cartCount.textContent = cart.length;
-        cartCount.style.display = cart.length > 0 ? "inline-block" : "none";
-      }
-
-      localStorage.setItem("cart", JSON.stringify(cart));
+  // ==== userId management ====
+  function getUserId() {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+      localStorage.setItem("userId", userId);
     }
+    return userId;
+  }
+  const userId = getUserId();
+  const cartKey = () => `cart_${userId}`;
+
+  // Load / Save
+  function loadCart() {
+    return JSON.parse(localStorage.getItem(cartKey())) || [];
+  }
+  function saveCart(cart) {
+    localStorage.setItem(cartKey(), JSON.stringify(cart));
+    updateCartCount();
   }
 
-  // إضافة منتج للكارت
+  // initial cart
+  let cart = loadCart();
+
+  // open/close cart sidebar
+  if (cartBtn) cartBtn.addEventListener("click", () => cartSidebar?.classList.add("active"));
+  if (closeCart) closeCart.addEventListener("click", () => cartSidebar?.classList.remove("active"));
+
+  // Render cart in sidebar
+  function renderCart() {
+    if (!cartItems) return;
+    cartItems.innerHTML = "";
+    let total = 0;
+    cart.forEach((item, index) => {
+      total += item.price * item.quantity;
+      const li = document.createElement("li");
+      li.innerHTML = `
+        <div class="cart-item">
+          <span>${item.name} - ${item.price} EGP</span>
+          <div class="quantity-controls">
+            <button class="decrease" data-index="${index}">-</button>
+            <span>${item.quantity}</span>
+            <button class="increase" data-index="${index}">+</button>
+          </div>
+        </div>
+      `;
+      cartItems.appendChild(li);
+    });
+    saveCart(cart); // keep saved
+  }
+
+  // Add to cart (used by click handler below)
   function addToCart(productId, productName, price) {
-    const existing = cart.find((item) => item.id === productId);
+    productId = parseInt(productId);
+    price = parseFloat(price);
+    const existing = cart.find(i => i.id === productId);
     if (existing) {
       existing.quantity++;
     } else {
-      cart.push({ id: productId, name: productName, price: parseFloat(price), quantity: 1 });
+      cart.push({ id: productId, name: productName, price, quantity: 1 });
     }
+    saveCart(cart);
     renderCart();
-    showCartMessage();
+    showCartMessage(`${productName} added to cart`);
   }
 
-  // التحكم في الكمية
-  if (cartItems) {
-    cartItems.addEventListener("click", (e) => {
-      if (e.target.classList.contains("increase")) {
-        const index = e.target.dataset.index;
-        cart[index].quantity++;
-      } else if (e.target.classList.contains("decrease")) {
-        const index = e.target.dataset.index;
-        cart[index].quantity--;
-        if (cart[index].quantity <= 0) {
-          cart.splice(index, 1);
-        }
-      }
+  // Quantity controls inside sidebar
+  cartItems?.addEventListener("click", (e) => {
+    if (e.target.classList.contains("increase")) {
+      const idx = parseInt(e.target.dataset.index);
+      cart[idx].quantity++;
       renderCart();
-    });
-  }
+    } else if (e.target.classList.contains("decrease")) {
+      const idx = parseInt(e.target.dataset.index);
+      cart[idx].quantity--;
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+  });
 
-  // ربط أي Add to Cart buttons موجودة ديناميكي
+  // Global listener for any add-to-cart button on page
   document.body.addEventListener("click", (e) => {
     if (e.target.classList.contains("add-to-cart")) {
       const id = e.target.dataset.id;
       const name = e.target.dataset.name;
       const price = e.target.dataset.price;
-      addToCart(parseInt(id), name, price);
+      if (!id || !name || !price) {
+        console.warn("add-to-cart missing data attributes:", e.target);
+        return;
+      }
+      addToCart(id, name, price);
     }
   });
 
-  // رسالة Added to Cart
-  function showCartMessage() {
-    if (cartMessage) {
-      cartMessage.style.display = "block";
-      setTimeout(() => {
-        cartMessage.style.display = "none";
-      }, 2000);
+  // unified toast
+  function showCartMessage(text) {
+    if (!cartMessage) return;
+    cartMessage.textContent = text || "Added to cart!";
+    cartMessage.classList.add("show");
+    setTimeout(() => cartMessage.classList.remove("show"), 2000);
+  }
+
+  // checkout button
+  if (checkoutBtn) checkoutBtn.addEventListener("click", () => window.location.href = "order.html");
+
+  // update cart count (sum of quantities)
+  function updateCartCount() {
+    const countEl = document.getElementById("cart-count");
+    const cartData = loadCart();
+    const qty = cartData.reduce((s, it) => s + (it.quantity || 0), 0);
+    if (countEl) {
+      countEl.textContent = qty;
+      countEl.style.display = qty ? "inline-block" : "none";
     }
   }
 
-  // زرار Checkout
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      window.location.href = "order.html";
-    });
-  }
-
+  // initial render
   renderCart();
+  updateCartCount();
 });

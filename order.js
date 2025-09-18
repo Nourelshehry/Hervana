@@ -2,24 +2,39 @@
 
 // === EmailJS init (استبدلي USER ID بالـ actual one) ===
 if (window.emailjs) {
-  // if the library already loaded, init immediately;
-  // otherwise emailjs will be initialised after the library script loads
   try {
-    emailjs.init("YOUR_USER_ID");
+    emailjs.init("YOUR_USER_ID"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
   } catch (e) {
     console.warn("EmailJS init warning:", e);
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const cart = JSON.parse(localStorage.getItem("cart")) || [];
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
   const form = document.getElementById("order-form");
+  const thankYou = document.getElementById("thank-you");
+  const backBtn = document.getElementById("thank-back-btn");
+
   let total = 0;
   let shippingCost = 0;
 
-  // عرض تفاصيل الأوردر (كما كانت في النسخة الأصلية)
+  // ========== إدارة المستخدم ==========
+  function getUserId() {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+      localStorage.setItem("userId", userId);
+    }
+    return userId;
+  }
+
+  const userId = getUserId();
+
+  // تحميل الكارت الخاص بالمستخدم
+  const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+
+  // === عرض تفاصيل الأوردر ===
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
@@ -30,10 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
       total += (parseFloat(item.price) || 0) * (item.quantity || 0);
     });
   }
-
   totalElem.textContent = `Total: ${total} EGP`;
 
-  // Shipping options logic (كما في النسخة الأصلية)
+  // === خيارات الشحن ===
   const shippingOptions = document.querySelectorAll(".shipping-option");
   shippingOptions.forEach(option => {
     option.addEventListener("click", () => {
@@ -44,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // عند Confirm Order (نقل كامل لوجيك الإرسال هنا بدلاً من inline)
+  // === عند تأكيد الأوردر ===
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -62,32 +76,32 @@ document.addEventListener("DOMContentLoaded", () => {
     const finalTotal = total + (shippingCost || 0);
 
     const orderData = {
+      id: "order_" + Date.now(),
+      userId: userId,
       name,
       phone,
       email,
       address,
       items,
-      total: finalTotal.toFixed(2)
+      total: finalTotal.toFixed(2),
+      date: new Date().toLocaleString()
     };
 
-    // تخزين الأوردر في localStorage (كما في النسخة الأصلية)
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push({ ...orderData, date: new Date().toLocaleString() });
-    localStorage.setItem("orders", JSON.stringify(orders));
+    // === تخزين الأوردر في localStorage لكل مستخدم ===
+    let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
+    orders.push(orderData);
+    localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
 
-    // إرسال إيميل بالـ EmailJS (كما في النسخة الأصلية)
-    // تأكدي تستبدلي service ID و template ID و user ID حسب حسابك في EmailJS
+    // === إرسال إيميل بالـ EmailJS ===
     if (window.emailjs && emailjs.send) {
       emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
-        .then(() => {
-          console.log("✅ Confirmation email sent!");
-        })
-        .catch((err) => console.error("❌ Failed to send email:", err));
+        .then(() => console.log("✅ Confirmation email sent!"))
+        .catch(err => console.error("❌ Failed to send email:", err));
     } else {
       console.warn("EmailJS not available — skipping send.");
     }
 
-    // تحديث المخزون (productStock) بناءً على item.id
+    // === تحديث المخزون (productStock) ===
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
     cart.forEach(item => {
       if (item.id !== undefined) {
@@ -102,17 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     localStorage.setItem("productStock", JSON.stringify(stockData));
 
-    // تصفير الكارت
-    localStorage.removeItem("cart");
+    // === تصفير الكارت بعد الأوردر ===
+    localStorage.removeItem(`cart_${userId}`);
 
-    // إظهار رسالة الشكر (كما في النسخة الأصلية)
+    // === إظهار رسالة الشكر ===
     form.style.display = "none";
     document.querySelector("header").style.display = "none";
     document.querySelector("footer").style.display = "none";
-    document.getElementById("thank-you").classList.add("show");
-
-    // زر العودة
-    const backBtn = document.getElementById("thank-back-btn");
-    if (backBtn) backBtn.addEventListener("click", () => window.location.href = "index.html");
+    thankYou.classList.add("show");
   });
+
+  // زر العودة للهوم
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+  }
 });

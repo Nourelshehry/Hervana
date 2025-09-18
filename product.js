@@ -1,65 +1,83 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  const productId = parseInt(new URLSearchParams(window.location.search).get("id"));
-  const productNameEl = document.getElementById("product-name");
-  const productDescEl = document.getElementById("product-description");
-  const productPriceEl = document.getElementById("product-price");
-  const addToCartBtn = document.getElementById("add-to-cart");
-  const sliderEl = document.getElementById("slider");
-  const sliderDots = document.getElementById("slider-dots");
+// product.js
 
-  if (!productId) return;
+document.addEventListener("DOMContentLoaded", async () => {
+  const productId = new URLSearchParams(window.location.search).get("id");
 
   try {
-    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
+    const response = await fetch("products.json");
     const products = await response.json();
 
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
-    let currentStock = stockData[product.id] ?? product.stock;
-
-    // ملء البيانات
-    productNameEl.textContent = product.name;
-    productDescEl.textContent = product.description;
-    productPriceEl.textContent = `EGP ${product.price}`;
-    if (currentStock <= 0) addToCartBtn.disabled = true;
-
-    // ربط Add to Cart
-    if (addToCartBtn) {
-      addToCartBtn.dataset.id = product.id;
-      addToCartBtn.dataset.name = product.name;
-      addToCartBtn.dataset.price = product.price;
+    const product = products.find(p => p.id == productId);
+    if (!product) {
+      document.querySelector(".product-details").innerHTML = "<p>Product not found.</p>";
+      return;
     }
 
-    // Slider الصور
-    sliderEl.innerHTML = product.images.map((img, idx) =>
-      `<img src="${img}" alt="${product.name}" style="display:${idx===0?'block':'none'};">`
-    ).join("");
+    // Fill product details
+    document.getElementById("product-name").textContent = product.name;
+    document.getElementById("product-description").textContent = product.description;
+    document.getElementById("product-price").textContent = `EGP ${product.price}`;
 
-    sliderDots.innerHTML = product.images.map((_, idx) =>
-      `<button class="${idx===0?'active':''}" data-index="${idx}"></button>`
-    ).join("");
+    // Setup slider
+    const slider = document.getElementById("slider");
+    const dots = document.getElementById("slider-dots");
 
-    let currentIndex = 0;
-    function showSlide(index) {
-      const slides = sliderEl.querySelectorAll("img");
-      slides.forEach((s, i) => s.style.display = i === index ? "block" : "none");
-      sliderDots.querySelectorAll("button").forEach((b, i) => b.classList.toggle("active", i === index));
-      currentIndex = index;
+    if (product.images && product.images.length > 0) {
+      product.images.forEach((img, index) => {
+        const imgElem = document.createElement("img");
+        imgElem.src = img;
+        imgElem.classList.add("slide");
+        if (index === 0) imgElem.classList.add("active");
+        slider.appendChild(imgElem);
+
+        const dot = document.createElement("span");
+        dot.classList.add("dot");
+        if (index === 0) dot.classList.add("active");
+        dots.appendChild(dot);
+      });
+
+      initSlider();
     }
 
-    document.querySelector(".next")?.addEventListener("click", () => {
-      showSlide((currentIndex + 1) % product.images.length);
-    });
-    document.querySelector(".prev")?.addEventListener("click", () => {
-      showSlide((currentIndex - 1 + product.images.length) % product.images.length);
-    });
-    sliderDots.querySelectorAll("button").forEach(btn => {
-      btn.addEventListener("click", () => showSlide(parseInt(btn.dataset.index)));
-    });
+    // Add-to-cart button
+    const addBtn = document.querySelector(".add-to-cart");
+    if (addBtn) {
+      addBtn.dataset.id = product.id;
+      addBtn.dataset.name = product.name;
+      addBtn.dataset.price = product.price;
 
+      addBtn.addEventListener("click", () => {
+        addToCart(product);
+      });
+    }
   } catch (err) {
-    console.error(err);
+    console.error("Failed to load product:", err);
   }
 });
+
+// === Slider Logic ===
+function initSlider() {
+  let currentIndex = 0;
+  const slides = document.querySelectorAll(".slide");
+  const dots = document.querySelectorAll(".dot");
+
+  function showSlide(index) {
+    slides.forEach((s, i) => s.classList.toggle("active", i === index));
+    dots.forEach((d, i) => d.classList.toggle("active", i === index));
+    currentIndex = index;
+  }
+
+  document.querySelector(".prev").addEventListener("click", () => {
+    showSlide((currentIndex - 1 + slides.length) % slides.length);
+  });
+
+  document.querySelector(".next").addEventListener("click", () => {
+    showSlide((currentIndex + 1) % slides.length);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => showSlide(i));
+  });
+
+  showSlide(0);
+}
