@@ -37,6 +37,7 @@ header {
 }
 
 /* Slider */
+/* Slider Container */
 .slider-container {
   position: relative;
   width: 100%;
@@ -46,12 +47,19 @@ header {
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
   margin-bottom: 20px;
 }
+
+/* Slides */
 .slider img {
   width: 100%;
+  display: none;   /* اخفي كل الصور */
   border-radius: 12px;
 }
 
-/* Slider buttons */
+.slider img.active {
+  display: block;  /* اللي عليها active بس تبان */
+}
+
+/* Buttons */
 .slider-btn {
   position: absolute;
   top: 50%;
@@ -67,21 +75,23 @@ header {
 .slider-btn.prev { left: 10px; }
 .slider-btn.next { right: 10px; }
 
-/* Slider dots */
+/* Dots */
 .slider-dots {
   text-align: center;
   margin-top: 10px;
 }
-.slider-dots button {
+.slider-dots .dot {
+  display: inline-block;
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  border: none;
-  margin: 0 5px;
   background: #ccc;
+  margin: 0 5px;
   cursor: pointer;
 }
-.slider-dots .active { background: #c0392b; }
+.slider-dots .dot.active {
+  background: #c0392b;
+}
 
 /* Mobile Header Fix */
 @media (max-width:768px){
@@ -124,5 +134,45 @@ header {
 }
 
 #checkout-btn:hover {
+  background: #c0392b;
+}
+
+/*temporary
+/* Cart toast message */
+.cart-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #27ae60;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  transform: translateY(-20px);
+  z-index: 9999;
+}
+.cart-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Slider dots fix */
+.slider-dots {
+  text-align: center;
+  margin-top: 10px;
+}
+.slider-dots .dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 5px;
+  background: #ccc;
+  cursor: pointer;
+}
+.slider-dots .dot.active {
   background: #c0392b;
 }

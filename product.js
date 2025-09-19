@@ -56,6 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // === Slider Logic ===
+// === Slider Logic ===
 function initSlider() {
   let currentIndex = 0;
   const slides = document.querySelectorAll(".slide");
@@ -79,5 +80,44 @@ function initSlider() {
     dot.addEventListener("click", () => showSlide(i));
   });
 
-  showSlide(0);
+  showSlide(0); // أول صورة تبقى ظاهرة
+}
+
+
+//temporary
+// === Add to Cart Function ===
+function addToCart(product) {
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = "user_" + Date.now();
+    localStorage.setItem("userId", userId);
+  }
+
+  const cartKey = `cart_${userId}`;
+  let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+  const existing = cart.find(item => item.id === product.id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+  }
+
+  localStorage.setItem(cartKey, JSON.stringify(cart));
+
+  // Show "Added to cart!" message
+  const msg = document.getElementById("cart-message");
+  if (msg) {
+    msg.classList.add("show");
+    setTimeout(() => msg.classList.remove("show"), 1500);
+  }
+
+  // Update cart counter
+  updateCartCount(cart);
+}
+
+function updateCartCount(cart) {
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const counter = document.getElementById("cart-count");
+  if (counter) counter.textContent = count;
 }
