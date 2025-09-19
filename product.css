@@ -36,16 +36,19 @@ header {
   margin-left: 5px;
 }
 
-/* Slider */
+/* ====================== */
+/* Slider Styles */
+/* ====================== */
+
 /* Slider Container */
 .slider-container {
   position: relative;
   width: 100%;
-  max-width: 450px;
+  max-width: 600px; /* أوسع للـ Desktop */
   overflow: hidden;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto; /* Center */
 }
 
 /* Slides */
@@ -68,41 +71,40 @@ header {
   border: none;
   color: #fff;
   font-size: 22px;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
   cursor: pointer;
+  transition: background 0.3s ease;
+  z-index: 10;
 }
-.slider-btn.prev { left: 10px; }
-.slider-btn.next { right: 10px; }
+.slider-btn:hover {
+  background: rgba(192, 57, 43, 1);
+}
+.slider-btn.prev { left: 15px; }
+.slider-btn.next { right: 15px; }
 
 /* Dots */
 .slider-dots {
   text-align: center;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 .slider-dots .dot {
   display: inline-block;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   background: #ccc;
-  margin: 0 5px;
+  margin: 0 6px;
   cursor: pointer;
+  transition: background 0.3s ease;
 }
 .slider-dots .dot.active {
   background: #c0392b;
 }
 
-/* Mobile Header Fix */
-@media (max-width:768px){
-  header {
-    grid-template-columns: 40px auto 40px;
-  }
-  .back-btn, #cart-btn {
-    font-size: 0.9rem;
-  }
-}
-
+/* ====================== */
+/* Buttons */
+/* ====================== */
 .add-to-cart {
   background: #c0392b;
   color: #fff;
@@ -116,9 +118,8 @@ header {
 }
 
 .add-to-cart:hover {
-  background: #c0392b;
+  background: #a93226;
 }
-
 
 #checkout-btn {
   background: #c0392b;
@@ -134,11 +135,12 @@ header {
 }
 
 #checkout-btn:hover {
-  background: #c0392b;
+  background: #a93226;
 }
 
-/*temporary
+/* ====================== */
 /* Cart toast message */
+/* ====================== */
 .cart-message {
   position: fixed;
   top: 20px;
@@ -159,20 +161,29 @@ header {
   transform: translateY(0);
 }
 
-/* Slider dots fix */
-.slider-dots {
-  text-align: center;
-  margin-top: 10px;
-}
-.slider-dots .dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  margin: 0 5px;
-  background: #ccc;
-  cursor: pointer;
-}
-.slider-dots .dot.active {
-  background: #c0392b;
+/* ====================== */
+/* Mobile Header Fix */
+/* ====================== */
+@media (max-width:768px){
+  header {
+    grid-template-columns: 40px auto 40px;
+  }
+  .back-btn, #cart-btn {
+    font-size: 0.9rem;
+  }
+
+  /* Slider smaller on mobile */
+  .slider-container {
+    max-width: 100%;
+  }
+
+  .slider-btn {
+    font-size: 18px;
+    padding: 8px;
+  }
+  .slider-dots .dot {
+    width: 10px;
+    height: 10px;
+    margin: 0 4px;
+  }
 }
