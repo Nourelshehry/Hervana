@@ -151,7 +151,7 @@ header .header-actions button.back-btn:hover {
 .product-card button,
 .view-btn {
   flex: 1;
-  padding: 12px;
+  padding: 8px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -163,7 +163,7 @@ header .header-actions button.back-btn:hover {
 .product-card button {
   background: #c0392b;
   color: #fff;
-  margin: 10px;
+  margin: 8px;
 }
 
 .product-card button:hover {
@@ -174,7 +174,7 @@ header .header-actions button.back-btn:hover {
 .view-btn {
   background: #c0392b;
   color: #fff;
-  margin: 10px;
+  margin: 8px;
 }
 
 .view-btn:hover {
@@ -347,4 +347,41 @@ footer {
     align-items: center;
   }
   .logo { margin: 0 auto; }
+}
+
+/* Default hidden on mobile */
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 22px;
+  /*cursor: pointer;*/
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: #c0392b;
+    flex-direction: column;
+    width: 200px;
+    padding: 15px;
+    display: none;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
 }
