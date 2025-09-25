@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // === تخزين الأوردر في localStorage لكل مستخدم ===
-    let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
+  let orders = JSON.parse(localStorage.getItem(`orders_user_${userId}`)) || [];
     orders.push(orderData);
     localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
 

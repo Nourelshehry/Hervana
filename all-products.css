@@ -361,7 +361,7 @@ footer {
   background: none;
   border: none;
   font-size: 22px;
-  /*cursor: pointer;*/
+  cursor: pointer;
   color: #fff;
 }
 

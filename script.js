@@ -128,3 +128,38 @@ function updateCartCount() {
 
 // Initial cart count
 updateCartCount();
+document.addEventListener("DOMContentLoaded", () => {
+  const slides = document.querySelectorAll(".slide");
+  const nextBtn = document.querySelector(".slider-btn.next");
+  const prevBtn = document.querySelector(".slider-btn.prev");
+  const dotsContainer = document.querySelector(".dots");
+
+  let currentIndex = 0;
+
+  // إنشاء النقاط
+  slides.forEach((_, i) => {
+    const dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => goToSlide(i));
+    dotsContainer.appendChild(dot);
+  });
+  const dots = document.querySelectorAll(".dots span");
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === index);
+      dots[i].classList.toggle("active", i === index);
+    });
+  }
+
+  function goToSlide(index) {
+    currentIndex = (index + slides.length) % slides.length;
+    showSlide(currentIndex);
+  }
+
+  nextBtn.addEventListener("click", () => goToSlide(currentIndex + 1));
+  prevBtn.addEventListener("click", () => goToSlide(currentIndex - 1));
+
+  // Auto play
+  setInterval(() => goToSlide(currentIndex + 1), 5000);
+});
