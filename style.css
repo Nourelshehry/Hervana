@@ -78,8 +78,11 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
+  flex-direction: column; /* ✅ خلي العناصر تحت بعض */
   gap: 15px;
+  align-items: flex-start; /* اختياري: تخليها تبدأ من الشمال */
 }
+
 
 nav a {
   color: #fff;
@@ -200,7 +203,7 @@ nav a {
 /* Search bar */
 .hero-search-container {
   position: absolute;
-  top: 80px;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   z-index:5;
@@ -259,6 +262,21 @@ nav a {
 }
 
 .product-card button:hover {
+  transform: scale(1.05);
+}
+
+.view-details {
+  margin-top:10px;
+  padding:8px 15px;
+  background:#c0392b;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  transition: transform 0.2s;
+  border-radius: 5px; /* زي add-to-cart */
+}
+
+.view-details:hover {
   transform: scale(1.05);
 }
 
