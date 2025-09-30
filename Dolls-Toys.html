@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>All Products - Hervana</title>
+  <title>Dolls-Toys - Hervana</title>
   <link rel="stylesheet" href="all-products.css"/>
 </head>
 <body>
@@ -64,27 +64,55 @@
 </body>
 </html>
 <section class="products">
-  <h2>Flowers</h2>
+  <h2>Dolls</h2>
   <div class="product-grid" id="product-list"></div>
 </section>
 
 <script>
-  fetch("products.json")
-    .then(res => res.json())
-    .then(data => {
-      const productList = document.getElementById("product-list");
-      const flowers = data.filter(p => p.category === "Dolls"); // ✅ فلترة بالكاشيجوري
+  async function loadDolls() {
+    let data = [];
 
-      flowers.forEach(product => {
-        const card = document.createElement("div");
-        card.classList.add("product-card");
-        card.innerHTML = `
-          <img src="${product.image}" alt="${product.name}">
-          <h3>${product.name}</h3>
-          <p>${product.price} EGP</p>
-          <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
-        `;
-        productList.appendChild(card);
-      });
+    try {
+      // الأول من local
+      const localRes = await fetch("products.json");
+      if (!localRes.ok) throw new Error("Local fetch failed");
+      data = await localRes.json();
+    } catch (err) {
+      console.warn("⚠️ Local failed, trying GitHub...");
+      try {
+        const githubRes = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
+        data = await githubRes.json();
+      } catch (githubErr) {
+        console.error("❌ Failed to load dolls.", githubErr);
+        document.getElementById("product-list").innerHTML = "<p>⚠️ Error loading dolls products.</p>";
+        return;
+      }
+    }
+
+    // ✅ فلترة بس الكاتيجوري "dolls"
+    const dolls = data.filter(p => p.category?.toLowerCase() === "dolls");
+
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = ""; // مهم عشان ميكررّش
+
+    dolls.forEach(product => {
+      const card = document.createElement("div");
+      card.classList.add("product-card");
+      card.innerHTML = `
+        <img src="${product.images[0]}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.price} EGP</p>
+        <button 
+          class="add-to-cart" 
+          data-id="${product.id}" 
+          data-name="${product.name}" 
+          data-price="${product.price}">
+          Add to Cart
+        </button>
+      `;
+      productList.appendChild(card);
     });
+  }
+
+  loadDolls();
 </script>
