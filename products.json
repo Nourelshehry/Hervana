@@ -1,10 +1,11 @@
 [
   {
     "id": 1,
-    "name": "Gift Box Classic",
-    "price": 150,
-    "stock": 5,
-    "description": "A beautifully packed classic gift box with selected items. Perfect for birthdays, anniversaries, or special occasions.",
+    "category":"Gift",
+    "name": "Princess Lola",
+    "price": 750,
+    "stock": 3,
+    "description": "A beautiful princess with moving-parts",
     "images": [
       "images/gift11.jpg",
       "images/gift12.jpg",
@@ -14,10 +15,11 @@
   },
   {
     "id": 2,
-    "name": "Luxury Decor Vase",
-    "price": 200,
-    "stock": 0,
-    "description": "Elegant handmade vase perfect for home decor. Limited edition, crafted with care.",
+    "category":"Notebooks",
+    "name": "Fantasy Notebook",
+    "price": 350,
+    "stock": 1,
+    "description": "Elegant Notebook.",
     "images": [
       "images/gift21.jpg",
       "images/gift22.jpg",
@@ -26,35 +28,44 @@
   },
   {
     "id": 3,
-    "name": "Spa Gift Basket",
-    "price": 300,
-    "stock": 8,
-    "description": "Relax and pamper yourself with this luxurious spa gift basket including oils, candles, and more.",
+    "category":"Totebags",
+    "name": "Wonderful Totebag",
+    "price": 600,
+    "stock": 2,
+    "description": "High material totebag with bockets",
     "images": [
-      "images/product3-1.jpg",
-      "images/product3-2.jpg"
+      "images/gift31.jpg",
+      "images/gift32.jpg",
+      "images/gift33.jpg",
+      "images/gift34.jpg"
     ]
   },
   {
     "id": 4,
-    "name": "Chocolate Lovers Box",
-    "price": 120,
-    "stock": 12,
-    "description": "A delightful selection of premium chocolates to satisfy every sweet tooth.",
+    "category":"Decors",
+    "name": "Women Vase",
+    "price": 420,
+    "stock": 1,
+    "description": "A Special great vase.",
     "images": [
-      "images/product4-1.jpg",
-      "images/product4-2.jpg"
+      "images/gift41.jpg",
+      "images/gift42.jpg",
+      "images/gift43.jpg",
+      "images/gift44.jpg"
     ]
   },
   {
     "id": 5,
-    "name": "Custom Gift Basket",
-    "price": 250,
+    "category":"Candels",
+    "name": "Floral-Scented Candle",
+    "price": 350,
     "stock": 3,
-    "description": "Create your own personalized gift basket with items of your choice. Unique and thoughtful.",
+    "description": "Perfect candle with floral scent",
     "images": [
-      "images/product5-1.jpg",
-      "images/product5-2.jpg"
+      "images/gift51.jpg",
+      "images/gift52.jpg",
+      "images/gift53.jpg",
+      "images/gift54.jpg"
     ]
   }
 ]
