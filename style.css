@@ -1,3 +1,8 @@
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* ===================== Body ===================== */
 body {
   font-family: Arial, sans-serif;
@@ -186,7 +191,7 @@ nav a {
 /* Search bar */
 .hero-search-container {
   position: absolute;
-  top: 90px;
+  top: 80px;
   left: 50%;
   transform: translateX(-50%);
   z-index:5;
@@ -196,7 +201,7 @@ nav a {
 
 .search-bar {
   width: 80%;
-  padding: 8px 12px;
+  padding: 10px 12px;
   border-radius: 5px;
   border: 1px solid #ccc;
   font-size: 14px;

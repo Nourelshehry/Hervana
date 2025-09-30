@@ -1,3 +1,8 @@
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* Header Grid Fix */
 header {
   display: grid;
@@ -43,7 +48,7 @@ header {
 /* Slider Container */
 .slider-container {
   position: relative;
-  width: 60%;
+  width: 100%;
   max-width: 600px; /* أوسع للـ Desktop */
   overflow: hidden;
   border-radius: 12px;
