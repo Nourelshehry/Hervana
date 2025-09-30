@@ -414,3 +414,9 @@ footer a:hover {
 #checkout-btn:hover {
   background: #c0392b;
 }
+/* ضمان أن الصور ماتكسرش عرض الصفحة */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
