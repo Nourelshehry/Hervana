@@ -186,7 +186,7 @@ nav a {
 /* Search bar */
 .hero-search-container {
   position: absolute;
-  top: 10px;
+  top: 90px;
   left: 50%;
   transform: translateX(-50%);
   z-index:5;
@@ -328,8 +328,8 @@ footer a:hover {
 /* ===================== Responsive ===================== */
 @media (max-width: 768px) {
   .menu-toggle { display:block; }
-  .nav-links { display:none; flex-direction:column; background:#c0392b; position:absolute; top:60px; left:0; width:100%; padding:15px 0; text-align:center; max-height: 0px;}
-  .nav-links.show { display:flex; max-height:300px;}
+  .nav-links { display:none; flex-direction:column; background:#c0392b; position:absolute; top:60px; left:0; width:100%; padding:15px 0; text-align:center;}
+  .nav-links.show { display:flex;}
   .product-card { width:90%; }
   .hero { height:400px; }
   .hero-content h1 { font-size:28px; }
