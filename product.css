@@ -2,7 +2,7 @@
 header {
   display: grid;
   grid-template-columns: 60px auto 60px; /* Back | Logo | Cart */
-  align-items: center;
+ /* align-items: center;*/
   padding: 12px 20px;
   background: #c0392b;
   color: #fff;
@@ -43,7 +43,7 @@ header {
 /* Slider Container */
 .slider-container {
   position: relative;
-  width: 100%;
+  width: 60%;
   max-width: 600px; /* أوسع للـ Desktop */
   overflow: hidden;
   border-radius: 12px;
@@ -187,17 +187,4 @@ header {
     height: 10px;
     margin: 0 4px;
   }
-}
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  gap: 15px;
-}
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
 }

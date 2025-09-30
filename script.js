@@ -163,3 +163,14 @@ document.addEventListener("DOMContentLoaded", () => {
   // Auto play
   setInterval(() => goToSlide(currentIndex + 1), 5000);
 });
+// ✅ Toggle menu on mobile
+document.addEventListener("DOMContentLoaded", () => {
+  const menuToggle = document.getElementById("menu-toggle");
+  const nav = document.getElementById("nav");
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener("click", () => {
+      nav.classList.toggle("show");
+    });
+  }
+});
