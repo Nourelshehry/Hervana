@@ -20,8 +20,7 @@
       <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="all-products.html">All Products</a></li>
-        
-        <li><a href="Dolls-Toys.html">Dolls-Toys</a></li>
+        <li><a href="about.html">About</a></li>
       </ul>
     </nav>
 
@@ -64,3 +63,28 @@
 
 </body>
 </html>
+<section class="products">
+  <h2>Flowers</h2>
+  <div class="product-grid" id="product-list"></div>
+</section>
+
+<script>
+  fetch("products.json")
+    .then(res => res.json())
+    .then(data => {
+      const productList = document.getElementById("product-list");
+      const flowers = data.filter(p => p.category === "Dolls"); // ✅ فلترة بالكاشيجوري
+
+      flowers.forEach(product => {
+        const card = document.createElement("div");
+        card.classList.add("product-card");
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>${product.price} EGP</p>
+          <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}">Add to Cart</button>
+        `;
+        productList.appendChild(card);
+      });
+    });
+</script>
