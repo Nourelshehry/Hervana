@@ -1,15 +1,25 @@
+/* ===================== Reset & Global ===================== */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   max-width: 100%;
   overflow-x: hidden;
 }
 
-/* ===================== Body ===================== */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   background: #ffe6f0;
   color: #333;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* ===================== Header ===================== */
@@ -19,7 +29,7 @@ header {
   align-items: center;
   background: transparent; /* ✅ شفاف */
   color: #fff;
-  padding: 15px 20px;
+  padding: 15px;
   position: absolute; /* ✅ فوق الهيرو */
   top: 0;
   left: 0;
@@ -77,16 +87,27 @@ nav a {
   font-weight: bold;
 }
 
+.nav-links {
+  transition: max-height 0.3s ease;
+  overflow: hidden;
+  max-width: 100%; /* ✅ ضمان مايكسرش العرض */
+  box-sizing: border-box;
+}
+
 /* ===================== Hero Section ===================== */
-.hero {
+.hero, .hero-slider {
   position: relative;
-  height: 500px;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
 }
+
+.hero {
+  height: 500px;
+}
+
 .hero-slider {
-  position: relative;
   height: 100vh;
-  overflow: hidden;
 }
 
 .hero-slider .slide {
@@ -148,18 +169,6 @@ nav a {
   background: #fff;
 }
 
-/*.hero-slider img {
-  position: absolute;
-  top:0; left:0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-}
-
-.hero-slider img.active { opacity: 1; }
-*/
 .hero-content {
   position: absolute;
   top:50%;
@@ -286,6 +295,7 @@ footer a:hover {
   transition:right 0.3s ease-in-out;
   z-index:2000;
   overflow-y: auto;
+  max-width: 100vw; /* ✅ ضمان عدم كسر العرض */
 }
 
 .cart-sidebar.active { right:0; }
@@ -324,11 +334,6 @@ footer a:hover {
   cursor: pointer;
   border-radius: 4px;
 }
-.nav-links {
-  transition: max-height 0.3s ease;
-  overflow: hidden;
-}
-
 
 /* ===================== Responsive ===================== */
 @media (max-width: 768px) {
@@ -394,29 +399,4 @@ footer a:hover {
 @keyframes slideIn {
   from { opacity:0; transform:translateX(50px); }
   to { opacity:1; transform:translateX(0); }
-}
-
-
-
-#checkout-btn {
-  background: #c0392b;
-  color: #fff;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  width: 100%;
-  transition: background 0.3s ease;
-}
-
-#checkout-btn:hover {
-  background: #c0392b;
-}
-/* ضمان أن الصور ماتكسرش عرض الصفحة */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
 }

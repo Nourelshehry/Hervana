@@ -174,3 +174,48 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+document.addEventListener("DOMContentLoaded", () => {
+  let slides = document.querySelectorAll(".hero-slider .slide");
+  let nextBtn = document.querySelector(".slider-btn.next");
+  let prevBtn = document.querySelector(".slider-btn.prev");
+  let dotsContainer = document.querySelector(".hero-slider .dots");
+  let currentIndex = 0;
+
+  // إنشاء dots
+  slides.forEach((_, i) => {
+    let dot = document.createElement("span");
+    if (i === 0) dot.classList.add("active");
+    dotsContainer.appendChild(dot);
+  });
+
+  let dots = dotsContainer.querySelectorAll("span");
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("active", i === index);
+      dots[i].classList.toggle("active", i === index);
+    });
+    currentIndex = index;
+  }
+
+  nextBtn.addEventListener("click", () => {
+    let newIndex = (currentIndex + 1) % slides.length;
+    showSlide(newIndex);
+  });
+
+  prevBtn.addEventListener("click", () => {
+    let newIndex = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(newIndex);
+  });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => showSlide(i));
+  });
+
+  // Auto play
+  setInterval(() => {
+    let newIndex = (currentIndex + 1) % slides.length;
+    showSlide(newIndex);
+  }, 5000);
+});
+
