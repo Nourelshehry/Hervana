@@ -181,6 +181,24 @@ header .header-actions button.back-btn:hover {
   background: #c0392b;
   transform: scale(1.05);
 }
+.view-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 15px;
+  background: #c0392b; /* نفس اللون */
+  color: #fff;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.view-btn:hover {
+  background: #c0392b;
+}
+
 
 /* Cart Sidebar */
 .cart-sidebar {

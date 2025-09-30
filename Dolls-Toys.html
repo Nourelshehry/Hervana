@@ -94,18 +94,20 @@
     dolls.forEach(product => {
       const card = document.createElement("div");
       card.classList.add("product-card");
-      card.innerHTML = `
-        <img src="${product.images[0]}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.price} EGP</p>
-        <button 
-          class="add-to-cart" 
-          data-id="${product.id}" 
-          data-name="${product.name}" 
-          data-price="${product.price}">
-          Add to Cart
-        </button>
-      `;
+     card.innerHTML = `
+  <img src="${product.images[0]}" alt="${product.name}">
+  <h3>${product.name}</h3>
+  <p>${product.price} EGP</p>
+  <button 
+    class="add-to-cart" 
+    data-id="${product.id}" 
+    data-name="${product.name}" 
+    data-price="${product.price}">
+    Add to Cart
+  </button>
+  <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
+`;
+
       productList.appendChild(card);
     });
   }
