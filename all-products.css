@@ -398,20 +398,20 @@ footer {
 }
 
 /* Default hidden on mobile */
-.nav-links {
+/*.nav-links {
   list-style: none;
   display: flex;
   gap: 20px;
 }
 
-.menu-toggle {
+/*.menu-toggle {
   display: none;
   background: none;
   border: none;
   font-size: 22px;
   cursor: pointer;
   color: #fff;
-}
+}*/
 
 @media (max-width: 768px) {
   .nav-links {
