@@ -385,6 +385,7 @@ footer {
     font-size: 15px;
     padding: 12px;
   }
+   .menu-toggle { display:block; }
 }
 
 /* Desktop */
