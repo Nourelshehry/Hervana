@@ -67,5 +67,69 @@
       "images/gift53.jpg",
       "images/gift54.jpg"
     ]
+  },
+
+   {
+    "id": 6,
+    "category":"Tapstery",
+    "name": "Fantsy-girly Tapstery",
+    "price": 450,
+    "stock": 1,
+    "description": "Perfect Tapstery with amazing colors",
+    "images": [
+      "images/gift61.jpg",
+      "images/gift62.jpg",
+      "images/gift63.jpg"
+    ]
+  },
+   {
+    "id": 7,
+    "category":"Stickers",
+    "name": "Florie-world stickers",
+    "price": 500,
+    "stock": 3,
+    "description": "Perfect candle with floral scent",
+    "images": [
+      "images/gift71.jpg",
+      "images/gift72.jpg",
+      "images/gift73.jpg",
+      "images/gift74.jpg"
+    ]
+  },
+
+  {
+    "id": 8,
+    "category":"Totebags",
+    "name": "Brown-Beary Totebag",
+    "price": 500,
+    "stock": 3,
+    "description": "Perfect candle with floral scent",
+    "images": [
+      "images/gift81.jpg",
+      "images/gift82.jpg",
+      "images/gift83.jpg",
+      "images/gift84.jpg",
+      "images/gift85.jpg"
+    ]
+  },
+  
+  {
+    "id": 9,
+    "category":"Candels",
+    "name": "Coconut-Scented Candles",
+    "price": 650,
+    "stock": 3,
+    "description": "Perfect candle with floral scent",
+    "images": [
+      "images/gift91.jpg",
+      "images/gift911.jpg",
+      "images/gift92.jpg",
+      "images/gift93.jpg",
+      "images/gift94.jpg"
+    ]
   }
+
+
+
+
 ]
