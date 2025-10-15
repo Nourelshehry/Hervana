@@ -58,7 +58,7 @@ header {
 
 /* Slides */
 .slider img {
-  width: 100%;
+  width: 90%;
   display: none;   /* اخفي كل الصور */
   border-radius: 12px;
 }
