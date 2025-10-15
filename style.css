@@ -133,7 +133,7 @@ nav a {
 }
 
 /* أزرار */
-.slider-btn {
+/*.slider-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -255,21 +255,65 @@ color: #fff;
   border-radius:8px;
 }
 
-.product-card button, .view-details {
-  margin-top:10px;
-  padding:8px 15px;
-  background:#c0392b;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-  transition: transform 0.2s;
-  border-radius: 5px;
+/* Buttons */
+.product-card .btns {
+  display: flex;
+  gap: 8px;
+  padding: 0 10px 15px;
+  margin-top: auto;
 }
 
-.product-card button:hover,
-.view-details:hover {
+.product-card button,
+.view-btn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.product-card button {
+  background: #c0392b;
+  color: #fff;
+  margin: 8px;
+}
+
+.product-card button:hover {
+  background: #a93226;
   transform: scale(1.05);
 }
+
+.view-btn {
+  background: #c0392b;
+  color: #fff;
+  margin: 8px;
+}
+
+.view-btn:hover {
+  background: #c0392b;
+  transform: scale(1.05);
+}
+.view-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 10px 15px;
+  background: #c0392b; /* نفس اللون */
+  color: #fff;
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.view-btn:hover {
+  background: #c0392b;
+}
+
 
 /* ===================== Footer ===================== */
 footer {
