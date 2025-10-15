@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Decor - Hervana</title>
+  <link rel="stylesheet" href="all-products.css"/>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="logo"><a href="index.html">Hervana</a></div>
+ <div class="header-actions">
+      <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
+    </div>
+    
+    <nav>
+      <button class="menu-toggle">☰</button>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="all-products.html">All Products</a></li>
+        <li><a href="about.html">About</a></li>
+      </ul>
+    </nav>
+
+   
+  </header>
+
+  <!-- Filters -->
+  <section class="filters">
+    <input type="text" id="search" placeholder="Search products..."/>
+    <select id="category">
+      <option value="all">All Categories</option>
+      <option value="skincare">Skincare</option>
+      <option value="makeup">Makeup</option>
+      <option value="fragrance">Fragrance</option>
+    </select>
+  </section>
+
+ <!-- Products -->
+  <section class="products">
+    <h2>Decor</h2>
+    <div class="product-grid" id="product-list"></div>
+  </section>
+  <!-- Cart message -->
+  <div id="cart-message" class="cart-message">Added to cart!</div>
+
+  <!-- Cart Sidebar -->
+  <aside id="cart-sidebar" class="cart-sidebar">
+    <button id="close-cart" class="close-btn">✖</button>
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <button id="checkout-btn" class="checkout-btn">Checkout</button>
+  </aside>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Hervana. All rights reserved.</p>
+  </footer>
+  <script src="cart.js"></script>
+
+</body>
+</html>
+
+<script>
+  async function loadDecors() {
+    let data = [];
+
+    try {
+      // الأول من local
+      const localRes = await fetch("products.json");
+      if (!localRes.ok) throw new Error("Local fetch failed");
+      data = await localRes.json();
+    } catch (err) {
+      console.warn("⚠️ Local failed, trying GitHub...");
+      try {
+        const githubRes = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
+        data = await githubRes.json();
+      } catch (githubErr) {
+        console.error("❌ Failed to load decor.", githubErr);
+        document.getElementById("product-list").innerHTML = "<p>⚠️ Error loading decor products.</p>";
+        return;
+      }
+    }
+
+    // ✅ فلترة بس الكاتيجوري "decors"
+    const decors = data.filter(p => p.category?.toLowerCase() === "decors");
+
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = ""; // مهم عشان ميكررّش
+
+    decors.forEach(product => {
+      const card = document.createElement("div");
+      card.classList.add("product-card");
+     card.innerHTML = `
+  <img src="${product.images[0]}" alt="${product.name}">
+  <h3>${product.name}</h3>
+  <p>${product.price} EGP</p>
+  <button 
+    class="add-to-cart" 
+    data-id="${product.id}" 
+    data-name="${product.name}" 
+    data-price="${product.price}">
+    Add to Cart
+  </button>
+  <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
+`;
+
+      productList.appendChild(card);
+    });
+  }
+
+  loadDecors();
+</script>
