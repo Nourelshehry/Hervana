@@ -58,7 +58,7 @@ header {
 
 /* Slides */
 .slider img {
-  width: 90%;
+  width: 95%;
   display: none;   /* اخفي كل الصور */
   border-radius: 12px;
 }
@@ -114,7 +114,7 @@ header {
   background: #c0392b;
   color: #fff;
   border: none;
-  padding: 15px 20px;
+  padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 18px;
