@@ -78,7 +78,7 @@ nav ul {
   margin: 0;
   padding: 0;
   display: flex;
-  flex-direction: column; /* ✅ خلي العناصر تحت بعض */
+  flex-direction:raw; /* ✅ خلي العناصر تحت بعض */
   gap: 15px;
   align-items: flex-start; /* اختياري: تخليها تبدأ من الشمال */
 }
