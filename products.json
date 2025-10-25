@@ -2,10 +2,10 @@
   {
     "id": 1,
     "category":"Dolls",
-    "name": "Princess Lola",
-    "price": 750,
-    "stock": 3,
-    "description": "A beautiful princess with moving-parts",
+    "name": "Princess Vivy",
+    "price": 700,
+    "stock": 1,
+    "description": "دمية جميلة جميع أطرافها متحركة مناسبة للأطفال والكبار height:30cm",
     "images": [
       "images/gift11.jpg",
       "images/gift12.jpg",
