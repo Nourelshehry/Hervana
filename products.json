@@ -240,12 +240,9 @@
     "stock": 1,
     "description": "دفتر مميز لا يفتح إلا بكلمة سر height:21.5cm, width:14.5cm",
     "images": [
-      "images/gift151.jpg",
-      "images/gift152.jpg",
-      "images/gift153.jpg",
-      "images/gift154.jpg",
-      "images/gift155.jpg",
-      "images/gift145.jpg"
+      "images/gift171.jpg",
+      "images/gift172.jpg",
+      "images/gift173.jpg"
     ]
   },
    {
@@ -366,73 +363,68 @@
     ]
   },
     {
-    "id": 22,
-    "category":"Other",
-    "name": "Wedding bouquet with diamonds",
-    "price": 550,
+    "id": 26,
+    "category":"Candels",
+    "name": "Veiled woman candle- Pink",
+    "price": 365,
     "stock": 1,
-    "description": "بوكيه ورد أبيض صناعي جميل للزفاف أو هدية رمزية",
+    "description": "Scented candle with veiled woman shaped",
     "images": [
-      "images/gift221.jpg",
-      "images/gift222.jpg",
-      "images/gift223.jpg",
-      "images/gift224.jpg"
+      "images/gift261.jpg",
+      "images/gift262.jpg"
     ]
   },
     {
-    "id": 22,
-    "category":"Other",
-    "name": "Wedding bouquet with diamonds",
+    "id": 27,
+    "category":"Candels",
+    "name": "Veiled woman candle- Black",
+    "price": 365,
+    "stock": 1,
+    "description": "Scented candle with veiled woman shaped",
+    "images": [
+      "images/gift271.jpg",
+      "images/gift272.jpg"    ]
+  },
+    {
+    "id": 28,
+    "category":"Dolls",
+    "name": "Cute plushie",
     "price": 550,
     "stock": 1,
-    "description": "بوكيه ورد أبيض صناعي جميل للزفاف أو هدية رمزية",
+    "description": "بلاشي كيوت جدا كبيرة ومناسبة للأطفال والكبار height:38cm, width:15cm",
     "images": [
-      "images/gift221.jpg",
-      "images/gift222.jpg",
-      "images/gift223.jpg",
-      "images/gift224.jpg"
+      "images/gift283.jpg",
+      "images/gift281.jpg",
+      "images/gift282.jpg",
+      "images/gift284.jpg"
     ]
   },
     {
-    "id": 22,
-    "category":"Other",
-    "name": "Wedding bouquet with diamonds",
-    "price": 550,
+    "id": 29,
+    "category":"Candels",
+    "name": "Birthday cake Candel",
+    "price": 400,
     "stock": 1,
-    "description": "بوكيه ورد أبيض صناعي جميل للزفاف أو هدية رمزية",
+    "description": "كاندل على شكل تورتة عيدالميلاد بألوان زاهية height:6cm, width:5.8cm",
     "images": [
-      "images/gift221.jpg",
-      "images/gift222.jpg",
-      "images/gift223.jpg",
-      "images/gift224.jpg"
+      "images/gift291.jpg",
+      "images/gift292.jpg",
+      "images/gift293.jpg"
     ]
   },
     {
-    "id": 22,
-    "category":"Other",
-    "name": "Wedding bouquet with diamonds",
-    "price": 550,
+    "id": 30,
+    "category":"Totebags",
+    "name": "Lovable Totebag",
+    "price": 500,
     "stock": 1,
-    "description": "بوكيه ورد أبيض صناعي جميل للزفاف أو هدية رمزية",
+    "description": "توت باج جميلة بجيب داخلي مناسبة للجامعة أو الخروج height:24cm, width:31cm, length:7cmm",
     "images": [
-      "images/gift221.jpg",
-      "images/gift222.jpg",
-      "images/gift223.jpg",
-      "images/gift224.jpg"
-    ]
-  },
-    {
-    "id": 22,
-    "category":"Other",
-    "name": "Wedding bouquet with diamonds",
-    "price": 550,
-    "stock": 1,
-    "description": "بوكيه ورد أبيض صناعي جميل للزفاف أو هدية رمزية",
-    "images": [
-      "images/gift221.jpg",
-      "images/gift222.jpg",
-      "images/gift223.jpg",
-      "images/gift224.jpg"
+      "images/gift301.jpg",
+      "images/gift302.jpg",
+      "images/gift303.jpg",
+      "images/gift304.jpg",
+      "images/gift305.jpg"
     ]
   }
 ]
