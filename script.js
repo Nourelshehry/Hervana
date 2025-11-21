@@ -179,13 +179,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropdownMenu = document.querySelector(".dropdown-menu");
   const arrow = document.querySelector(".arrow");
 
-  if (dropBtn && dropdownMenu) {
+ /* if (dropBtn && dropdownMenu) {*/
     dropBtn.addEventListener("click", (e) => {
       e.preventDefault(); // منع الانتقال للرابط
       dropdownMenu.classList.toggle("show");
       arrow.classList.toggle("rotate");
     });
-  }
+  //}
 });
 document.addEventListener("DOMContentLoaded", () => {
   let slides = document.querySelectorAll(".hero-slider .slide");
