@@ -525,27 +525,26 @@
     ]
   },
   {
-    "id": 30,
-    "category":"Totebags",
-    "name": "Lovable Totebag",
-    "price": 500,
+    "id": 38,
+    "category":"Decors",
+    "name": "Fairytale set",
+    "price": 400,
     "stock": 1,
-    "description": "توت باج جميلة بجيب داخلي مناسبة للجامعة أو الخروج height:24cm, width:31cm, length:7cmm",
+    "description": "مجموعة من 4 فيري تيلز لديكور حالم وخيالي height: 8.5cm, width:3cm",
     "images": [
-      "images/gift301.jpg",
-      "images/gift302.jpg",
-      "images/gift303.jpg",
-      "images/gift304.jpg",
-      "images/gift305.jpg"
+      "images/gift381.jpg",
+      "images/gift382.jpg",
+      "images/gift383.jpg",
+      "images/gift384.jpg"
     ]
   },
   {
-    "id": 30,
-    "category":"Totebags",
-    "name": "Lovable Totebag",
-    "price": 500,
+    "id": 39,
+    "category":"Other",
+    "name": "Mandela tapstery",
+    "price": 300,
     "stock": 1,
-    "description": "توت باج جميلة بجيب داخلي مناسبة للجامعة أو الخروج height:24cm, width:31cm, length:7cmm",
+    "description": "توت باج جميلة بجيب داخلي مناسبة للجامعة أو الخروlength:7cmm",
     "images": [
       "images/gift301.jpg",
       "images/gift302.jpg",

@@ -96,7 +96,53 @@ nav a {
   max-width: 100%; /* ✅ ضمان مايكسرش العرض */
   box-sizing: border-box;
 }
+/* ▼▼ زرار الـ dropdown الأساسي ▼▼ */
+.dropbtn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-weight: bold;
+  width: 100%;
+  text-align: left;
+  padding: 10px 0;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+/* السهم */
+.arrow {
+  transition: transform 0.3s;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+/* ▼▼ القائمة المنسدلة ▼▼ */
+.dropdown-menu {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 15px; /* مسافة صغيرة للتمييز */
+}
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+/* عناصر القائمة */
+.dropdown-menu li a {
+  font-weight: normal;
+  color: #fff;
+}
+
+/* ممكن تضيفي تأثير بسيط */
+.dropdown-menu li a:hover {
+  opacity: 0.7;
+}
 /* ===================== Hero Section ===================== */
 .hero, .hero-slider {
   position: relative;
