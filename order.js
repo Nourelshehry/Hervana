@@ -3,7 +3,7 @@
 // === EmailJS init (استبدلي USER ID بالـ actual one) ===
 if (window.emailjs) {
   try {
-    emailjs.init("Hervana"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
+    emailjs.init("7hqQN_HKaAyPHjqYu"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
   } catch (e) {
     console.warn("EmailJS init warning:", e);
   }
