@@ -3,7 +3,7 @@
 // === EmailJS init (استبدلي USER ID بالـ actual one) ===
 if (window.emailjs) {
   try {
-    emailjs.init("YOUR_USER_ID"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
+    emailjs.init("Hervana"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
   } catch (e) {
     console.warn("EmailJS init warning:", e);
   }
@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // === إرسال إيميل بالـ EmailJS ===
     if (window.emailjs && emailjs.send) {
-      emailjs.send("service_7bn78p4", "template_3eu20q2", orderData)
+      emailjs.send("service_7bn78p4", "template_s8o631t", orderData)
         .then(() => console.log("✅ Confirmation email sent!"))
         .catch(err => console.error("❌ Failed to send email:", err));
     } else {
