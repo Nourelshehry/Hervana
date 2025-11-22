@@ -91,7 +91,7 @@ nav ul {
   padding-left: 0;
   margin: 0; /* مهم */
   list-style: none;
-  background:#e75480;
+  background:transparent #e75480;
   border-radius:4px;
 }
 
