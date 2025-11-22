@@ -1,14 +1,3 @@
-// order.js
-
-// === EmailJS init (استبدلي USER ID بالـ actual one) ===
-if (window.emailjs) {
-  try {
-    emailjs.init("7hqQN_HKaAyPHjqYu"); // 👈 استبدليها بالـ User ID بتاعك من EmailJS
-  } catch (e) {
-    console.warn("EmailJS init warning:", e);
-  }
-}
-
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
@@ -19,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let total = 0;
   let shippingCost = 0;
 
-  // ========== إدارة المستخدم ==========
+  // إدارة المستخدم
   function getUserId() {
     let userId = localStorage.getItem("userId");
     if (!userId) {
@@ -34,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // تحميل الكارت الخاص بالمستخدم
   const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
-  // === عرض تفاصيل الأوردر ===
+  // عرض تفاصيل الأوردر
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
@@ -47,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   totalElem.textContent = `Total: ${total} EGP`;
 
-  // === خيارات الشحن ===
+  // خيارات الشحن
   const shippingOptions = document.querySelectorAll(".shipping-option");
   shippingOptions.forEach(option => {
     option.addEventListener("click", () => {
@@ -58,8 +47,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // === عند تأكيد الأوردر ===
-  form.addEventListener("submit", (e) => {
+  // عند تأكيد الأوردر
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     if (cart.length === 0) {
@@ -77,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const orderData = {
       id: "order_" + Date.now(),
-      userId: userId,
+      userId,
       name,
       phone,
       email,
@@ -87,21 +76,35 @@ document.addEventListener("DOMContentLoaded", () => {
       date: new Date().toLocaleString()
     };
 
-    // === تخزين الأوردر في localStorage لكل مستخدم ===
-  let orders = JSON.parse(localStorage.getItem(`orders_user_${userId}`)) || [];
+    // تخزين الأوردر في localStorage
+    let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
     orders.push(orderData);
     localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
 
-    // === إرسال إيميل بالـ EmailJS ===
-    if (window.emailjs && emailjs.send) {
-      emailjs.send("service_7bn78p4", "template_1k6yrj9", orderData)
-        .then(() => console.log("✅ Confirmation email sent!"))
-        .catch(err => console.error("❌ Failed to send email:", err));
-    } else {
-      console.warn("EmailJS not available — skipping send.");
+    // === إرسال البيانات للباك اند الجديد ===
+    try {
+      const response = await fetch("http://localhost:3000/send-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: orderData.email,
+          name: orderData.name,
+          items: orderData.items,
+          total: orderData.total
+        })
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        console.log("✅ Confirmation email sent via backend!");
+      } else {
+        console.error("❌ Email sending failed:", result.message);
+      }
+    } catch (err) {
+      console.error("❌ Error sending email:", err);
     }
 
-    // === تحديث المخزون (productStock) ===
+    // تحديث المخزون
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
     cart.forEach(item => {
       if (item.id !== undefined) {
@@ -116,10 +119,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     localStorage.setItem("productStock", JSON.stringify(stockData));
 
-    // === تصفير الكارت بعد الأوردر ===
+    // تصفير الكارت بعد الأوردر
     localStorage.removeItem(`cart_${userId}`);
-
-    // === إظهار رسالة الشكر ===
+    // إظهار صفحة الشكر
     form.style.display = "none";
     document.querySelector("header").style.display = "none";
     document.querySelector("footer").style.display = "none";
