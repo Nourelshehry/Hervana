@@ -97,6 +97,16 @@ nav ul {
 .dropdown-menu.show {
   display: flex;
 }
+.dropdown-menu li a {
+  padding: 10px 15px;
+  color: #fff;
+  text-decoration: none;
+}
+/* تأثير hover على Dropdown */
+.dropdown-menu li a:hover {
+  background: #555;
+  color: #fff;
+}
 
 /* زرار الـ dropdown */
 .dropbtn {
@@ -136,9 +146,36 @@ nav ul {
 /* nav-links */
 .nav-links {
   transition: max-height 0.3s ease;
-  overflow: hidden;
+  overflow: auto;
   max-width: 100%;
   box-sizing: border-box;
+}
+/* القائمة الرئيسية */
+.nav-links ul {
+  list-style: none; /* إزالة الـ bullets */
+  margin: 0;
+  padding: 0;
+}
+
+/* كل عناصر nav الرئيسية */
+.nav-links li {
+  margin: 0;
+  padding: 0;
+}
+
+/* روابط القائمة الرئيسية */
+.nav-links a {
+  text-decoration: none; /* إزالة underline */
+  color: #fff; /* اللون الأبيض */
+  padding: 10px 15px;
+  display: block;
+  transition: background 0.3s;
+}
+
+/* تأثير عند hover على الروابط */
+.nav-links a:hover {
+  background: #555;
+  color: #fff;
 }
 /* ===================== Hero Section ===================== */
 .hero, .hero-slider {
