@@ -87,10 +87,12 @@ nav ul {
 .dropdown-menu {
   display: none;
   flex-direction: column;
-  gap: 10px;
-  padding-left: 15px;
+  gap: 0;
+  padding-left: 0;
   margin: 0; /* مهم */
-  list-style: none; /* للتأكد */
+  list-style: none;
+  background:#e75480
+  border-radius:4px;
 }
 
 /* عند الفتح */
@@ -116,7 +118,7 @@ nav ul {
   font-weight: bold;
   width: 100%;
   text-align: left;
-  padding: 10px 0;
+  padding: 10px 15px;
   font-size: 16px;
   cursor: pointer;
   display: flex;
