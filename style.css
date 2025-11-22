@@ -91,7 +91,7 @@ nav ul {
   padding-left: 0;
   margin: 0; /* مهم */
   list-style: none;
-  background:transparent #c0392b;
+  background:transparent #b46056ff;
   border-radius:4px;
 }
 
@@ -106,7 +106,7 @@ nav ul {
 }
 /* تأثير hover على Dropdown */
 .dropdown-menu li a:hover {
-  background: #e75480;
+  background: #682d2dff;
   color: #fff;
 }
 
