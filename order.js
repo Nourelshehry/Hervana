@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // === إرسال إيميل بالـ EmailJS ===
     if (window.emailjs && emailjs.send) {
-      emailjs.send("service_7bn78p4", "template_s8o631t", orderData)
+      emailjs.send("service_7bn78p4", "template_1k6yrj9", orderData)
         .then(() => console.log("✅ Confirmation email sent!"))
         .catch(err => console.error("❌ Failed to send email:", err));
     } else {
