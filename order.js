@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let total = 0;
   let shippingCost = 0;
 
-  // إدارة المستخدم
   function getUserId() {
     let userId = localStorage.getItem("userId");
     if (!userId) {
@@ -19,11 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   const userId = getUserId();
-
-  // تحميل الكارت الخاص بالمستخدم
   const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
-  // عرض تفاصيل الأوردر
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
@@ -34,9 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
       total += (parseFloat(item.price) || 0) * (item.quantity || 0);
     });
   }
+
   totalElem.textContent = `Total: ${total} EGP`;
 
-  // خيارات الشحن
   const shippingOptions = document.querySelectorAll(".shipping-option");
   shippingOptions.forEach(option => {
     option.addEventListener("click", () => {
@@ -47,7 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // عند تأكيد الأوردر
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -61,7 +56,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const email = document.getElementById("email").value.trim();
     const address = document.getElementById("address").value.trim();
 
-    const items = cart.map(item => `${item.name} ×${item.quantity} - ${item.price} EGP`).join(", ");
+    const orderItems = cart.map(item => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+      image: item.image
+    }));
+
     const finalTotal = total + (shippingCost || 0);
 
     const orderData = {
@@ -71,19 +72,17 @@ document.addEventListener("DOMContentLoaded", () => {
       phone,
       email,
       address,
-      items,
+      items: orderItems,
       total: finalTotal.toFixed(2),
       date: new Date().toLocaleString()
     };
 
-    // تخزين الأوردر في localStorage
     let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
     orders.push(orderData);
     localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
 
-    // === إرسال البيانات للباك اند الجديد ===
     try {
-      const response = await fetch("http://localhost:3000/send-confirmation", {
+      const response = await fetch("http://127.0.0.1:3000/send-confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("❌ Error sending email:", err);
     }
 
-    // تحديث المخزون
     let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
     cart.forEach(item => {
       if (item.id !== undefined) {
@@ -119,16 +117,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     localStorage.setItem("productStock", JSON.stringify(stockData));
 
-    // تصفير الكارت بعد الأوردر
     localStorage.removeItem(`cart_${userId}`);
-    // إظهار صفحة الشكر
     form.style.display = "none";
     document.querySelector("header").style.display = "none";
     document.querySelector("footer").style.display = "none";
     thankYou.classList.add("show");
   });
 
-  // زر العودة للهوم
   if (backBtn) {
     backBtn.addEventListener("click", () => {
       window.location.href = "index.html";
