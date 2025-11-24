@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Fetch real stock from backend
       let stockData;
       try {
-        const stockResponse = await fetch(`http://127.0.0.1:3000/product/${productId}`);
+        const stockResponse = await fetch(`hervana-production.up.railway.app/${productId}`);
         stockData = await stockResponse.json();
       } catch (err) {
         console.error("Failed fetching product stock:", err);
@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!item) return;
 
       try {
-        const stockResponse = await fetch(`http://127.0.0.1:3000/product/${item.id}`);
+        const stockResponse = await fetch(`hervana-production.up.railway.app/${item.id}`);
         const stockData = await stockResponse.json();
         if (!stockData || !stockData.success) {
           showCartMessage("❌ Product not found");

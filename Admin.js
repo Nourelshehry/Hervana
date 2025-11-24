@@ -1,5 +1,5 @@
 // admin.js
-const API_BASE = "http://127.0.0.1:3000";
+const API_BASE = "hervana-production.up.railway.app";
 
 async function fetchJson(url, opts) {
   const res = await fetch(url, opts);

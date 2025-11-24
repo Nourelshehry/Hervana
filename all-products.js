@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // جلب المنتجات من السيرفر المحلي
-    const response = await fetch("http://127.0.0.1:3000/products");
+    const response = await fetch("hervana-production.up.railway.app");
     const products = await response.json();
 
     // دالة العرض
