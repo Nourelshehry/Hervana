@@ -4,8 +4,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
   try {
-    const response = await fetch("products.json");
-    const products = await response.json();
+const response = await fetch("http://127.0.0.1:3000/products");
+const products = await response.json();
+    
 
     const product = products.find(p => p.id == productId);
     if (!product) {
