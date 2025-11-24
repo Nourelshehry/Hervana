@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // ---------- 1) Send order to backend ----------
-      const orderResponse = await fetch("http://127.0.0.1:3000/checkout", {
+      const orderResponse = await fetch("https://hervana-production.up.railway.app/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // ---------- 2) Send confirmation email ----------
-      await fetch("http://127.0.0.1:3000/send-confirmation", {
+      await fetch("https://hervana-production.up.railway.app/send-confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

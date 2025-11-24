@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
   try {
-const response = await fetch("hervana-production.up.railway.app");
+const response = await fetch("https://hervana-production.up.railway.app/product/ID");
 const products = await response.json();
     
 
