@@ -1,29 +1,31 @@
-// all-products.js (مُحدث للتكامل مع cart.js المثبت)
 document.addEventListener("DOMContentLoaded", async () => {
   const productGrid = document.querySelector(".product-grid");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
 
   try {
-    // جلب المنتجات من JSON على GitHub
-    const response = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
+    // جلب المنتجات من السيرفر المحلي
+    const response = await fetch("http://127.0.0.1:3000/products");
     const products = await response.json();
-
-    // جلب المخزون من localStorage (لو متخزن)
-    let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
 
     // دالة العرض
     function displayProducts(filterText = "", filterCategory = "all") {
       productGrid.innerHTML = "";
 
-      products.forEach(product => {
-        let currentStock = stockData[product.id] ?? product.stock;
+      const searchLower = filterText.toLowerCase();
 
-        // فلترة
-        if (
-          product.name.toLowerCase().includes(filterText.toLowerCase()) &&
-          (filterCategory === "all" || product.category === filterCategory)
-        ) {
+      products.forEach(product => {
+        let currentStock = product.stock;
+
+        // فلترة محسنة: الاسم + الكاتيجوري + الوصف
+        const matchesText =
+          product.name.toLowerCase().includes(searchLower) ||
+          (product.category && product.category.toLowerCase().includes(searchLower)) ||
+          (product.description && product.description.toLowerCase().includes(searchLower));
+
+        const matchesCategory = filterCategory === "all" || product.category === filterCategory;
+
+        if (matchesText && matchesCategory) {
           const card = document.createElement("div");
           card.classList.add("product-card");
           card.setAttribute("data-category", product.category || "general");
@@ -50,21 +52,21 @@ document.addEventListener("DOMContentLoaded", async () => {
           productGrid.appendChild(card);
         }
       });
-      // ✅ مهم: مش محتاجين نعمل eventListeners هنا
       // cart.js بيسمع أوتوماتيك لأي زرار add-to-cart
     }
 
     // أول تحميل
     displayProducts();
-// Mobile menu toggle
-const menuToggle = document.querySelector(".menu-toggle");
-const navLinks = document.querySelector(".nav-links");
 
-if (menuToggle && navLinks) {
-  menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-  });
-}
+    // Mobile menu toggle
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener("click", () => {
+        navLinks.classList.toggle("active");
+      });
+    }
 
     // البحث
     if (searchInput) {

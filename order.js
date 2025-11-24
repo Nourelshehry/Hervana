@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let total = 0;
   let shippingCost = 0;
 
+  // ----------- User ID Management -----------
   function getUserId() {
     let userId = localStorage.getItem("userId");
     if (!userId) {
@@ -20,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const userId = getUserId();
   const cart = JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
 
+  // ----------- Display Cart Summary -----------
   if (cart.length === 0) {
     summary.innerHTML = "<li>Your cart is empty.</li>";
   } else {
@@ -27,12 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const li = document.createElement("li");
       li.textContent = `${item.name} - EGP ${item.price} ×${item.quantity}`;
       summary.appendChild(li);
-      total += (parseFloat(item.price) || 0) * (item.quantity || 0);
+      total += (parseFloat(item.price) || 0) * (item.quantity || 1);
     });
   }
 
   totalElem.textContent = `Total: ${total} EGP`;
 
+  // ----------- Shipping Selection -----------
   const shippingOptions = document.querySelectorAll(".shipping-option");
   shippingOptions.forEach(option => {
     option.addEventListener("click", () => {
@@ -43,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
+  // ----------- Form Submission -----------
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -51,72 +55,64 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Collect data
     const name = document.getElementById("name").value.trim();
     const phone = document.getElementById("phone").value.trim();
     const email = document.getElementById("email").value.trim();
     const address = document.getElementById("address").value.trim();
-
-    const orderItems = cart.map(item => ({
-      name: item.name,
-      quantity: item.quantity,
-      price: item.price,
-      image: item.image
-    }));
-
     const finalTotal = total + (shippingCost || 0);
 
-    const orderData = {
-      id: "order_" + Date.now(),
-      userId,
-      name,
-      phone,
-      email,
-      address,
-      items: orderItems,
-      total: finalTotal.toFixed(2),
-      date: new Date().toLocaleString()
-    };
+    // Validate required fields
+    if (!name || !phone || !email || !address) {
+      alert("Please fill in all fields.");
+      return;
+    }
 
-    let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
-    orders.push(orderData);
-    localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
+    // Prepare cart items for backend
+    const formattedItems = cart.map(item => ({
+      id: item.id,
+      quantity: item.quantity
+    }));
 
     try {
-      const response = await fetch("http://127.0.0.1:3000/send-confirmation", {
+      // ---------- 1) Send order to backend ----------
+      const orderResponse = await fetch("http://127.0.0.1:3000/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email: orderData.email,
-          name: orderData.name,
-          items: orderData.items,
-          total: orderData.total
+          items: formattedItems,
+          userDetails: { name, phone, email, address },
+          total: finalTotal
         })
       });
 
-      const result = await response.json();
-      if (result.success) {
-        console.log("✅ Confirmation email sent via backend!");
-      } else {
-        console.error("❌ Email sending failed:", result.message);
+      const orderResult = await orderResponse.json();
+      console.log("Checkout Result:", orderResult);
+
+      if (!orderResult.success) {
+        alert("⚠️ " + orderResult.message);
+        return;
       }
+
+      // ---------- 2) Send confirmation email ----------
+      await fetch("http://127.0.0.1:3000/send-confirmation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          name,
+          items: cart,
+          total: finalTotal
+        })
+      });
+
     } catch (err) {
-      console.error("❌ Error sending email:", err);
+      console.error("❌ Checkout/Email Error:", err);
+      alert("An error occurred. Please try again.");
+      return;
     }
 
-    let stockData = JSON.parse(localStorage.getItem("productStock")) || {};
-    cart.forEach(item => {
-      if (item.id !== undefined) {
-        if (stockData[item.id] !== undefined) {
-          stockData[item.id] -= item.quantity;
-          if (stockData[item.id] < 0) stockData[item.id] = 0;
-        } else {
-          stockData[item.id] = (item.stock ?? 0) - item.quantity;
-          if (stockData[item.id] < 0) stockData[item.id] = 0;
-        }
-      }
-    });
-    localStorage.setItem("productStock", JSON.stringify(stockData));
-
+    // ---------- 3) Clear cart & show Thank You ----------
     localStorage.removeItem(`cart_${userId}`);
     form.style.display = "none";
     document.querySelector("header").style.display = "none";
@@ -124,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
     thankYou.classList.add("show");
   });
 
+  // ----------- Back Button -----------
   if (backBtn) {
     backBtn.addEventListener("click", () => {
       window.location.href = "index.html";

@@ -1,4 +1,4 @@
-// cart.js (استبدل الملف بالكامل بهذا المحتوى)
+// cart.js (Fixed & Robust)
 document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartMessage = document.getElementById("cart-message");
 
-  // ==== userId management ====
   function getUserId() {
     let userId = localStorage.getItem("userId");
     if (!userId) {
@@ -17,10 +16,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     return userId;
   }
+
   const userId = getUserId();
   const cartKey = () => `cart_${userId}`;
 
-  // Load / Save
   function loadCart() {
     return JSON.parse(localStorage.getItem(cartKey())) || [];
   }
@@ -29,20 +28,143 @@ document.addEventListener("DOMContentLoaded", () => {
     updateCartCount();
   }
 
-  // initial cart
   let cart = loadCart();
 
-  // open/close cart sidebar
   if (cartBtn) cartBtn.addEventListener("click", () => cartSidebar?.classList.add("active"));
   if (closeCart) closeCart.addEventListener("click", () => cartSidebar?.classList.remove("active"));
 
-  // Render cart in sidebar
+  function showCartMessage(text) {
+    if (!cartMessage) {
+      console.log("Cart message:", text);
+      return;
+    }
+    cartMessage.textContent = text || "Added to cart!";
+    cartMessage.classList.add("show");
+    setTimeout(() => cartMessage.classList.remove("show"), 2000);
+  }
+
+  // ---- Add to Cart (robust) ----
+  async function addToCart(productId, productName, price) {
+    try {
+      productId = parseInt(productId);
+      price = parseFloat(price);
+
+      if (Number.isNaN(productId) || Number.isNaN(price) || !productName) {
+        console.warn("addToCart called with invalid data:", productId, productName, price);
+        showCartMessage("❌ Invalid product data");
+        return;
+      }
+
+      // Fetch real stock from backend
+      let stockData;
+      try {
+        const stockResponse = await fetch(`http://127.0.0.1:3000/product/${productId}`);
+        stockData = await stockResponse.json();
+      } catch (err) {
+        console.error("Failed fetching product stock:", err);
+        showCartMessage("❌ Couldn't check stock (network)");
+        return;
+      }
+
+      if (!stockData || !stockData.success) {
+        showCartMessage("❌ Product not found");
+        return;
+      }
+
+      const realStock = stockData.product.stock;
+      const existing = cart.find(i => i.id === productId);
+
+      if (existing) {
+        if (existing.quantity + 1 > realStock) {
+          showCartMessage("❌ Not enough stock");
+          return;
+        }
+        existing.quantity++;
+      } else {
+        if (realStock <= 0) {
+          showCartMessage("❌ Product out of stock");
+          return;
+        }
+        cart.push({ id: productId, name: productName, price, quantity: 1 });
+      }
+
+      saveCart(cart);
+      renderCart();
+      showCartMessage(`${productName} added to cart`);
+    } catch (err) {
+      console.error("Unexpected error in addToCart:", err);
+      showCartMessage("❌ Error adding to cart");
+    }
+  }
+
+  // ---- Delegated click handler for add-to-cart buttons ----
+  document.body.addEventListener("click", (e) => {
+    // find nearest element with class 'add-to-cart' (works if you click icon/text inside the button)
+    const btn = e.target.closest && e.target.closest(".add-to-cart");
+    if (!btn) return;
+
+    // read dataset safely, allow data attributes or data-*
+    const id = btn.dataset.id ?? btn.getAttribute("data-id");
+    const name = btn.dataset.name ?? btn.getAttribute("data-name");
+    const price = btn.dataset.price ?? btn.getAttribute("data-price");
+
+    if (!id || !name || !price) {
+      console.warn("add-to-cart missing data attributes on element:", btn);
+      showCartMessage("❌ Missing product info");
+      return;
+    }
+
+    // call addToCart but don't block UI; the function handles errors internally
+    addToCart(id, name, price);
+  });
+
+  // ---- Modify Quantity (Increase/Decrease) with stock-check on increase ----
+  cartItems?.addEventListener("click", async (e) => {
+    const btn = e.target;
+    const idxAttr = btn.dataset.index;
+    if (typeof idxAttr === "undefined") return;
+    const idx = parseInt(idxAttr);
+    if (Number.isNaN(idx)) return;
+
+    // INCREASE
+    if (btn.classList.contains("increase")) {
+      const item = cart[idx];
+      if (!item) return;
+
+      try {
+        const stockResponse = await fetch(`http://127.0.0.1:3000/product/${item.id}`);
+        const stockData = await stockResponse.json();
+        if (!stockData || !stockData.success) {
+          showCartMessage("❌ Product not found");
+          return;
+        }
+        const realStock = stockData.product.stock;
+        if (item.quantity + 1 > realStock) {
+          showCartMessage("❌ Not enough stock");
+          return;
+        }
+        item.quantity++;
+        renderCart();
+      } catch (err) {
+        console.error("Error checking stock for increase:", err);
+        showCartMessage("❌ Error checking stock");
+      }
+    }
+
+    // DECREASE
+    else if (btn.classList.contains("decrease")) {
+      cart[idx].quantity--;
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+      renderCart();
+    }
+  });
+
+  // ---- Render Cart ----
   function renderCart() {
     if (!cartItems) return;
     cartItems.innerHTML = "";
-    let total = 0;
+
     cart.forEach((item, index) => {
-      total += item.price * item.quantity;
       const li = document.createElement("li");
       li.innerHTML = `
         <div class="cart-item">
@@ -56,64 +178,11 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       cartItems.appendChild(li);
     });
-    saveCart(cart); // keep saved
-  }
 
-  // Add to cart (used by click handler below)
-  function addToCart(productId, productName, price) {
-    productId = parseInt(productId);
-    price = parseFloat(price);
-    const existing = cart.find(i => i.id === productId);
-    if (existing) {
-      existing.quantity++;
-    } else {
-      cart.push({ id: productId, name: productName, price, quantity: 1 });
-    }
     saveCart(cart);
-    renderCart();
-    showCartMessage(`${productName} added to cart`);
   }
 
-  // Quantity controls inside sidebar
-  cartItems?.addEventListener("click", (e) => {
-    if (e.target.classList.contains("increase")) {
-      const idx = parseInt(e.target.dataset.index);
-      cart[idx].quantity++;
-      renderCart();
-    } else if (e.target.classList.contains("decrease")) {
-      const idx = parseInt(e.target.dataset.index);
-      cart[idx].quantity--;
-      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
-      renderCart();
-    }
-  });
-
-  // Global listener for any add-to-cart button on page
-  document.body.addEventListener("click", (e) => {
-    if (e.target.classList.contains("add-to-cart")) {
-      const id = e.target.dataset.id;
-      const name = e.target.dataset.name;
-      const price = e.target.dataset.price;
-      if (!id || !name || !price) {
-        console.warn("add-to-cart missing data attributes:", e.target);
-        return;
-      }
-      addToCart(id, name, price);
-    }
-  });
-
-  // unified toast
-  function showCartMessage(text) {
-    if (!cartMessage) return;
-    cartMessage.textContent = text || "Added to cart!";
-    cartMessage.classList.add("show");
-    setTimeout(() => cartMessage.classList.remove("show"), 2000);
-  }
-
-  // checkout button
-  if (checkoutBtn) checkoutBtn.addEventListener("click", () => window.location.href = "order.html");
-
-  // update cart count (sum of quantities)
+  // ---- Update cart bubble count ----
   function updateCartCount() {
     const countEl = document.getElementById("cart-count");
     const cartData = loadCart();
@@ -123,6 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
       countEl.style.display = qty ? "inline-block" : "none";
     }
   }
+
+  if (checkoutBtn) checkoutBtn.addEventListener("click", () => window.location.href = "order.html");
 
   // initial render
   renderCart();
