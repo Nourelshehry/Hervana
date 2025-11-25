@@ -97,7 +97,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       localStorage.setItem(cartKey, JSON.stringify(cart));
 
-      alert("Added to cart!");
     }
 
     // أول تحميل
