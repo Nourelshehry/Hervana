@@ -4,11 +4,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categorySelect = document.getElementById("category");
 
   try {
-    // جلب المنتجات من السيرفر المحلي
+    // جلب المنتجات من السيرفر
     const response = await fetch("https://hervana-production.up.railway.app/products");
     const products = await response.json();
 
-    // دالة العرض
     function displayProducts(filterText = "", filterCategory = "all") {
       productGrid.innerHTML = "";
 
@@ -17,21 +16,25 @@ document.addEventListener("DOMContentLoaded", async () => {
       products.forEach(product => {
         let currentStock = product.stock;
 
-        // فلترة محسنة: الاسم + الكاتيجوري + الوصف
         const matchesText =
           product.name.toLowerCase().includes(searchLower) ||
           (product.category && product.category.toLowerCase().includes(searchLower)) ||
           (product.description && product.description.toLowerCase().includes(searchLower));
 
-        const matchesCategory = filterCategory === "all" || product.category === filterCategory;
+        const matchesCategory =
+          filterCategory === "all" || product.category === filterCategory;
 
         if (matchesText && matchesCategory) {
           const card = document.createElement("div");
           card.classList.add("product-card");
           card.setAttribute("data-category", product.category || "general");
 
+          const imageURL = product.images[0].startsWith("http")
+            ? product.images[0]
+            : `https://hervana-production.up.railway.app/${product.images[0]}`;
+
           card.innerHTML = `
-            <img src="${product.images[0]}" alt="${product.name}" class="product-img"/>
+            <img src="${imageURL}" alt="${product.name}" class="product-img"/>
             <h3>${product.name}</h3>
             <p>EGP ${product.price}</p>
             <p class="stock ${currentStock > 0 ? "in-stock" : "out-of-stock"}">
@@ -49,24 +52,56 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
           `;
+
           productGrid.appendChild(card);
         }
       });
-      // cart.js بيسمع أوتوماتيك لأي زرار add-to-cart
+
+      attachCartListeners();
+    }
+
+    function attachCartListeners() {
+      document.querySelectorAll(".add-to-cart").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.id;
+          const name = btn.dataset.name;
+          const price = btn.dataset.price;
+
+          addToCart({ id, name, price });
+        });
+      });
+    }
+
+    function addToCart(product) {
+      let userId = localStorage.getItem("userId");
+      if (!userId) {
+        userId = "user_" + Date.now();
+        localStorage.setItem("userId", userId);
+      }
+
+      const cartKey = `cart_${userId}`;
+      let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+      const existing = cart.find(item => item.id == product.id);
+
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id: Number(product.id),
+          name: product.name,
+          price: Number(product.price),
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+
+      alert("Added to cart!");
     }
 
     // أول تحميل
     displayProducts();
-
-    // Mobile menu toggle
-    const menuToggle = document.querySelector(".menu-toggle");
-    const navLinks = document.querySelector(".nav-links");
-
-    if (menuToggle && navLinks) {
-      menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-      });
-    }
 
     // البحث
     if (searchInput) {
@@ -81,7 +116,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         displayProducts(searchInput?.value || "", categorySelect.value);
       });
     }
-
   } catch (error) {
     console.error("Error loading products:", error);
     productGrid.innerHTML = "<p>⚠️ Error loading products data.</p>";

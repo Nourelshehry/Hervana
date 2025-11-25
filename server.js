@@ -31,20 +31,16 @@ app.post("/send-confirmation", async (req, res) => {
     }
 
     // === تعديل هنا لعرض الصور مع التفاصيل ===
-    const itemsHtml = items
-      .map(
-        (item) => `
-        <li style="margin-bottom: 15px; list-style: none; display: flex; align-items: center;">
-          <img src="${item.image}" alt="${item.name}" width="80" 
-            style="margin-right: 15px; border:1px solid #ccc; border-radius:4px;" />
-          <div>
-            <strong>${item.name}</strong><br/>
-            Quantity: ${item.quantity}<br/>
-            Price: ${item.price} EGP
-          </div>
-        </li>`
-      )
-      .join("");
+   const itemsHtml = items
+  .map(
+    (item) => `
+      <li style="margin-bottom: 15px; list-style: none;">
+        <strong>${item.name}</strong><br/>
+        Quantity: ${item.quantity}<br/>
+        Price: ${item.price} EGP
+      </li>`
+  )
+  .join("");
 
     const mailOptions = {
       from: "hervanacontact@gmail.com",

@@ -1,25 +1,24 @@
-// product.js
-
 document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
   try {
-const response = await fetch("https://hervana-production.up.railway.app/product/ID");
-const products = await response.json();
-    
+    // جلب كل المنتجات من الباك اند
+    const response = await fetch("https://hervana-production.up.railway.app/products");
+    const products = await response.json();
 
+    // البحث عن المنتج المطلوب
     const product = products.find(p => p.id == productId);
     if (!product) {
       document.querySelector(".product-details").innerHTML = "<p>Product not found.</p>";
       return;
     }
 
-    // Fill product details
+    // === عرض بيانات المنتج ===
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent = product.description;
     document.getElementById("product-price").textContent = `EGP ${product.price}`;
 
-    // Setup slider
+    // === عرض الصور (السلايدر) ===
     const slider = document.getElementById("slider");
     const dots = document.getElementById("slider-dots");
 
@@ -40,24 +39,25 @@ const products = await response.json();
       initSlider();
     }
 
-    // Add-to-cart button
+    // === زرار إضافة للكارت (تعديلات مهمة) ===
     const addBtn = document.querySelector(".add-to-cart");
-    if (addBtn) {
-      addBtn.dataset.id = product.id;
-      addBtn.dataset.name = product.name;
-      addBtn.dataset.price = product.price;
+    addBtn.dataset.id = product.id;
+    addBtn.dataset.name = product.name;
+    addBtn.dataset.price = product.price;
 
-      addBtn.addEventListener("click", () => {
-        addToCart(product);
-      });
-    }
+    addBtn.addEventListener("click", () => {
+      addToCart(product);
+    });
+
   } catch (err) {
     console.error("Failed to load product:", err);
   }
 });
 
-// === Slider Logic ===
-// === Slider Logic ===
+
+// =====================
+//       Slider Logic
+// =====================
 function initSlider() {
   let currentIndex = 0;
   const slides = document.querySelectorAll(".slide");
@@ -81,12 +81,13 @@ function initSlider() {
     dot.addEventListener("click", () => showSlide(i));
   });
 
-  showSlide(0); // أول صورة تبقى ظاهرة
+  showSlide(0);
 }
 
 
-//temporary
-// === Add to Cart Function ===
+// =====================
+//   Cart Functionality
+// =====================
 function addToCart(product) {
   let userId = localStorage.getItem("userId");
   if (!userId) {
@@ -101,19 +102,22 @@ function addToCart(product) {
   if (existing) {
     existing.quantity += 1;
   } else {
-    cart.push({ id: product.id, name: product.name, price: product.price, quantity: 1 });
+    cart.push({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1
+    });
   }
 
   localStorage.setItem(cartKey, JSON.stringify(cart));
 
-  // Show "Added to cart!" message
   const msg = document.getElementById("cart-message");
   if (msg) {
     msg.classList.add("show");
     setTimeout(() => msg.classList.remove("show"), 1500);
   }
 
-  // Update cart counter
   updateCartCount(cart);
 }
 
