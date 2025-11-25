@@ -3,14 +3,13 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 const fs = require("fs");
 const path = require("path");
-const publicPath = path.join(__dirname);
-app.use(express.static(publicPath));
-
 const app = express();
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+const publicPath = path.join(__dirname);
+app.use(express.static(publicPath));
 
 // ===============================
 // 1) إعداد الإيميل
