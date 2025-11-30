@@ -12,25 +12,30 @@ const publicPath = path.join(__dirname);
 app.use(express.static(publicPath));
 
 // ===============================
-// 1) إعداد الإيميل
+// 1) إعداد 
 // ===============================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // SSL
   auth: {
     user: "hervanacontact@gmail.com",
-    pass: "zlupfuqxktdygvhe",
-  },
+    pass: "zlupfuqxktdygvhe"  // ← ضيفي الـ App Password
+  }
 });
 
+
 app.post("/send-confirmation", async (req, res) => {
-  try {
+
     const { email, name, items, total } = req.body;
 
-    if (!email || !name || !items || !total) {
-      return res.status(400).json({ success: false, message: "Missing required fields" });
-    }
+      res.json({ success: true, message: "Email queued" });
 
-    // === تعديل هنا لعرض الصور مع التفاصيل ===
+    /*if (!email || !name || !items || !total) {
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }*/
+
+  try{  // === تعديل هنا لعرض الصور مع التفاصيل ===
    const itemsHtml = items
   .map(
     (item) => `
