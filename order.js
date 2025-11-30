@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      await fetch("https://hervana-production.up.railway.app/send-confirmation", {
+      /*await fetch("https://hervana-production.up.railway.app/send-confirmation", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -111,6 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
           total: finalTotal
         })
       });
+*/
+console.log("Email sending skipped temporarily");
 
     } catch (err) {
       console.error("❌ Checkout/Email Error:", err);
