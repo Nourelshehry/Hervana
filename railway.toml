@@ -5,4 +5,8 @@ builder = "NIXPACKS"
 start = "node server.js"
 
 [env]
-PORT = "3000"
+PORT = 3000
+
+[[services]]
+internal_port = 3000
+protocol = "http"
