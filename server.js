@@ -9,8 +9,8 @@ const app = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
-const publicPath = path.join(__dirname);
-app.use(express.static(publicPath));
+app.use(express.static(path.join(__dirname, "public")));
+
 
 // ===============================
 // 1) إعداد 
@@ -205,6 +205,14 @@ app.post("/restore", (req, res) => {
 // ===============================
 // تشغيل السيرفر
 // ===============================
+// Static files (frontend)
+app.use(express.static(path.join(__dirname, "public")));
+
+// Fallback for SPA
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, "0.0.0.0", () => {
