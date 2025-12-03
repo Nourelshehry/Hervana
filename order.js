@@ -1,3 +1,4 @@
+//order.js
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");

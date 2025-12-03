@@ -1,3 +1,4 @@
+//server.js
 const express = require("express");
 const nodemailer = require("nodemailer");
 const cors = require("cors");
@@ -201,7 +202,11 @@ app.post("/restore", (req, res) => {
 // ===============================
 // تشغيل السيرفر
 // ===============================
-const PORT = 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Backend running at http://localhost:${PORT}`);
+// ===============================
+// تشغيل السيرفر
+// ===============================
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Backend running on port ${PORT}`);
 });
