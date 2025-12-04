@@ -33,6 +33,10 @@
 
 <script src="cart.js"></script>
 <script src="order.js"></script>
+<script>
+  // منع أي سكربت اسمه script.js من التحميل في checkout
+  document.querySelectorAll('script[src="script.js"]').forEach(s => s.remove());
+</script>
 
 </body>
 </html>
