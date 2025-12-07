@@ -1,4 +1,8 @@
-name = "hervana-worker"          
-type = "javascript"    
-account_id =  "eaea500be2f3e32f4989c61015da2d07"
-workers_dev = true                
+name = "hervana"
+main = "index.js"
+compatibility_date = "2024-11-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "hervana-products"
+database_id = "8f9a69e8-357d-4223-9db1-62a792102991"

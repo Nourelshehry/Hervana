@@ -3,11 +3,6 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "echo 'No build needed'",
-    "start": "wrangler dev"
-  },
-  "dependencies": {
-    "@cloudflare/d1": "^1.0.0",
-    "node-fetch": "^3.3.2"
+    "build": "echo 'No build needed'"
   }
 }
