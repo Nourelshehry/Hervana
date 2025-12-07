@@ -1,4 +1,4 @@
-//order.js
+// order.js (D1-ready)
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
@@ -77,7 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }));
 
     try {
-      const orderResponse = await fetch("https://hervana-production.up.railway.app/checkout", {
+      // 🌟 رابط الـ Worker الجديد
+      const WORKER_BASE = "https://hervana.your-worker.workers.dev";
+
+      const orderResponse = await fetch(`${WORKER_BASE}/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -87,7 +90,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       });
 
-      // 🔥 لازم نفحص قبل .json()
       if (!orderResponse.ok) {
         alert("Server error during checkout.");
         isSubmitting = false;
@@ -102,7 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      await fetch("https://hervana-production.up.railway.app/send-confirmation", {
+      // 🔥 إرسال الإيميل مؤقتًا ممكن يتأجل
+      /*
+      await fetch(`${WORKER_BASE}/send-confirmation`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -112,8 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
           total: finalTotal
         })
       });
-
-//console.log("Email sending skipped temporarily");
+      */
 
     } catch (err) {
       console.error("❌ Checkout/Email Error:", err);

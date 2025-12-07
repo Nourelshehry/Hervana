@@ -1,0 +1,4 @@
+name = "hervana-worker"          
+type = "javascript"    
+account_id =  "eaea500be2f3e32f4989c61015da2d07"
+workers_dev = true                

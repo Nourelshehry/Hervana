@@ -1,16 +1,13 @@
 {
-  "name": "hervana-backend",
+  "name": "hervana",
   "version": "1.0.0",
-  "main": "server.js",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "build": "echo 'No build needed'",
+    "start": "wrangler dev"
   },
-  "engines": { "node": "18.x" },
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5",
-    "nodemailer": "^6.9.3"
+    "@cloudflare/d1": "^1.0.0",
+    "node-fetch": "^3.3.2"
   }
-
 }
