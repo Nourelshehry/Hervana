@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       // 🌟 رابط الـ Worker الجديد
-      const WORKER_BASE = "https://hervana.your-worker.workers.dev";
+      const WORKER_BASE = "https://hervana.nourthranduil.workers.dev/";
 
       const orderResponse = await fetch(`${WORKER_BASE}/checkout`, {
         method: "POST",
