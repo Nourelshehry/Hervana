@@ -25,6 +25,22 @@ export default {
     const url = new URL(request.url);
     const method = request.method;
 
+    // ===================================================
+    // (1) محاولة تقديم ملفات الاستاتيك من public أولا
+    // ===================================================
+    try {
+      const staticResponse = await env.ASSETS.fetch(request);
+      if (staticResponse.status !== 404) {
+        return staticResponse;
+      }
+    } catch (err) {
+      // تجاهل الخطأ ونكمل للـ API
+    }
+
+    // ===================================================
+    // (2) API ROUTES (كودك الأصلي بدون أي تعديل)
+    // ===================================================
+
     // ------------------------------
     // GET /products
     // ------------------------------
@@ -120,5 +136,9 @@ export default {
       });
     }
 
-return json({ message: "Not found" }, 404);  }
+    // ------------------------------
+    // fallback response
+    // ------------------------------
+    return json({ message: "Not found" }, 404);
+  }
 };
