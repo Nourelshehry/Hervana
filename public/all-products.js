@@ -30,48 +30,35 @@ document.addEventListener("DOMContentLoaded", async () => {
           card.setAttribute("data-category", product.category || "general");
 
           // ===================================================
-          //  🔥 إصلاح images مهما كانت (Array / JSON / string)
+          // 🔥 تجهيز الصورة الأولى فقط
           // ===================================================
-
-          let imagesArray = [];
+          let firstImage = "default.jpg"; // صورة افتراضية
 
           try {
-            if (Array.isArray(product.images)) {
-              imagesArray = product.images;
+            if (Array.isArray(product.images) && product.images.length > 0) {
+              firstImage = product.images[0];
             } else if (typeof product.images === "string") {
               if (product.images.trim().startsWith("[")) {
-                imagesArray = JSON.parse(product.images);
+                const arr = JSON.parse(product.images);
+                if (arr.length > 0) firstImage = arr[0];
               } else {
-                imagesArray = [product.images];
+                firstImage = product.images;
               }
             }
           } catch {
-            imagesArray = [];
+            firstImage = "default.jpg";
           }
 
-          // لو مفيش صور خالص
-          if (imagesArray.length === 0) {
-            imagesArray = ["default.jpg"];
-          }
+          const imageURL = firstImage.startsWith("http")
+            ? firstImage
+            : `https://hervana.pages.dev/public/${firstImage}`;
 
           // ===================================================
-          // 🔥 إنشاء HTML للصور
-          // ===================================================
-          const imagesHTML = imagesArray
-            .map(img => {
-              const imageURL = img.startsWith("http")
-                ? img
-                : `https://hervana.pages.dev/public/${img}`;
-              return `<img src="${imageURL}" class="slide-img">`;
-            })
-            .join("");
-
-          // ===================================================
-          //  محتوى الكارد
+          // محتوى الكارد
           // ===================================================
           card.innerHTML = `
             <div class="slider">
-              ${imagesHTML}
+              <img src="${imageURL}" class="slide-img">
             </div>
 
             <h3>${product.name}</h3>
