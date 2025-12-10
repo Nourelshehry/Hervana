@@ -29,17 +29,31 @@ document.addEventListener("DOMContentLoaded", async () => {
           card.classList.add("product-card");
           card.setAttribute("data-category", product.category || "general");
 
-          const imageURL = product.images[0].startsWith("http")
-            ? product.images[0]
-            : `https://hervana-production.up.railway.app/${product.images[0]}`;
+          // ===============================
+          //  🔥 إنشاء سلايدر الصور الجديد
+          // ===============================
+          const imagesHTML = product.images
+            .map(img => {
+              const imageURL = img.startsWith("http")
+                ? img
+                : `/public/${img}`; // <-- أهم تعديل
+              return `<img src="${imageURL}" class="slide-img">`;
+            })
+            .join("");
 
+          // محتوى الـ Card بالكامل
           card.innerHTML = `
-            <img src="${imageURL}" alt="${product.name}" class="product-img"/>
+            <div class="slider">
+              ${imagesHTML}
+            </div>
+
             <h3>${product.name}</h3>
             <p>EGP ${product.price}</p>
+
             <p class="stock ${currentStock > 0 ? "in-stock" : "out-of-stock"}">
               ${currentStock > 0 ? `In Stock: ${currentStock}` : "Out of Stock"}
             </p>
+
             ${
               currentStock > 0
                 ? `<button class="add-to-cart" 
@@ -50,6 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                    </button>`
                 : `<button disabled>Out of Stock</button>`
             }
+
             <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
           `;
 
@@ -96,7 +111,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       }
 
       localStorage.setItem(cartKey, JSON.stringify(cart));
-
     }
 
     // أول تحميل
