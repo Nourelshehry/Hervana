@@ -4,8 +4,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categorySelect = document.getElementById("category");
 
   try {
-    // جلب المنتجات من السيرفر
-    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products")
+    // جلب المنتجات من Cloudflare Worker
+    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
     const products = await response.json();
 
     function displayProducts(filterText = "", filterCategory = "all") {
@@ -29,19 +29,46 @@ document.addEventListener("DOMContentLoaded", async () => {
           card.classList.add("product-card");
           card.setAttribute("data-category", product.category || "general");
 
-          // ===============================
-          //  🔥 إنشاء سلايدر الصور الجديد
-          // ===============================
-        const imagesHTML = product.images
-  .map(img => {
-    const imageURL = img.startsWith("http")
-      ? img
-      : `https://hervana.pages.dev/public/${img}`; 
-    return `<img src="${imageURL}" class="slide-img">`;
-  })
-  .join("");
+          // ===================================================
+          //  🔥 إصلاح images مهما كانت (Array / JSON / string)
+          // ===================================================
 
-          // محتوى الـ Card بالكامل
+          let imagesArray = [];
+
+          try {
+            if (Array.isArray(product.images)) {
+              imagesArray = product.images;
+            } else if (typeof product.images === "string") {
+              if (product.images.trim().startsWith("[")) {
+                imagesArray = JSON.parse(product.images);
+              } else {
+                imagesArray = [product.images];
+              }
+            }
+          } catch {
+            imagesArray = [];
+          }
+
+          // لو مفيش صور خالص
+          if (imagesArray.length === 0) {
+            imagesArray = ["default.jpg"];
+          }
+
+          // ===================================================
+          // 🔥 إنشاء HTML للصور
+          // ===================================================
+          const imagesHTML = imagesArray
+            .map(img => {
+              const imageURL = img.startsWith("http")
+                ? img
+                : `https://hervana.pages.dev/public/${img}`;
+              return `<img src="${imageURL}" class="slide-img">`;
+            })
+            .join("");
+
+          // ===================================================
+          //  محتوى الكارد
+          // ===================================================
           card.innerHTML = `
             <div class="slider">
               ${imagesHTML}
@@ -129,6 +156,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         displayProducts(searchInput?.value || "", categorySelect.value);
       });
     }
+
   } catch (error) {
     console.error("Error loading products:", error);
     productGrid.innerHTML = "<p>⚠️ Error loading products data.</p>";
