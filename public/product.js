@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // جلب كل المنتجات من الباك اند
-    const response = await fetch("https://hervana-production.up.railway.app/products");
+    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
     const products = await response.json();
 
     // البحث عن المنتج المطلوب
