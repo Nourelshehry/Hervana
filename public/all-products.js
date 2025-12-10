@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // جلب المنتجات من السيرفر
-    const response = await fetch("/products");
+    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products")
     const products = await response.json();
 
     function displayProducts(filterText = "", filterCategory = "all") {
@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           // ===============================
           //  🔥 إنشاء سلايدر الصور الجديد
           // ===============================
-          const imagesHTML = product.images
-            .map(img => {
-              const imageURL = img.startsWith("http")
-                ? img
-                : `/public/${img}`; // <-- أهم تعديل
-              return `<img src="${imageURL}" class="slide-img">`;
-            })
-            .join("");
+        const imagesHTML = product.images
+  .map(img => {
+    const imageURL = img.startsWith("http")
+      ? img
+      : `https://hervana.pages.dev/public/${img}`; 
+    return `<img src="${imageURL}" class="slide-img">`;
+  })
+  .join("");
 
           // محتوى الـ Card بالكامل
           card.innerHTML = `

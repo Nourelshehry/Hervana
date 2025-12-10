@@ -13,7 +13,9 @@ const json = (data, status = 200) =>
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization"
     }
   });
 
@@ -24,6 +26,21 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const method = request.method;
+
+    // ===================================================
+    // (0) Handle CORS Preflight (OPTIONS)
+    // ===================================================
+    if (method === "OPTIONS") {
+      return new Response(null, {
+        status: 204,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type, Authorization",
+          "Access-Control-Max-Age": "86400"
+        }
+      });
+    }
 
     // ===================================================
     // (1) محاولة تقديم ملفات الاستاتيك من public أولا
@@ -38,7 +55,7 @@ export default {
     }
 
     // ===================================================
-    // (2) API ROUTES (كودك الأصلي بدون أي تعديل)
+    // (2) API ROUTES (كودك الأصلي بالكامل كما هو)
     // ===================================================
 
     // ------------------------------
