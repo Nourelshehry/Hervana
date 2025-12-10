@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // جلب المنتجات من السيرفر
-    const response = await fetch("https://hervana-production.up.railway.app/products");
+    const response = await fetch("/products");
     const products = await response.json();
 
     function displayProducts(filterText = "", filterCategory = "all") {
