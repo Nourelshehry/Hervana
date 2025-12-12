@@ -3,43 +3,87 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   try {
     // جلب كل المنتجات من الباك اند
-    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
+    const response = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
     const products = await response.json();
 
     // البحث عن المنتج المطلوب
     const product = products.find(p => p.id == productId);
     if (!product) {
-      document.querySelector(".product-details").innerHTML = "<p>Product not found.</p>";
+      document.querySelector(".product-details").innerHTML =
+        "<p>Product not found.</p>";
       return;
     }
 
-    // === عرض بيانات المنتج ===
+    // ===============================
+    //   عرض بيانات المنتج
+    // ===============================
     document.getElementById("product-name").textContent = product.name;
-    document.getElementById("product-description").textContent = product.description;
-    document.getElementById("product-price").textContent = `EGP ${product.price}`;
+    document.getElementById("product-description").textContent =
+      product.description || "";
+    document.getElementById("product-price").textContent =
+      `EGP ${product.price}`;
 
-    // === عرض الصور (السلايدر) ===
+    // ===============================
+    //   تجهيز الصور من الـ DB
+    // ===============================
+
+    let images = [];
+
+    // لو جاية كـ string (JSON)
+    if (typeof product.images === "string") {
+      try {
+        images = JSON.parse(product.images);
+      } catch (e) {
+        console.error("Invalid images JSON", e);
+        images = [];
+      }
+    }
+
+    // لو Array جاهز
+    if (Array.isArray(product.images)) {
+      images = product.images;
+    }
+
+    // ===============================
+    //   عرض الصور (Slider)
+    // ===============================
     const slider = document.getElementById("slider");
     const dots = document.getElementById("slider-dots");
 
-    if (product.images && product.images.length > 0) {
-      product.images.forEach((img, index) => {
+    slider.innerHTML = "";
+    dots.innerHTML = "";
+
+    if (images.length > 0) {
+      images.forEach((img, index) => {
         const imgElem = document.createElement("img");
-        imgElem.src = img;
+
+        // معالجة الـ path
+        imgElem.src = img.startsWith("http")
+          ? img
+          : `https://hervana.pages.dev/public/${img}`;
+
         imgElem.classList.add("slide");
         if (index === 0) imgElem.classList.add("active");
+
         slider.appendChild(imgElem);
 
         const dot = document.createElement("span");
         dot.classList.add("dot");
         if (index === 0) dot.classList.add("active");
+
         dots.appendChild(dot);
       });
 
       initSlider();
+    } else {
+      slider.innerHTML = "<p>No images available</p>";
     }
 
-    // === زرار إضافة للكارت (تعديلات مهمة) ===
+    // ===============================
+    //   زر إضافة للكارت
+    // ===============================
     const addBtn = document.querySelector(".add-to-cart");
     addBtn.dataset.id = product.id;
     addBtn.dataset.name = product.name;
@@ -63,17 +107,23 @@ function initSlider() {
   const slides = document.querySelectorAll(".slide");
   const dots = document.querySelectorAll(".dot");
 
+  if (!slides.length) return;
+
   function showSlide(index) {
-    slides.forEach((s, i) => s.classList.toggle("active", i === index));
-    dots.forEach((d, i) => d.classList.toggle("active", i === index));
+    slides.forEach((s, i) =>
+      s.classList.toggle("active", i === index)
+    );
+    dots.forEach((d, i) =>
+      d.classList.toggle("active", i === index)
+    );
     currentIndex = index;
   }
 
-  document.querySelector(".prev").addEventListener("click", () => {
+  document.querySelector(".prev")?.addEventListener("click", () => {
     showSlide((currentIndex - 1 + slides.length) % slides.length);
   });
 
-  document.querySelector(".next").addEventListener("click", () => {
+  document.querySelector(".next")?.addEventListener("click", () => {
     showSlide((currentIndex + 1) % slides.length);
   });
 
