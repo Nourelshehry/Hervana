@@ -316,12 +316,6 @@ color: #fff;
   margin-bottom:20px;
 }
 
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  justify-items: center;
-}
 
 
 /* ===================== Products Section (FLAT - NO CARDS) ===================== */
@@ -476,7 +470,7 @@ footer a:hover {
   .menu-toggle { display:block; }
   .nav-links { display:none; flex-direction:column; background:#c0392b; position:absolute; top:60px; left:0; width:100%; padding:15px 0; text-align:center;}
   .nav-links.show { display:flex;}
-  .product-card { width:90%; }
+  /*.product-card { width:90%; }*/
   .hero { height:400px; }
   .hero-content h1 { font-size:28px; }
   .hero-content p { font-size:16px; }
@@ -552,7 +546,7 @@ footer a:hover {
 /* ===============================
    FORCE NO CARDS (GLOBAL)
 =============================== */
-.product-card {
+.home .product-card {
   background: transparent !important;
   box-shadow: none !important;
   border-radius: 0 !important;

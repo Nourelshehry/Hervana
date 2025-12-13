@@ -270,3 +270,11 @@ gap: 6px;
   border-radius: 0 !important;
   padding: 0 !important;
 }
+
+.all-products .product-card,
+.all-products .product-item {
+  background: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}

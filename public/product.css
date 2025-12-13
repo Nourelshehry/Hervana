@@ -243,3 +243,9 @@ header {
     font-size: 1.25rem;
   }
 }
+
+.product-page .product-details {
+  background: none;
+  box-shadow: none;
+  border-radius: 0;
+}
