@@ -9,25 +9,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
+
     products = await response.json();
+    console.log("Loaded products:", products); // 👈 للتأكد
+
     renderProducts();
   } catch (err) {
     console.error(err);
     productsContainer.innerHTML = "<p>⚠️ Failed to load products</p>";
   }
 
-  function renderProducts(search = "", category = "all-products") {
+  function renderProducts(search = "", category = "all") {
     productsContainer.innerHTML = "";
 
     const searchLower = search.toLowerCase();
 
     products.forEach(product => {
+      const productCategory = (product.category || "").toLowerCase();
+
       const matchesText =
         product.name.toLowerCase().includes(searchLower) ||
         (product.description || "").toLowerCase().includes(searchLower);
 
       const matchesCategory =
-        category === "all-products" || product.category === category;
+        category === "all" ||
+        productCategory === category.toLowerCase();
 
       if (!matchesText || !matchesCategory) return;
 
@@ -39,13 +45,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       let image = "default.jpg";
 
       try {
-        if (Array.isArray(product.images) && product.images.length) {
+        if (Array.isArray(product.images) && product.images.length > 0) {
           image = product.images[0];
         } else if (typeof product.images === "string") {
           const parsed = JSON.parse(product.images);
-          if (Array.isArray(parsed) && parsed.length) image = parsed[0];
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            image = parsed[0];
+          }
         }
-      } catch {}
+      } catch (e) {
+        console.warn("Image parse error", e);
+      }
 
       const imageURL = image.startsWith("http")
         ? image
@@ -69,9 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <h3>${product.name}</h3>
           <div class="price">EGP ${product.price}</div>
 
-          <div class="stock ${
-            stock > 0 ? "in-stock" : "out-of-stock"
-          }">
+          <div class="stock ${stock > 0 ? "in-stock" : "out-of-stock"}">
             ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
           </div>
 
@@ -88,9 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 : `<button disabled>Out of Stock</button>`
             }
 
-            <a href="product.html?id=${product.id}">
-              View
-            </a>
+            <a href="product.html?id=${product.id}">View</a>
           </div>
         </div>
       `;
