@@ -112,6 +112,11 @@ header {
   gap: 22px;
   padding: 30px 20px;
 }
+.all-products-grid {
+  grid-template-columns: repeat(4, 1fr);
+  justify-items: stretch;
+}
+
 
 /* Single product */
 .product-item {

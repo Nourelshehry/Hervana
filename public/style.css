@@ -323,77 +323,78 @@ color: #fff;
   justify-items: center;
 }
 
-.product-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  text-align:center;
-  width: 200px;
-}
 
-.product-card img {
-  width:100%;
-  border-radius:8px;
-}
-
-/* Buttons */
-.product-card .btns {
-  display: flex;
-  gap: 8px;
-  padding: 0 10px 15px;
-  margin-top: auto;
-}
-
-.product-card button,
-.view-btn {
-  flex: 1;
-  padding: 8px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 13px;
-  transition: all 0.3s ease;
-}
-
-.product-card button {
-  background: #c0392b;
-  color: #fff;
-  margin: 8px;
-}
-
-.product-card button:hover {
-  background: #a93226;
-  transform: scale(1.05);
-}
-
-.view-btn {
-  background: #c0392b;
-  color: #fff;
-  margin: 8px;
-}
-
-.view-btn:hover {
-  background: #c0392b;
-  transform: scale(1.05);
-}
-.view-btn {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 10px 15px;
-  background: #c0392b; /* نفس اللون */
-  color: #fff;
+/* ===================== Products Section (FLAT - NO CARDS) ===================== */
+.products {
+  padding: 40px 20px;
   text-align: center;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background 0.3s;
 }
 
-.view-btn:hover {
-  background: #c0392b;
+.products h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+/* Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  padding: 10px;
+}
+
+/* Single product */
+.product-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  cursor: pointer;
+}
+
+/* Image */
+.product-item img {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: transparent;
+}
+
+/* Info */
+.product-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.product-info h3 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.price {
+  color: #c0392b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* Hover (Shein style) */
+.product-item:hover img {
+  opacity: 0.9;
+}
+
+.product-item:hover h3 {
+  text-decoration: underline;
+}
+
+/* ❌ Hide buttons completely */
+.product-actions,
+.btns,
+.view-btn,
+.product-card button {
+  display: none !important;
 }
 
 
@@ -534,4 +535,31 @@ footer a:hover {
 @keyframes slideIn {
   from { opacity:0; transform:translateX(50px); }
   to { opacity:1; transform:translateX(0); }
+}
+
+@media (max-width: 1024px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+}
+/* ===============================
+   FORCE NO CARDS (GLOBAL)
+=============================== */
+.product-card {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  width: auto !important;
+}
+
+.product-card img {
+  border-radius: 0 !important;
 }

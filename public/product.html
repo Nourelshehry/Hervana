@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Product - Hervana</title>
+
   <link rel="stylesheet" href="/public/all-products.css"/>
   <link rel="stylesheet" href="/public/product.css"/>
 </head>
@@ -13,36 +14,51 @@
   <div class="header-actions">
     <button class="back-btn" onclick="window.location.href='all-products.html'">←</button>
   </div>
-  <div class="logo"><a href="index.html">Hervana</a></div>
+
+  <div class="logo">
+    <a href="index.html">Hervana</a>
+  </div>
+
   <div class="header-actions">
     <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
   </div>
 </header>
 
 <main class="product-page">
+
+  <!-- Product Images -->
   <div class="product-images">
     <div class="slider-container">
       <div class="slider" id="slider"></div>
+
       <button class="slider-btn prev">❮</button>
       <button class="slider-btn next">❯</button>
+
       <div class="slider-dots" id="slider-dots"></div>
     </div>
   </div>
+
+  <!-- Product Details -->
   <div class="product-details">
     <h1 id="product-name"></h1>
-    <p id="product-description"></p>
+
     <p class="price" id="product-price"></p>
-<button class="add-to-cart"
-        data-id="1"
-        data-name="Product Name"
-        data-price="199">
-  Add to Cart
-</button>
+
+    <p id="product-description"></p>
+
+    <button class="add-to-cart">
+      Add to Cart
+    </button>
   </div>
+
 </main>
 
-<div id="cart-message" class="cart-message">Added to cart!</div>
+<!-- Toast -->
+<div id="cart-message" class="cart-message">
+  Added to cart!
+</div>
 
+<!-- Cart Sidebar -->
 <aside id="cart-sidebar" class="cart-sidebar">
   <button id="close-cart">✖</button>
   <h2>Your Cart</h2>
