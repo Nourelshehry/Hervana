@@ -104,12 +104,12 @@ header {
 }
 
 /* ===============================
-   PRODUCTS (NO CARDS)
+   PRODUCTS (Shein-style)
 =============================== */
 .products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
   padding: 30px 20px;
 }
 
@@ -117,39 +117,41 @@ header {
 .product-item {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  cursor: pointer;
 }
 
 /* Image */
 .product-thumb {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: 12px;
-  background: #fff;
+  border-radius: 10px;
+  background: #f9f9f9;
 }
 
 /* Info */
 .product-info {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .product-info h3 {
   margin: 0;
-  font-size: 15px;
-  font-weight: bold;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.3;
 }
 
 .price {
   color: #c0392b;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 14px;
 }
 
 .stock {
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .stock.in-stock {
@@ -160,34 +162,9 @@ header {
   color: #999;
 }
 
-/* Actions */
+/* ❌ Hide actions (Shein style) */
 .product-actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 6px;
-}
-
-.product-actions button,
-.product-actions a {
-  flex: 1;
-  padding: 8px;
-  font-size: 13px;
-  font-weight: bold;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-}
-
-.product-actions button {
-  background: #c0392b;
-  color: #fff;
-}
-
-.product-actions a {
-  background: #eee;
-  color: #333;
+  display: none;
 }
 
 /* ===============================
@@ -222,6 +199,15 @@ footer {
 }
 
 /* ===============================
+   Tablet
+=============================== */
+@media (max-width: 1024px) {
+  .products {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ===============================
    Mobile
 =============================== */
 @media (max-width: 768px) {
@@ -246,10 +232,21 @@ footer {
 
   .products {
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 12px;
   }
 
   .product-info h3 {
-    font-size: 14px;
+    font-size: 12.5px;
   }
+}
+.product-item {
+  cursor: pointer;
+}
+
+.product-item:hover img {
+  opacity: 0.9;
+}
+
+.product-item:hover h3 {
+  text-decoration: underline;
 }

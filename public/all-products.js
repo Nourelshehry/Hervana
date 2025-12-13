@@ -64,42 +64,33 @@ const productsContainer = document.querySelector(".product-grid");
       // ===============================
       // Product layout (NO CARDS)
       // ===============================
-      const item = document.createElement("div");
-      item.className = "product-item";
+const item = document.createElement("div");
+item.className = "product-item";
+
+// المنتج كله clickable
+item.addEventListener("click", () => {
+  window.location.href = `product.html?id=${product.id}`;
+});
+
 
       item.innerHTML = `
-        <img
-          src="${imageURL}"
-          alt="${product.name}"
-          class="product-thumb"
-          loading="lazy"
-        />
+  <img
+    src="${imageURL}"
+    alt="${product.name}"
+    class="product-thumb"
+    loading="lazy"
+  />
 
-        <div class="product-info">
-          <h3>${product.name}</h3>
-          <div class="price">EGP ${product.price}</div>
+  <div class="product-info">
+    <h3>${product.name}</h3>
+    <div class="price">EGP ${product.price}</div>
 
-          <div class="stock ${stock > 0 ? "in-stock" : "out-of-stock"}">
-            ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
-          </div>
+    <div class="stock ${stock > 0 ? "in-stock" : "out-of-stock"}">
+      ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
+    </div>
+  </div>
+`;
 
-          <div class="product-actions">
-            ${
-              stock > 0
-                ? `<button
-                    class="add-to-cart"
-                    data-id="${product.id}"
-                    data-name="${product.name}"
-                    data-price="${product.price}">
-                    Add to Cart
-                  </button>`
-                : `<button disabled>Out of Stock</button>`
-            }
-
-            <a href="product.html?id=${product.id}">View</a>
-          </div>
-        </div>
-      `;
 
       productsContainer.appendChild(item);
     });
