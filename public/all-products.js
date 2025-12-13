@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const productsContainer = document.querySelector(".products");
+const productsContainer = document.querySelector(".product-grid");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
 
