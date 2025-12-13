@@ -1,151 +1,152 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const productGrid = document.querySelector(".product-grid");
+  const productsContainer = document.querySelector(".products");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
 
+  let products = [];
+
   try {
-    // جلب المنتجات من Cloudflare Worker
-    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
-    const products = await response.json();
+    const response = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
+    products = await response.json();
+    renderProducts();
+  } catch (err) {
+    console.error(err);
+    productsContainer.innerHTML = "<p>⚠️ Failed to load products</p>";
+  }
 
-    function displayProducts(filterText = "", filterCategory = "all") {
-      productGrid.innerHTML = "";
+  function renderProducts(search = "", category = "all-products") {
+    productsContainer.innerHTML = "";
 
-      const searchLower = filterText.toLowerCase();
+    const searchLower = search.toLowerCase();
 
-      products.forEach(product => {
-        let currentStock = product.stock;
+    products.forEach(product => {
+      const matchesText =
+        product.name.toLowerCase().includes(searchLower) ||
+        (product.description || "").toLowerCase().includes(searchLower);
 
-        const matchesText =
-          product.name.toLowerCase().includes(searchLower) ||
-          (product.category && product.category.toLowerCase().includes(searchLower)) ||
-          (product.description && product.description.toLowerCase().includes(searchLower));
+      const matchesCategory =
+        category === "all-products" || product.category === category;
 
-        const matchesCategory =
-          filterCategory === "all" || product.category === filterCategory;
+      if (!matchesText || !matchesCategory) return;
 
-        if (matchesText && matchesCategory) {
-          const card = document.createElement("div");
-          card.classList.add("product-card");
-          card.setAttribute("data-category", product.category || "general");
+      const stock = Number(product.stock) || 0;
 
-          // ===================================================
-          // 🔥 تجهيز الصورة الأولى فقط
-          // ===================================================
-          let firstImage = "default.jpg"; // صورة افتراضية
+      // ===============================
+      // Image (first only)
+      // ===============================
+      let image = "default.jpg";
 
-          try {
-            if (Array.isArray(product.images) && product.images.length > 0) {
-              firstImage = product.images[0];
-            } else if (typeof product.images === "string") {
-              if (product.images.trim().startsWith("[")) {
-                const arr = JSON.parse(product.images);
-                if (arr.length > 0) firstImage = arr[0];
-              } else {
-                firstImage = product.images;
-              }
-            }
-          } catch {
-            firstImage = "default.jpg";
-          }
+      try {
+        if (Array.isArray(product.images) && product.images.length) {
+          image = product.images[0];
+        } else if (typeof product.images === "string") {
+          const parsed = JSON.parse(product.images);
+          if (Array.isArray(parsed) && parsed.length) image = parsed[0];
+        }
+      } catch {}
 
-          const imageURL = firstImage.startsWith("http")
-            ? firstImage
-            : `https://hervana.pages.dev/public/${firstImage}`;
+      const imageURL = image.startsWith("http")
+        ? image
+        : `https://hervana.pages.dev/public/${image}`;
 
-          // ===================================================
-          // محتوى الكارد
-          // ===================================================
-          card.innerHTML = `
-            <div class="slider">
-              <img src="${imageURL}" class="slide-img">
-            </div>
+      // ===============================
+      // Product layout (NO CARDS)
+      // ===============================
+      const item = document.createElement("div");
+      item.className = "product-item";
 
-            <h3>${product.name}</h3>
-            <p>EGP ${product.price}</p>
+      item.innerHTML = `
+        <img
+          src="${imageURL}"
+          alt="${product.name}"
+          class="product-thumb"
+          loading="lazy"
+        />
 
-            <p class="stock ${currentStock > 0 ? "in-stock" : "out-of-stock"}">
-              ${currentStock > 0 ? `In Stock: ${currentStock}` : "Out of Stock"}
-            </p>
+        <div class="product-info">
+          <h3>${product.name}</h3>
+          <div class="price">EGP ${product.price}</div>
 
+          <div class="stock ${
+            stock > 0 ? "in-stock" : "out-of-stock"
+          }">
+            ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
+          </div>
+
+          <div class="product-actions">
             ${
-              currentStock > 0
-                ? `<button class="add-to-cart" 
-                     data-id="${product.id}" 
-                     data-name="${product.name}" 
-                     data-price="${product.price}">
-                     Add to Cart
-                   </button>`
+              stock > 0
+                ? `<button
+                    class="add-to-cart"
+                    data-id="${product.id}"
+                    data-name="${product.name}"
+                    data-price="${product.price}">
+                    Add to Cart
+                  </button>`
                 : `<button disabled>Out of Stock</button>`
             }
 
-            <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
-          `;
+            <a href="product.html?id=${product.id}">
+              View
+            </a>
+          </div>
+        </div>
+      `;
 
-          productGrid.appendChild(card);
-        }
-      });
+      productsContainer.appendChild(item);
+    });
 
-      attachCartListeners();
-    }
-
-    function attachCartListeners() {
-      document.querySelectorAll(".add-to-cart").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.dataset.id;
-          const name = btn.dataset.name;
-          const price = btn.dataset.price;
-
-          addToCart({ id, name, price });
-        });
-      });
-    }
-
-    function addToCart(product) {
-      let userId = localStorage.getItem("userId");
-      if (!userId) {
-        userId = "user_" + Date.now();
-        localStorage.setItem("userId", userId);
-      }
-
-      const cartKey = `cart_${userId}`;
-      let cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-      const existing = cart.find(item => item.id == product.id);
-
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        cart.push({
-          id: Number(product.id),
-          name: product.name,
-          price: Number(product.price),
-          quantity: 1
-        });
-      }
-
-      localStorage.setItem(cartKey, JSON.stringify(cart));
-    }
-
-    // أول تحميل
-    displayProducts();
-
-    // البحث
-    if (searchInput) {
-      searchInput.addEventListener("input", () => {
-        displayProducts(searchInput.value, categorySelect?.value || "all");
-      });
-    }
-
-    // الفلترة بالكاتيجوري
-    if (categorySelect) {
-      categorySelect.addEventListener("change", () => {
-        displayProducts(searchInput?.value || "", categorySelect.value);
-      });
-    }
-
-  } catch (error) {
-    console.error("Error loading products:", error);
-    productGrid.innerHTML = "<p>⚠️ Error loading products data.</p>";
+    attachCartListeners();
   }
+
+  function attachCartListeners() {
+    document.querySelectorAll(".add-to-cart").forEach(btn => {
+      btn.onclick = () => {
+        addToCart({
+          id: btn.dataset.id,
+          name: btn.dataset.name,
+          price: btn.dataset.price
+        });
+      };
+    });
+  }
+
+  function addToCart(product) {
+    let userId = localStorage.getItem("userId");
+    if (!userId) {
+      userId = "user_" + Date.now();
+      localStorage.setItem("userId", userId);
+    }
+
+    const cartKey = `cart_${userId}`;
+    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+    const existing = cart.find(item => item.id == product.id);
+
+    if (existing) {
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        id: Number(product.id),
+        name: product.name,
+        price: Number(product.price),
+        quantity: 1
+      });
+    }
+
+    localStorage.setItem(cartKey, JSON.stringify(cart));
+  }
+
+  // ===============================
+  // Filters
+  // ===============================
+  searchInput?.addEventListener("input", () => {
+    renderProducts(searchInput.value, categorySelect.value);
+  });
+
+  categorySelect?.addEventListener("change", () => {
+    renderProducts(searchInput.value, categorySelect.value);
+  });
 });

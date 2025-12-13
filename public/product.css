@@ -62,17 +62,17 @@ header {
   -webkit-user-drag: none;
 }
 .slider img {
+  display: none;          /* ✨ السطر المهم */
   width: 100%;
   height: 100%;
-  object-fit: contain;        /* عشان كل الصور تبقى متناسقة */
+  object-fit: contain;
   background: #fff;
 }
-
-
 
 .slider img.active {
   display: block;
 }
+
 
 @media (max-width: 480px) {
   .slider-container {
