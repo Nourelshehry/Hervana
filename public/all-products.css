@@ -126,9 +126,10 @@ header {
   width: 100%;
   aspect-ratio: 3 / 4;
   object-fit: cover;
-  border-radius: 10px;
-  background: #f9f9f9;
+  border-radius: 0;        /* ✅ NO cards */
+  background: transparent;/* ✅ NO cards */
 }
+
 
 /* Info */
 .product-info {
@@ -231,15 +232,20 @@ footer {
   }
 
   .products {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;        /* أقل */
+  padding: 20px 12px;
+}
 
-  .product-info h3 {
-    font-size: 12.5px;
-  }
+
+.product-info h3 {
+  font-size: 13px;
+  font-weight: 400;
+}
 }
 .product-item {
+gap: 6px;
   cursor: pointer;
 }
 
