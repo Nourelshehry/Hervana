@@ -258,3 +258,10 @@ gap: 6px;
 .product-item:hover h3 {
   text-decoration: underline;
 }
+/* FORCE REMOVE CARDS */
+.product-grid > * {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+}
