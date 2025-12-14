@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const categorySelect = document.getElementById("category");
 
   try {
-    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
+    const response = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
     const products = await response.json();
 
     function displayProducts(filterText = "", filterCategory = "all") {
@@ -14,8 +16,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       products.forEach(product => {
         const matchesText =
           product.name.toLowerCase().includes(searchLower) ||
-          (product.category && product.category.toLowerCase().includes(searchLower)) ||
-          (product.description && product.description.toLowerCase().includes(searchLower));
+          (product.category &&
+            product.category.toLowerCase().includes(searchLower)) ||
+          (product.description &&
+            product.description.toLowerCase().includes(searchLower));
 
         const matchesCategory =
           filterCategory === "all" || product.category === filterCategory;
@@ -36,26 +40,28 @@ document.addEventListener("DOMContentLoaded", async () => {
           ? firstImage
           : `https://hervana.pages.dev/public/${firstImage}`;
 
+        const safeName = product.name.replace(/'/g, "\\'");
+
         const card = document.createElement("div");
         card.className = "product-card";
 
         card.innerHTML = `
-          <img src="${imageURL}" alt="${product.name}">
-          <h3>${product.name}</h3>
+          <img src="${imageURL}" alt="${safeName}">
+          <h3>${safeName}</h3>
           <p>EGP ${product.price}</p>
 
           ${
             product.stock > 0
               ? `<button class="add-to-cart"
-                   data-id="${product.id}"
-                   data-name="${product.name}"
-                   data-price="${product.price}">
+                   onclick="addToCart('${product.id}', '${safeName}', '${product.price}')">
                    Add to Cart
                  </button>`
               : `<button disabled>Out of Stock</button>`
           }
 
-          <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
+          <a href="product.html?id=${product.id}" class="view-btn">
+            View Details
+          </a>
         `;
 
         productGrid.appendChild(card);
@@ -71,7 +77,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     categorySelect?.addEventListener("change", () => {
       displayProducts(searchInput?.value || "", categorySelect.value);
     });
-
   } catch (err) {
     console.error(err);
     productGrid.innerHTML = "<p>⚠️ Error loading products.</p>";

@@ -211,3 +211,4 @@ if (checkoutBtn) {
 renderCart();
 updateCartCount();
 });
+window.addToCart = addToCart;
