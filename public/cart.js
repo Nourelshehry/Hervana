@@ -1,3 +1,4 @@
+console.log("🔥 cart.js loaded");
 
 // cart.js — Cloudflare compatible & global
 document.addEventListener("DOMContentLoaded", () => {
@@ -65,6 +66,8 @@ function showCartMessage(text) {
    Add to Cart
 ========================= */
 async function addToCart(id, name, price) {
+    console.log("🟡 addToCart called", { id, name, price });
+
   cart = loadCart(); // ✅ مهم جدًا علشان أحدث نسخة دايمًا
 
   id = Number(id);
@@ -119,6 +122,7 @@ async function addToCart(id, name, price) {
 document.body.addEventListener("click", (e) => {
   const btn = e.target.closest(".add-to-cart");
   if (!btn) return;
+  console.log("🟢 add-to-cart clicked", btn.dataset);
 
   addToCart(
     btn.dataset.id,
@@ -166,6 +170,8 @@ cartItems?.addEventListener("click", async (e) => {
    Render cart
 ========================= */
 function renderCart() {
+  console.log("🔵 renderCart called");
+
   cart = loadCart(); // ✅ حل المشكلة الأساسية
 
   if (!cartItems) return;
