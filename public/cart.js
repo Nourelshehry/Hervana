@@ -1,5 +1,4 @@
 // cart.js — Cloudflare compatible & global
-document.addEventListener("DOMContentLoaded", () => {
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
   const cartItems = document.getElementById("cart-items");
@@ -179,4 +178,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderCart();
   updateCartCount();
-});
+
