@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-const productsContainer = document.querySelector(".product-grid");
+  const productsContainer = document.querySelector(".products");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
 
@@ -9,31 +9,25 @@ const productsContainer = document.querySelector(".product-grid");
     const response = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
-
     products = await response.json();
-    console.log("Loaded products:", products); // 👈 للتأكد
-
     renderProducts();
   } catch (err) {
     console.error(err);
     productsContainer.innerHTML = "<p>⚠️ Failed to load products</p>";
   }
 
-  function renderProducts(search = "", category = "all") {
+  function renderProducts(search = "", category = "all-products") {
     productsContainer.innerHTML = "";
 
     const searchLower = search.toLowerCase();
 
     products.forEach(product => {
-      const productCategory = (product.category || "").toLowerCase();
-
       const matchesText =
         product.name.toLowerCase().includes(searchLower) ||
         (product.description || "").toLowerCase().includes(searchLower);
 
       const matchesCategory =
-        category === "all" ||
-        productCategory === category.toLowerCase();
+        category === "all-products" || product.category === category;
 
       if (!matchesText || !matchesCategory) return;
 
@@ -45,17 +39,13 @@ const productsContainer = document.querySelector(".product-grid");
       let image = "default.jpg";
 
       try {
-        if (Array.isArray(product.images) && product.images.length > 0) {
+        if (Array.isArray(product.images) && product.images.length) {
           image = product.images[0];
         } else if (typeof product.images === "string") {
           const parsed = JSON.parse(product.images);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            image = parsed[0];
-          }
+          if (Array.isArray(parsed) && parsed.length) image = parsed[0];
         }
-      } catch (e) {
-        console.warn("Image parse error", e);
-      }
+      } catch {}
 
       const imageURL = image.startsWith("http")
         ? image
@@ -64,33 +54,46 @@ const productsContainer = document.querySelector(".product-grid");
       // ===============================
       // Product layout (NO CARDS)
       // ===============================
-const item = document.createElement("div");
-item.className = "product-item";
-
-// المنتج كله clickable
-item.addEventListener("click", () => {
-  window.location.href = `product.html?id=${product.id}`;
-});
-
+      const item = document.createElement("div");
+      item.className = "product-item";
 
       item.innerHTML = `
-  <img
-    src="${imageURL}"
-    alt="${product.name}"
-    class="product-thumb"
-    loading="lazy"
-  />
+        <img
+          src="${imageURL}"
+          alt="${product.name}"
+          class="product-thumb"
+          loading="lazy"
+        />
 
-  <div class="product-info">
-    <h3>${product.name}</h3>
-    <div class="price">EGP ${product.price}</div>
+        <div class="product-info">
+          <h3>${product.name}</h3>
+          <div class="price">EGP ${product.price}</div>
 
-    <div class="stock ${stock > 0 ? "in-stock" : "out-of-stock"}">
-      ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
-    </div>
-  </div>
-`;
+          <div class="stock ${
+            stock > 0 ? "in-stock" : "out-of-stock"
+          }">
+            ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
+          </div>
 
+          <div class="product-actions">
+            ${
+              stock > 0
+                ? `<button
+                    class="add-to-cart"
+                    data-id="${product.id}"
+                    data-name="${product.name}"
+                    data-price="${product.price}">
+                    Add to Cart
+                  </button>`
+                : `<button disabled>Out of Stock</button>`
+            }
+
+            <a href="product.html?id=${product.id}">
+              View
+            </a>
+          </div>
+        </div>
+      `;
 
       productsContainer.appendChild(item);
     });
