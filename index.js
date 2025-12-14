@@ -43,16 +43,12 @@ export default {
     }
 
     // ===================================================
-    // (1) Static Assets (Pages / public)
+    // (1) Static Assets
     // ===================================================
     try {
       const staticResponse = await env.ASSETS.fetch(request);
-      if (staticResponse.status !== 404) {
-        return staticResponse;
-      }
-    } catch (_) {
-      // ignore
-    }
+      if (staticResponse.status !== 404) return staticResponse;
+    } catch (_) {}
 
     // ===================================================
     // (2) API ROUTES
@@ -85,7 +81,7 @@ export default {
     }
 
     // ------------------------------
-    // POST /order  ✅ FINAL
+    // POST /order ✅ FINAL
     // ------------------------------
     if (url.pathname === "/order" && method === "POST") {
       let body;
@@ -97,18 +93,13 @@ export default {
 
       const { userId, customer, items } = body;
 
-      if (
-        !userId ||
-        !customer ||
-        !Array.isArray(items) ||
-        items.length === 0
-      ) {
+      if (!userId || !customer || !Array.isArray(items) || !items.length) {
         return json({ success: false, message: "Invalid order data" }, 400);
       }
 
       let total = 0;
 
-      // 🔒 Transaction-like logic
+      // تحقق من المخزون + حساب السعر
       for (const item of items) {
         const product = await queryDB(
           env,
@@ -117,10 +108,7 @@ export default {
         );
 
         if (!product.length) {
-          return json(
-            { success: false, message: "Product not found" },
-            404
-          );
+          return json({ success: false, message: "Product not found" }, 404);
         }
 
         if (product[0].stock < item.quantity) {
@@ -136,7 +124,7 @@ export default {
         total += product[0].price * item.quantity;
       }
 
-      // ✅ Deduct stock
+      // خصم المخزون
       for (const item of items) {
         await env.DB.prepare(
           "UPDATE products SET stock = stock - ? WHERE id = ?"
@@ -147,8 +135,9 @@ export default {
 
       const orderId = "order_" + Date.now();
 
+      // حفظ الأوردر
       await env.DB.prepare(
-        `INSERT INTO orders (id, date, items, customer, total)
+        `INSERT INTO orders (id, date, items, userDetails, total)
          VALUES (?, ?, ?, ?, ?)`
       )
         .bind(

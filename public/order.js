@@ -1,4 +1,4 @@
-// order.js — FINAL (Cloudflare + D1 compatible)
+// order.js — FINAL & CLEAN
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const thankYou = document.getElementById("thank-you");
   const backBtn = document.getElementById("thank-back-btn");
 
-  let displayTotal = 0;
   let shippingCost = 0;
   let isSubmitting = false;
 
@@ -24,53 +23,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const userId = getUserId();
   const cartKey = `cart_${userId}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+
+  function loadCart() {
+    return JSON.parse(localStorage.getItem(cartKey)) || [];
+  }
 
   /* =========================
-     Render Summary (UI only)
+     Render Summary
   ========================= */
-  if (cart.length === 0) {
-    summary.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
+  function renderSummary() {
+    const cart = loadCart();
+    summary.innerHTML = "";
+    let total = 0;
+
+    if (!cart.length) {
+      summary.innerHTML = "<li>Your cart is empty.</li>";
+      totalElem.textContent = "Total: 0 EGP";
+      return;
+    }
+
     cart.forEach(item => {
+      const lineTotal =
+        (Number(item.price) || 0) * (Number(item.quantity) || 1);
+      total += lineTotal;
+
       const li = document.createElement("li");
       li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
       summary.appendChild(li);
-
-      displayTotal +=
-        (Number(item.price) || 0) * (Number(item.quantity) || 1);
     });
+
+    totalElem.textContent = `Total: ${total} EGP`;
+    return total;
   }
 
-  totalElem.textContent = `Total: ${displayTotal} EGP`;
+  let displayTotal = renderSummary();
 
   /* =========================
-     Shipping (UI only)
+     Shipping
   ========================= */
-  const shippingOptions = document.querySelectorAll(".shipping-option");
-  shippingOptions.forEach(option => {
+  document.querySelectorAll(".shipping-option").forEach(option => {
     option.addEventListener("click", () => {
-      shippingOptions.forEach(o => o.classList.remove("selected"));
-      option.classList.add("selected");
+      document
+        .querySelectorAll(".shipping-option")
+        .forEach(o => o.classList.remove("selected"));
 
+      option.classList.add("selected");
       shippingCost = Number(option.dataset.price) || 0;
+
       totalElem.textContent =
-        `Total: ${displayTotal} EGP + ${shippingCost} EGP (Shipping)`;
+        `Total: ${displayTotal + shippingCost} EGP (incl. shipping)`;
     });
   });
 
   /* =========================
      Submit Order
   ========================= */
-  form.addEventListener("submit", async (e) => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
-
     if (isSubmitting) return;
     isSubmitting = true;
-    form.querySelector("button[type=submit]").disabled = true;
 
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
+    const cart = loadCart();
+    if (!cart.length) {
+      alert("Your cart is empty");
       isSubmitting = false;
       return;
     }
@@ -79,76 +94,68 @@ document.addEventListener("DOMContentLoaded", () => {
       name: document.getElementById("name").value.trim(),
       phone: document.getElementById("phone").value.trim(),
       email: document.getElementById("email").value.trim(),
-      address: document.getElementById("address").value.trim(),
+      address: document.getElementById("address").value.trim()
     };
 
     if (Object.values(customer).some(v => !v)) {
-      alert("Please fill in all fields.");
+      alert("Please fill in all fields");
       isSubmitting = false;
       return;
     }
 
-    const items = cart.map(item => ({
-      id: item.id,
-      quantity: item.quantity
-    }));
+    const total =
+      cart.reduce((s, i) => s + i.price * i.quantity, 0) + shippingCost;
 
     try {
-      const WORKER_BASE = "https://hervana.nourthranduil.workers.dev";
-
-      const res = await fetch(`${WORKER_BASE}/order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          customer,
-          items
-        })
-      });
+      const res = await fetch(
+        "https://hervana.nourthranduil.workers.dev/order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            customer,
+            items: cart.map(i => ({
+              id: i.id,
+              quantity: i.quantity
+            })),
+            total
+          })
+        }
+      );
 
       const result = await res.json();
 
       if (!res.ok || !result.success) {
-        alert("⚠️ " + (result.message || "Order failed"));
+        alert(result.message || "Order failed");
         isSubmitting = false;
         return;
       }
 
+      // ✅ نجاح
+      localStorage.removeItem(cartKey);
+
+      form.style.display = "none";
+      document.querySelector("header")?.style.display = "none";
+      document.querySelector("footer")?.style.display = "none";
+
+      thankYou.classList.add("show");
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2500);
+
     } catch (err) {
-      console.error("❌ Order Error:", err);
-      alert("An error occurred. Please try again.");
+      console.error(err);
+      alert("Network error");
       isSubmitting = false;
-      return;
     }
-
-    localStorage.removeItem(cartKey);
-    form.style.display = "none";
-    document.querySelector("header")?.style.display = "none";
-    document.querySelector("footer")?.style.display = "none";
-    thankYou.classList.add("show");
   });
-// مسح الكارت
-localStorage.removeItem(`cart_${userId}`);
-
-// إخفاء الفورم والصفحة
-form.style.display = "none";
-document.querySelector("header")?.style.display = "none";
-document.querySelector("footer")?.style.display = "none";
-
-// إظهار رسالة الشكر
-thankYou.classList.add("show");
-
-// ⏳ بعد 3 ثواني يرجع للهوم
-setTimeout(() => {
-  window.location.href = "index.html";
-}, 3000);
 
   /* =========================
      Back to Home
   ========================= */
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-  }
+  backBtn?.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
 });
