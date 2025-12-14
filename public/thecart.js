@@ -92,22 +92,26 @@ async function addToCart(id, name, price) {
       return;
     }
 
-    const existing = cart.find(i => i.id === id);
+  const existing = cart.find(i => i.id === id);
 
-    if (existing) {
-      if (existing.quantity + 1 > product.stock) {
-        showCartMessage("❌ Not enough stock");
-        return;
-      }
-      existing.quantity++;
-    } else {
-      cart.push({
-        id,
-        name,
-        price,
-        quantity: 1
-      });
-    }
+if (existing) {
+  if (existing.quantity + 1 > product.stock) {
+    showCartMessage("❌ الكمية المتاحة خلصت");
+    return;
+  }
+  existing.quantity += 1;
+} else {
+  if (product.stock < 1) {
+    showCartMessage("❌ Out of stock");
+    return;
+  }
+  cart.push({
+    id,
+    name,
+    price,
+    quantity: 1
+  });
+}
 
     saveCart(cart);
     renderCart();
