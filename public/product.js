@@ -64,9 +64,21 @@ document.addEventListener("DOMContentLoaded", async () => {
        Add To Cart
     =============================== */
     const addBtn = document.querySelector(".add-to-cart");
-    if (addBtn) {
-      addBtn.addEventListener("click", () => addToCart(product));
-    }
+
+if (addBtn) {
+  if (product.stock <= 0) {
+    addBtn.disabled = true;
+    addBtn.textContent = "Out of Stock";
+    addBtn.classList.add("out-of-stock");
+  } else {
+    addBtn.disabled = false;
+    addBtn.textContent = "Add to Cart";
+    addBtn.classList.remove("out-of-stock");
+
+    addBtn.addEventListener("click", () => addToCart(product, addBtn));
+  }
+}
+
 
   } catch (err) {
     console.error("Error loading product:", err);
@@ -147,7 +159,7 @@ function initSlider(slider, dotsContainer) {
 /* ===============================
    Cart
 =============================== */
-function addToCart(product) {
+function addToCart(product, button) {
   let userId = localStorage.getItem("userId");
   if (!userId) {
     userId = "user_" + Date.now();
@@ -157,8 +169,24 @@ function addToCart(product) {
   const key = `cart_${userId}`;
   const cart = JSON.parse(localStorage.getItem(key)) || [];
 
+  // 🔴 لو مفيش stock
+  if (product.stock <= 0) {
+    if (button) {
+      button.disabled = true;
+      button.textContent = "Out of Stock";
+      button.classList.add("out-of-stock");
+    }
+    return;
+  }
+
   const existing = cart.find(i => i.id === product.id);
+
+  // 🔴 لو وصلنا للحد الأقصى
   if (existing) {
+    if (existing.quantity + 1 > product.stock) {
+      alert("No more items in stock");
+      return;
+    }
     existing.quantity += 1;
   } else {
     cart.push({
