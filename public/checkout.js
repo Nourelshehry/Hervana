@@ -1,83 +1,115 @@
-// checkout.js
+console.log("✅ checkout.js loaded");
+
 document.addEventListener("DOMContentLoaded", () => {
   const orderForm = document.getElementById("order-form");
   const orderSummary = document.getElementById("order-summary");
   const thankYou = document.getElementById("thank-you");
   const thankClose = document.getElementById("thank-close");
 
-  // ========== إدارة المستخدم ==========
+  /* =========================
+     User
+  ========================= */
   function getUserId() {
-    let userId = localStorage.getItem("userId");
-    if (!userId) {
-      userId = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-      localStorage.setItem("userId", userId);
+    let id = localStorage.getItem("userId");
+    if (!id) {
+      id = "user_" + Date.now();
+      localStorage.setItem("userId", id);
     }
-    return userId;
+    return id;
   }
 
   const userId = getUserId();
+  const cartKey = `cart_${userId}`;
 
-  // تحميل الكارت الخاص بالمستخدم
   function loadCart() {
-    return JSON.parse(localStorage.getItem(`cart_${userId}`)) || [];
+    return JSON.parse(localStorage.getItem(cartKey)) || [];
   }
 
-  // حفظ الأوردرات الخاصة بالمستخدم
-  function saveOrder(order) {
-    let orders = JSON.parse(localStorage.getItem(`orders_${userId}`)) || [];
-    orders.push(order);
-    localStorage.setItem(`orders_${userId}`, JSON.stringify(orders));
+  function clearCart() {
+    localStorage.removeItem(cartKey);
   }
 
+  /* =========================
+     Render order summary
+  ========================= */
   const cart = loadCart();
 
-  // عرض ملخص الأوردر
-  if (orderSummary && cart.length > 0) {
+  if (orderSummary && cart.length) {
     let total = 0;
     orderSummary.innerHTML = "";
+
     cart.forEach(item => {
       total += item.price * item.quantity;
       const div = document.createElement("div");
-      div.textContent = `${item.name} x ${item.quantity} = ${item.price * item.quantity} EGP`;
+      div.textContent = `${item.name} × ${item.quantity} = ${item.price * item.quantity} EGP`;
       orderSummary.appendChild(div);
     });
+
     const totalDiv = document.createElement("div");
     totalDiv.innerHTML = `<strong>Total: ${total} EGP</strong>`;
     orderSummary.appendChild(totalDiv);
   }
 
-  // عند إرسال الأوردر
+  /* =========================
+     Submit Order
+  ========================= */
   if (orderForm) {
-    orderForm.addEventListener("submit", (e) => {
+    orderForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const formData = new FormData(orderForm);
-      const orderData = Object.fromEntries(formData.entries());
+      if (!cart.length) {
+        alert("Cart is empty");
+        return;
+      }
 
-      const order = {
-        id: "order_" + Date.now(),
-        userId: userId,
+      const formData = new FormData(orderForm);
+      const customer = Object.fromEntries(formData.entries());
+
+      const orderPayload = {
+        userId,
+        customer,
         items: cart,
-        customer: orderData,
-        date: new Date().toLocaleString(),
       };
 
-      // حفظ الأوردر
-      saveOrder(order);
+      try {
+        const res = await fetch(
+          "https://hervanastore.nourthranduil.workers.dev/order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(orderPayload),
+          }
+        );
 
-      // تفريغ الكارت بعد الأوردر
-      localStorage.removeItem(`cart_${userId}`);
+        const result = await res.json();
 
-      // إظهار رسالة الشكر
-      if (thankYou) thankYou.classList.add("show");
+        if (!result.success) {
+          alert(result.message || "Order failed");
+          return;
+        }
+
+        // ✅ نجح → نفرغ الكارت
+        clearCart();
+
+        // ✅ نظهر Thank you
+        if (thankYou) thankYou.classList.add("show");
+
+      } catch (err) {
+        console.error("❌ checkout error:", err);
+        alert("Network error, try again");
+      }
     });
   }
 
-  // غلق رسالة الشكر
+  /* =========================
+     Close Thank You
+  ========================= */
   if (thankClose) {
     thankClose.addEventListener("click", () => {
       if (thankYou) thankYou.classList.remove("show");
-      window.location.href = "index.html"; // رجوع للهوم
+      window.location.href = "index.html";
     });
   }
 });

@@ -1,4 +1,4 @@
-// serverless.js
+// serverless.js — FINAL (Cloudflare Workers + D1)
 
 // ===============================
 // Helpers
@@ -28,7 +28,7 @@ export default {
     const method = request.method;
 
     // ===================================================
-    // (0) Handle CORS Preflight (OPTIONS)
+    // (0) CORS Preflight
     // ===================================================
     if (method === "OPTIONS") {
       return new Response(null, {
@@ -43,19 +43,19 @@ export default {
     }
 
     // ===================================================
-    // (1) محاولة تقديم ملفات الاستاتيك من public أولا
+    // (1) Static Assets (Pages / public)
     // ===================================================
     try {
       const staticResponse = await env.ASSETS.fetch(request);
       if (staticResponse.status !== 404) {
         return staticResponse;
       }
-    } catch (err) {
-      // تجاهل الخطأ ونكمل للـ API
+    } catch (_) {
+      // ignore
     }
 
     // ===================================================
-    // (2) API ROUTES (كودك الأصلي بالكامل كما هو)
+    // (2) API ROUTES
     // ===================================================
 
     // ------------------------------
@@ -70,91 +70,144 @@ export default {
     // GET /product/:id
     // ------------------------------
     if (url.pathname.startsWith("/product/") && method === "GET") {
-      const id = parseInt(url.pathname.split("/")[2]);
-      const products = await queryDB(env, "SELECT * FROM products WHERE id = ?", [id]);
+      const id = Number(url.pathname.split("/")[2]);
+      const prod = await queryDB(
+        env,
+        "SELECT * FROM products WHERE id = ?",
+        [id]
+      );
 
-      if (!products.length) {
+      if (!prod.length) {
         return json({ success: false, message: "Product not found" }, 404);
       }
 
-      return json({ success: true, product: products[0] });
+      return json({ success: true, product: prod[0] });
     }
 
     // ------------------------------
-    // POST /checkout
+    // POST /order  ✅ FINAL
     // ------------------------------
-    if (url.pathname === "/checkout" && method === "POST") {
-      const body = await request.json();
-      const { items, userDetails, total } = body;
+    if (url.pathname === "/order" && method === "POST") {
+      let body;
+      try {
+        body = await request.json();
+      } catch {
+        return json({ success: false, message: "Invalid JSON" }, 400);
+      }
 
-      // check stock
+      const { userId, customer, items } = body;
+
+      if (
+        !userId ||
+        !customer ||
+        !Array.isArray(items) ||
+        items.length === 0
+      ) {
+        return json({ success: false, message: "Invalid order data" }, 400);
+      }
+
+      let total = 0;
+
+      // 🔒 Transaction-like logic
       for (const item of items) {
-        const prod = await queryDB(env, "SELECT * FROM products WHERE id = ?", [item.id]);
+        const product = await queryDB(
+          env,
+          "SELECT * FROM products WHERE id = ?",
+          [item.id]
+        );
 
-        if (!prod.length) {
-          return json({ success: false, message: "Product not found" }, 404);
+        if (!product.length) {
+          return json(
+            { success: false, message: "Product not found" },
+            404
+          );
         }
 
-        if (prod[0].stock < item.quantity) {
+        if (product[0].stock < item.quantity) {
           return json(
-            { success: false, message: `Not enough stock for ${prod[0].name}` },
+            {
+              success: false,
+              message: `Not enough stock for ${product[0].name}`
+            },
             400
           );
         }
 
-        await env.DB.prepare(
-          "UPDATE products SET stock = stock - ? WHERE id = ?"
-        ).bind(item.quantity, item.id).run();
+        total += product[0].price * item.quantity;
       }
 
-      // save order
+      // ✅ Deduct stock
+      for (const item of items) {
+        await env.DB.prepare(
+          "UPDATE products SET stock = stock - ? WHERE id = ?"
+        )
+          .bind(item.quantity, item.id)
+          .run();
+      }
+
       const orderId = "order_" + Date.now();
 
       await env.DB.prepare(
-        "INSERT INTO orders (id, date, items, userDetails, total) VALUES (?, ?, ?, ?, ?)"
+        `INSERT INTO orders (id, date, items, customer, total)
+         VALUES (?, ?, ?, ?, ?)`
       )
         .bind(
           orderId,
           new Date().toISOString(),
           JSON.stringify(items),
-          JSON.stringify(userDetails),
+          JSON.stringify(customer),
           total
         )
         .run();
 
-      return json({ success: true, message: "Order processed", orderId });
+      return json({
+        success: true,
+        message: "Order placed successfully",
+        orderId,
+        total
+      });
     }
 
     // ------------------------------
     // POST /restock/:id
     // ------------------------------
     if (url.pathname.startsWith("/restock/") && method === "POST") {
-      const id = parseInt(url.pathname.split("/")[2]);
+      const id = Number(url.pathname.split("/")[2]);
       const body = await request.json();
       const { amount } = body;
 
-      if (!Number.isInteger(amount)) {
+      if (!Number.isInteger(amount) || amount <= 0) {
         return json({ success: false, message: "Invalid amount" }, 400);
       }
 
-      const prod = await queryDB(env, "SELECT * FROM products WHERE id = ?", [id]);
+      const prod = await queryDB(
+        env,
+        "SELECT * FROM products WHERE id = ?",
+        [id]
+      );
+
       if (!prod.length) {
         return json({ success: false, message: "Product not found" }, 404);
       }
 
       await env.DB.prepare(
         "UPDATE products SET stock = stock + ? WHERE id = ?"
-      ).bind(amount, id).run();
+      )
+        .bind(amount, id)
+        .run();
 
       return json({
         success: true,
         message: "Product restocked",
-        product: { ...prod[0], stock: prod[0].stock + amount }
+        product: {
+          ...prod[0],
+          stock: prod[0].stock + amount
+        }
       });
     }
 
     // ------------------------------
-    // fallback response
+    // Fallback
     // ------------------------------
     return json({ message: "Not found" }, 404);
   }

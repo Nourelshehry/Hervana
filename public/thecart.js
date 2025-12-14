@@ -1,23 +1,7 @@
 console.log("✅ CART CF VERSION – NO RAILWAY –", Date.now());
 
-console.log("🔥 thecart.js loaded");
-
-// thecart.js — Cloudflare compatible & global
-document.addEventListener("DOMContentLoaded", () => {
-
 /* =========================
-   DOM Elements
-========================= */
-const cartBtn = document.getElementById("cart-btn");
-const cartSidebar = document.getElementById("cart-sidebar");
-const cartItems = document.getElementById("cart-items");
-const cartCount = document.getElementById("cart-count");
-const closeCart = document.getElementById("close-cart");
-const checkoutBtn = document.getElementById("checkout-btn");
-const cartMessage = document.getElementById("cart-message");
-
-/* =========================
-   User & Storage
+   User & Storage (GLOBAL)
 ========================= */
 function getUserId() {
   let id = localStorage.getItem("userId");
@@ -40,24 +24,11 @@ function saveCart(cart) {
   updateCartCount();
 }
 
-let cart = loadCart();
-
 /* =========================
-   UI helpers
+   UI helpers (GLOBAL)
 ========================= */
-if (cartBtn && cartSidebar) {
-  cartBtn.addEventListener("click", () =>
-    cartSidebar.classList.add("active")
-  );
-}
-
-if (closeCart && cartSidebar) {
-  closeCart.addEventListener("click", () =>
-    cartSidebar.classList.remove("active")
-  );
-}
-
 function showCartMessage(text) {
+  const cartMessage = document.getElementById("cart-message");
   if (!cartMessage) return;
   cartMessage.textContent = text;
   cartMessage.classList.add("show");
@@ -65,12 +36,12 @@ function showCartMessage(text) {
 }
 
 /* =========================
-   Add to Cart
+   Add to Cart (GLOBAL)
 ========================= */
 async function addToCart(id, name, price) {
-    console.log("🟡 addToCart called", { id, name, price });
+  console.log("🟡 addToCart called", { id, name, price });
 
-  cart = loadCart(); // ✅ مهم جدًا علشان أحدث نسخة دايمًا
+  let cart = loadCart(); // ✅ أحدث نسخة دايمًا
 
   id = Number(id);
   price = Number(price);
@@ -92,26 +63,22 @@ async function addToCart(id, name, price) {
       return;
     }
 
-  const existing = cart.find(i => i.id === id);
+    const existing = cart.find(i => i.id === id);
 
-if (existing) {
-  if (existing.quantity + 1 > product.stock) {
-    showCartMessage("❌ الكمية المتاحة خلصت");
-    return;
-  }
-  existing.quantity += 1;
-} else {
-  if (product.stock < 1) {
-    showCartMessage("❌ Out of stock");
-    return;
-  }
-  cart.push({
-    id,
-    name,
-    price,
-    quantity: 1
-  });
-}
+    if (existing) {
+      if (existing.quantity + 1 > product.stock) {
+        showCartMessage("❌ الكمية المتاحة خلصت");
+        return;
+      }
+      existing.quantity += 1;
+    } else {
+      cart.push({
+        id,
+        name,
+        price,
+        quantity: 1
+      });
+    }
 
     saveCart(cart);
     renderCart();
@@ -122,65 +89,19 @@ if (existing) {
   }
 }
 
-/* =========================
-   Global Add-to-cart listener
-========================= */
-document.body.addEventListener("click", (e) => {
-  const btn = e.target.closest(".add-to-cart");
-  if (!btn) return;
-  console.log("🟢 add-to-cart clicked", btn.dataset);
-
-  addToCart(
-    btn.dataset.id,
-    btn.dataset.name,
-    btn.dataset.price
-  );
-});
+// 👈 لازم GLOBAL
+window.addToCart = addToCart;
 
 /* =========================
-   Quantity controls
-========================= */
-cartItems?.addEventListener("click", async (e) => {
-  const idx = Number(e.target.dataset.index);
-  if (Number.isNaN(idx)) return;
-
-  cart = loadCart();
-
-  if (e.target.classList.contains("increase")) {
-    const item = cart[idx];
-
-    const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
-    );
-    const products = await res.json();
-    const product = products.find(p => Number(p.id) === item.id);
-
-    if (item.quantity + 1 > product.stock) {
-      showCartMessage("❌ Not enough stock");
-      return;
-    }
-
-    item.quantity++;
-  }
-
-  if (e.target.classList.contains("decrease")) {
-    cart[idx].quantity--;
-    if (cart[idx].quantity <= 0) cart.splice(idx, 1);
-  }
-
-  saveCart(cart);
-  renderCart();
-});
-
-/* =========================
-   Render cart
+   Render Cart (GLOBAL)
 ========================= */
 function renderCart() {
   console.log("🔵 renderCart called");
 
-  cart = loadCart(); // ✅ حل المشكلة الأساسية
-
+  const cartItems = document.getElementById("cart-items");
   if (!cartItems) return;
+
+  const cart = loadCart();
   cartItems.innerHTML = "";
 
   cart.forEach((item, index) => {
@@ -202,25 +123,93 @@ function renderCart() {
 }
 
 function updateCartCount() {
+  const cartCount = document.getElementById("cart-count");
   if (!cartCount) return;
+
+  const cart = loadCart();
   const qty = cart.reduce((sum, i) => sum + i.quantity, 0);
+
   cartCount.textContent = qty;
   cartCount.style.display = qty ? "inline-block" : "none";
 }
 
 /* =========================
-   Checkout
+   DOMContentLoaded (UI فقط)
 ========================= */
-if (checkoutBtn) {
-  checkoutBtn.addEventListener("click", () => {
-    window.location.href = "order.html";
-  });
-}
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🔥 thecart.js loaded");
 
-/* =========================
-   Init
-========================= */
-renderCart();
-updateCartCount();
+  const cartBtn = document.getElementById("cart-btn");
+  const cartSidebar = document.getElementById("cart-sidebar");
+  const closeCart = document.getElementById("close-cart");
+  const checkoutBtn = document.getElementById("checkout-btn");
+  const cartItems = document.getElementById("cart-items");
+
+  if (cartBtn && cartSidebar) {
+    cartBtn.addEventListener("click", () =>
+      cartSidebar.classList.add("active")
+    );
+  }
+
+  if (closeCart && cartSidebar) {
+    closeCart.addEventListener("click", () =>
+      cartSidebar.classList.remove("active")
+    );
+  }
+
+  // ✅ add-to-cart (delegation)
+  document.body.addEventListener("click", (e) => {
+    const btn = e.target.closest(".add-to-cart");
+    if (!btn) return;
+
+    console.log("🟢 add-to-cart clicked", btn.dataset);
+
+    addToCart(
+      btn.dataset.id,
+      btn.dataset.name,
+      btn.dataset.price
+    );
+  });
+
+  // ✅ quantity controls
+  cartItems?.addEventListener("click", async (e) => {
+    const idx = Number(e.target.dataset.index);
+    if (Number.isNaN(idx)) return;
+
+    let cart = loadCart();
+    const item = cart[idx];
+    if (!item) return;
+
+    if (e.target.classList.contains("increase")) {
+      const res = await fetch(
+        "https://hervanastore.nourthranduil.workers.dev/products"
+      );
+      const products = await res.json();
+      const product = products.find(p => Number(p.id) === item.id);
+
+      if (item.quantity + 1 > product.stock) {
+        showCartMessage("❌ Not enough stock");
+        return;
+      }
+
+      item.quantity++;
+    }
+
+    if (e.target.classList.contains("decrease")) {
+      item.quantity--;
+      if (item.quantity <= 0) cart.splice(idx, 1);
+    }
+
+    saveCart(cart);
+    renderCart();
+  });
+
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener("click", () => {
+      window.location.href = "order.html";
+    });
+  }
+
+  renderCart();
+  updateCartCount();
 });
-window.addToCart = addToCart;
