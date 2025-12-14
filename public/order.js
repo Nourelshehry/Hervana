@@ -127,6 +127,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("footer")?.style.display = "none";
     thankYou.classList.add("show");
   });
+// مسح الكارت
+localStorage.removeItem(`cart_${userId}`);
+
+// إخفاء الفورم والصفحة
+form.style.display = "none";
+document.querySelector("header")?.style.display = "none";
+document.querySelector("footer")?.style.display = "none";
+
+// إظهار رسالة الشكر
+thankYou.classList.add("show");
+
+// ⏳ بعد 3 ثواني يرجع للهوم
+setTimeout(() => {
+  window.location.href = "index.html";
+}, 3000);
 
   /* =========================
      Back to Home

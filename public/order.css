@@ -1,77 +1,43 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  font-family: Arial, sans-serif;
+/* =========================
+   CHECKOUT PAGE ONLY
+========================= */
+
+.checkout-page {
   background: #fdfdfd;
+  font-family: Arial, sans-serif;
 }
 
 /* Thank You Overlay */
-#thank-you {
+.checkout-page #thank-you {
   position: fixed;
   inset: 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
   background: rgba(255, 182, 193, 0.9);
   z-index: 999999;
   text-align: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out;
   pointer-events: none;
+  transition: opacity 0.3s ease;
 }
 
-#thank-you.show {
+.checkout-page #thank-you.show {
   opacity: 1;
   pointer-events: auto;
 }
 
-#thank-you .thank-card {
+.checkout-page .thank-card {
   background: #fff;
   padding: 40px;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.2);
   max-width: 400px;
   width: 90%;
-  animation: popIn 0.4s ease;
 }
 
-#thank-you h2 {
-  font-size: 2em;
-  margin-bottom: 10px;
-  color: #c0392b;
-}
-
-#thank-you p {
-  font-size: 1.2em;
-  margin-bottom: 20px;
-  color: #444;
-}
-
-#thank-you button {
-  padding: 12px 25px;
-  background: #c0392b;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background 0.3s;
-}
-
-#thank-you button:hover {
-  background: #a93226;
-}
-
-@keyframes popIn {
-  from { transform: scale(0.9); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-/* Order container */
-.order-container {
+/* Container */
+.checkout-page .order-container {
   max-width: 500px;
   margin: 40px auto;
   padding: 20px;
@@ -80,83 +46,59 @@ html, body {
   box-shadow: 0 2px 10px rgba(0,0,0,0.2);
 }
 
-.form-group {
-  margin-bottom: 15px;
-  text-align: left;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
+/* Form */
+.checkout-page .form-group label {
   color: #c0392b;
+  font-weight: bold;
 }
 
-.form-group input,
-.form-group textarea {
+.checkout-page input,
+.checkout-page textarea {
   width: 100%;
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
-  font-size: 14px;
 }
 
-/* Order summary */
-.order-summary-box {
+/* Summary */
+.checkout-page .order-summary-box {
   background: #ffe6f0;
   padding: 15px;
   border-radius: 8px;
-  margin: 20px 0;
 }
 
-button[type="submit"] {
+/* Submit */
+.checkout-page button[type="submit"] {
   background: #c0392b;
   color: #fff;
-  padding: 12px 20px;
-  border: none;
+  padding: 12px;
   border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
+  border: none;
   width: 100%;
 }
 
-button[type="submit"]:hover {
+.checkout-page button[type="submit"]:hover {
   background: #a93226;
 }
 
 /* Shipping */
-.shipping-options {
+.checkout-page .shipping-options {
   display: flex;
   gap: 15px;
-  margin: 20px 0;
 }
 
-.shipping-option {
+.checkout-page .shipping-option {
   flex: 1;
   border: 2px solid #ffb6c1;
   border-radius: 10px;
   padding: 15px;
   text-align: center;
   cursor: pointer;
-  background: #fff;
-  transition: all 0.3s ease;
   font-weight: bold;
   color: #c0392b;
-  position: relative;
 }
 
-.shipping-option:hover {
-  background: #ffe6f0;
-}
-
-.shipping-option input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.shipping-option.selected {
+.checkout-page .shipping-option.selected {
   border-color: #c0392b;
   background: #ffe6f0;
-  box-shadow: 0 0 10px rgba(192,57,43,0.3);
 }
