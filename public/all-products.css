@@ -462,3 +462,44 @@ nav a {
   max-width: 100%; /* ✅ ضمان مايكسرش العرض */
   box-sizing: border-box;
 }
+
+/* =========================
+   SCOPE FIX (ALL PRODUCTS)
+   ========================= */
+
+/* خليه يؤثر على all-products بس */
+.all-products .product-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+/* الصور بس في صفحة all-products */
+.all-products .product-card img {
+  height: 180px;
+  object-fit: cover;
+}
+
+/* تأكيد إن زرار Add to Cart ظاهر */
+.all-products .add-to-cart {
+  display: block !important;
+  background: #c0392b;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* زرار View Details */
+.all-products .view-btn {
+  display: block !important;
+  margin: 8px;
+}
+
+/* منع تأثيره على checkout */
+.checkout .product-card,
+.checkout .product-card img {
+  all: unset;
+}

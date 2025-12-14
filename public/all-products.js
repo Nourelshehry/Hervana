@@ -1,152 +1,79 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const productsContainer = document.querySelector(".products");
+  const productGrid = document.querySelector(".product-grid");
   const searchInput = document.getElementById("search");
   const categorySelect = document.getElementById("category");
 
-  let products = [];
-
   try {
-    const response = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
-    );
-    products = await response.json();
-    renderProducts();
-  } catch (err) {
-    console.error(err);
-    productsContainer.innerHTML = "<p>⚠️ Failed to load products</p>";
-  }
+    const response = await fetch("https://hervanastore.nourthranduil.workers.dev/products");
+    const products = await response.json();
 
-  function renderProducts(search = "", category = "all-products") {
-    productsContainer.innerHTML = "";
+    function displayProducts(filterText = "", filterCategory = "all") {
+      productGrid.innerHTML = "";
+      const searchLower = filterText.toLowerCase();
 
-    const searchLower = search.toLowerCase();
+      products.forEach(product => {
+        const matchesText =
+          product.name.toLowerCase().includes(searchLower) ||
+          (product.category && product.category.toLowerCase().includes(searchLower)) ||
+          (product.description && product.description.toLowerCase().includes(searchLower));
 
-    products.forEach(product => {
-      const matchesText =
-        product.name.toLowerCase().includes(searchLower) ||
-        (product.description || "").toLowerCase().includes(searchLower);
+        const matchesCategory =
+          filterCategory === "all" || product.category === filterCategory;
 
-      const matchesCategory =
-        category === "all-products" || product.category === category;
+        if (!matchesText || !matchesCategory) return;
 
-      if (!matchesText || !matchesCategory) return;
+        let firstImage = "default.jpg";
+        try {
+          if (Array.isArray(product.images) && product.images.length > 0) {
+            firstImage = product.images[0];
+          } else if (typeof product.images === "string") {
+            const parsed = JSON.parse(product.images);
+            if (parsed.length) firstImage = parsed[0];
+          }
+        } catch {}
 
-      const stock = Number(product.stock) || 0;
+        const imageURL = firstImage.startsWith("http")
+          ? firstImage
+          : `https://hervana.pages.dev/public/${firstImage}`;
 
-      // ===============================
-      // Image (first only)
-      // ===============================
-      let image = "default.jpg";
+        const card = document.createElement("div");
+        card.className = "product-card";
 
-      try {
-        if (Array.isArray(product.images) && product.images.length) {
-          image = product.images[0];
-        } else if (typeof product.images === "string") {
-          const parsed = JSON.parse(product.images);
-          if (Array.isArray(parsed) && parsed.length) image = parsed[0];
-        }
-      } catch {}
-
-      const imageURL = image.startsWith("http")
-        ? image
-        : `https://hervana.pages.dev/public/${image}`;
-
-      // ===============================
-      // Product layout (NO CARDS)
-      // ===============================
-      const item = document.createElement("div");
-      item.className = "product-item";
-
-      item.innerHTML = `
-        <img
-          src="${imageURL}"
-          alt="${product.name}"
-          class="product-thumb"
-          loading="lazy"
-        />
-
-        <div class="product-info">
+        card.innerHTML = `
+          <img src="${imageURL}" alt="${product.name}">
           <h3>${product.name}</h3>
-          <div class="price">EGP ${product.price}</div>
+          <p>EGP ${product.price}</p>
 
-          <div class="stock ${
-            stock > 0 ? "in-stock" : "out-of-stock"
-          }">
-            ${stock > 0 ? `In Stock: ${stock}` : "Out of Stock"}
-          </div>
+          ${
+            product.stock > 0
+              ? `<button class="add-to-cart"
+                   data-id="${product.id}"
+                   data-name="${product.name}"
+                   data-price="${product.price}">
+                   Add to Cart
+                 </button>`
+              : `<button disabled>Out of Stock</button>`
+          }
 
-          <div class="product-actions">
-            ${
-              stock > 0
-                ? `<button
-                    class="add-to-cart"
-                    data-id="${product.id}"
-                    data-name="${product.name}"
-                    data-price="${product.price}">
-                    Add to Cart
-                  </button>`
-                : `<button disabled>Out of Stock</button>`
-            }
+          <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
+        `;
 
-            <a href="product.html?id=${product.id}">
-              View
-            </a>
-          </div>
-        </div>
-      `;
-
-      productsContainer.appendChild(item);
-    });
-
-    attachCartListeners();
-  }
-
-  function attachCartListeners() {
-    document.querySelectorAll(".add-to-cart").forEach(btn => {
-      btn.onclick = () => {
-        addToCart({
-          id: btn.dataset.id,
-          name: btn.dataset.name,
-          price: btn.dataset.price
-        });
-      };
-    });
-  }
-
-  function addToCart(product) {
-    let userId = localStorage.getItem("userId");
-    if (!userId) {
-      userId = "user_" + Date.now();
-      localStorage.setItem("userId", userId);
-    }
-
-    const cartKey = `cart_${userId}`;
-    const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-    const existing = cart.find(item => item.id == product.id);
-
-    if (existing) {
-      existing.quantity += 1;
-    } else {
-      cart.push({
-        id: Number(product.id),
-        name: product.name,
-        price: Number(product.price),
-        quantity: 1
+        productGrid.appendChild(card);
       });
     }
 
-    localStorage.setItem(cartKey, JSON.stringify(cart));
+    displayProducts();
+
+    searchInput?.addEventListener("input", () => {
+      displayProducts(searchInput.value, categorySelect?.value || "all");
+    });
+
+    categorySelect?.addEventListener("change", () => {
+      displayProducts(searchInput?.value || "", categorySelect.value);
+    });
+
+  } catch (err) {
+    console.error(err);
+    productGrid.innerHTML = "<p>⚠️ Error loading products.</p>";
   }
-
-  // ===============================
-  // Filters
-  // ===============================
-  searchInput?.addEventListener("input", () => {
-    renderProducts(searchInput.value, categorySelect.value);
-  });
-
-  categorySelect?.addEventListener("change", () => {
-    renderProducts(searchInput.value, categorySelect.value);
-  });
 });
