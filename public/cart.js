@@ -1,4 +1,6 @@
+
 // cart.js — Cloudflare compatible & global
+document.addEventListener("DOMContentLoaded", () => {
 
 /* =========================
    DOM Elements
@@ -208,3 +210,4 @@ if (checkoutBtn) {
 ========================= */
 renderCart();
 updateCartCount();
+});
