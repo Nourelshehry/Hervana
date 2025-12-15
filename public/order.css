@@ -25,6 +25,7 @@
 .checkout-page #thank-you.show {
   opacity: 1;
   pointer-events: auto;
+
 }
 
 .checkout-page .thank-card {
@@ -102,3 +103,6 @@
   border-color: #c0392b;
   background: #ffe6f0;
 }
+
+.thank-you { display: none; }
+.thank-you.show { display: block; }
