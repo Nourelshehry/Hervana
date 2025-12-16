@@ -1,5 +1,3 @@
-
-// order.js — FINAL & CLEAN
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
   const totalElem = document.getElementById("order-total");
@@ -7,8 +5,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const thankYou = document.getElementById("thank-you");
   const backBtn = document.getElementById("thank-back-btn");
 
+  if (!summary || !totalElem || !form) {
+    console.error("Order page elements missing");
+    return;
+  }
+
   let shippingCost = 0;
   let isSubmitting = false;
+  let baseTotal = 0;
 
   /* =========================
      User
@@ -35,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderSummary() {
     const cart = loadCart();
     summary.innerHTML = "";
-    let total = 0;
+    baseTotal = 0;
 
     if (!cart.length) {
       summary.innerHTML = "<li>Your cart is empty.</li>";
@@ -44,20 +48,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     cart.forEach(item => {
-      const lineTotal =
-        (Number(item.price) || 0) * (Number(item.quantity) || 1);
-      total += lineTotal;
+      const line =
+        Number(item.price || 0) * Number(item.quantity || 1);
+      baseTotal += line;
 
       const li = document.createElement("li");
       li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
       summary.appendChild(li);
     });
 
-    totalElem.textContent = `Total: ${total} EGP`;
-    return total;
+    updateTotal();
   }
 
-  let displayTotal = renderSummary();
+  function updateTotal() {
+    totalElem.textContent =
+      `Total: ${baseTotal + shippingCost} EGP`;
+  }
+
+  renderSummary();
 
   /* =========================
      Shipping
@@ -70,16 +78,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       option.classList.add("selected");
       shippingCost = Number(option.dataset.price) || 0;
-
-      totalElem.textContent =
-        `Total: ${displayTotal + shippingCost} EGP (incl. shipping)`;
+      updateTotal();
     });
   });
 
   /* =========================
      Submit Order
   ========================= */
-    form.addEventListener("submit", async e => {
+  form.addEventListener("submit", async e => {
     e.preventDefault();
     if (isSubmitting) return;
     isSubmitting = true;
@@ -92,10 +98,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const customer = {
-      name: document.getElementById("name").value.trim(),
-      phone: document.getElementById("phone").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      address: document.getElementById("address").value.trim()
+      name: document.getElementById("name")?.value.trim(),
+      phone: document.getElementById("phone")?.value.trim(),
+      email: document.getElementById("email")?.value.trim(),
+      address: document.getElementById("address")?.value.trim()
     };
 
     if (Object.values(customer).some(v => !v)) {
@@ -104,12 +110,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const total =
-      cart.reduce((s, i) => s + i.price * i.quantity, 0) + shippingCost;
-
     try {
       const res = await fetch(
-        "https://hervana.nourthranduil.workers.dev/order",
+        "https://hervanastore.nourthranduil.workers.dev/order",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -119,8 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
             items: cart.map(i => ({
               id: i.id,
               quantity: i.quantity
-            })),
-            total
+            }))
           })
         }
       );
@@ -130,146 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok || !result.success) {
         alert(result.message || "Order failed");
         isSubmitting = false;
-        return;
-      }
-
-      // ✅ نجاح
-      localStorage.removeItem(cartKey);
-
-      form.style.display = "none";
-      document.querySelector("header")?.style.display = "none";
-      document.querySelector("footer")?.style.display = "none";
-
-      thankYou.classList.add("show");
-
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2500);
-
-    } catch (err) {
-      console.error(err);
-      alert("Network error");
-      isSubmitting = false;
-    }
-  });
-
-  /* =========================
-     Back to Home
-  ========================= */
-  backBtn?.addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-});
-
-
-
-
-
-
-
-/*// order.js — FINAL (Cloudflare + D1 compatible)
-
-document.addEventListener("DOMContentLoaded", () => {
-  const summary = document.getElementById("order-summary");
-  const totalElem = document.getElementById("order-total");
-  const form = document.getElementById("order-form");
-  const thankYou = document.getElementById("thank-you");
-  const backBtn = document.getElementById("thank-back-btn");
-
-  let displayTotal = 0;
-  let isSubmitting = false;
-
-  /* =========================
-     User
-  ========================= 
-  function getUserId() {
-    let id = localStorage.getItem("userId");
-    if (!id) {
-      id = "user_" + Date.now();
-      localStorage.setItem("userId", id);
-    }
-    return id;
-  }
-
-  const userId = getUserId();
-  const cartKey = `cart_${userId}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-  /* =========================
-     Render Summary
-  ========================= 
-  if (!summary || !totalElem || !form) return;
-
-  if (cart.length === 0) {
-    summary.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
-      summary.appendChild(li);
-
-      displayTotal += Number(item.price) * Number(item.quantity);
-    });
-  }
-
-  totalElem.textContent = `Total: ${displayTotal} EGP`;
-
-  /* =========================
-     Submit Order
-  ========================= 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (isSubmitting) return;
-    isSubmitting = true;
-
-    const submitBtn = form.querySelector("button[type=submit]");
-    if (submitBtn) submitBtn.disabled = true;
-
-    if (!cart.length) {
-      alert("Your cart is empty");
-      isSubmitting = false;
-      return;
-    }
-
-    const customer = {
-      name: document.getElementById("name")?.value.trim(),
-      phone: document.getElementById("phone")?.value.trim(),
-      email: document.getElementById("email")?.value.trim(),
-      address: document.getElementById("address")?.value.trim(),
-    };
-
-    if (Object.values(customer).some(v => !v)) {
-      alert("Please fill all fields");
-      isSubmitting = false;
-      if (submitBtn) submitBtn.disabled = false;
-      return;
-    }
-
-    const items = cart.map(item => ({
-      id: item.id,
-      quantity: item.quantity
-    }));
-
-    try {
-      const WORKER_BASE = "https://hervana.nourthranduil.workers.dev";
-
-      const res = await fetch(`${WORKER_BASE}/order`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          customer,
-          items
-        })
-      });
-
-      const result = await res.json();
-
-      if (!res.ok || !result.success) {
-        alert(result.message || "Order failed");
-        isSubmitting = false;
-        if (submitBtn) submitBtn.disabled = false;
         return;
       }
 
@@ -284,20 +146,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setTimeout(() => {
         window.location.href = "index.html";
-      }, 3000);
+      }, 2500);
 
     } catch (err) {
-      console.error("Order Error:", err);
-      alert("Something went wrong");
+      console.error("Order error:", err);
+      alert("Network error");
       isSubmitting = false;
-      if (submitBtn) submitBtn.disabled = false;
     }
   });
 
   /* =========================
      Back to Home
-  ========================= 
+  ========================= */
   backBtn?.addEventListener("click", () => {
     window.location.href = "index.html";
   });
-});*/
+});

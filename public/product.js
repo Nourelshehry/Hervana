@@ -1,13 +1,38 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
+  /* ===============================
+     Helpers
+  =============================== */
+  function parseImages(images) {
+    try {
+      if (Array.isArray(images)) return images;
+      if (typeof images === "string") {
+        const parsed = JSON.parse(images);
+        return Array.isArray(parsed) ? parsed : [];
+      }
+    } catch {}
+    return [];
+  }
+
+  function buildImageURL(path) {
+    if (!path) return "images/default.jpg";
+    if (path.startsWith("http")) return path;
+    return `https://hervana.pages.dev/${path.replace(/^\/+/, "")}`;
+  }
+
+  /* ===============================
+     Fetch Product
+  =============================== */
   try {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
-    const products = await res.json();
+    if (!res.ok) throw new Error("Failed to load products");
 
+    const products = await res.json();
     const product = products.find(p => String(p.id) === productId);
+
     if (!product) {
       document.querySelector(".product-details").innerHTML =
         "<p>Product not found.</p>";
@@ -29,27 +54,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const slider = document.getElementById("slider");
     const dotsContainer = document.getElementById("slider-dots");
 
-    let images = [];
+    slider.innerHTML = "";
+    dotsContainer.innerHTML = "";
 
-    try {
-      if (Array.isArray(product.images)) {
-        images = product.images;
-      } else if (typeof product.images === "string") {
-        images = JSON.parse(product.images);
-      }
-    } catch {
-      images = [];
-    }
-
-    if (images.length === 0) {
-      images = ["default.jpg"];
-    }
+    let images = parseImages(product.images);
+    if (!images.length) images = ["images/default.jpg"];
 
     images.forEach((img, index) => {
       const image = document.createElement("img");
-      image.src = img.startsWith("http")
-        ? img
-        : `https://hervana.pages.dev/public/${img}`;
+      image.src = buildImageURL(img);
+      image.alt = product.name;
+      image.loading = "lazy";
+      image.onerror = () => {
+        image.src = "images/default.jpg";
+      };
+
       if (index === 0) image.classList.add("active");
       slider.appendChild(image);
 
@@ -65,21 +84,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     =============================== */
     const addBtn = document.querySelector(".add-to-cart");
 
-if (addBtn) {
-  if (product.stock <= 0) {
-    addBtn.disabled = true;
-    addBtn.textContent = "Out of Stock";
-    addBtn.classList.add("out-of-stock");
-  } else {
-    addBtn.disabled = false;
-    addBtn.textContent = "Add to Cart";
-    addBtn.classList.remove("out-of-stock");
+    if (addBtn) {
+      if (product.stock <= 0) {
+        addBtn.disabled = true;
+        addBtn.textContent = "Out of Stock";
+        addBtn.classList.add("out-of-stock");
+      } else {
+        addBtn.disabled = false;
+        addBtn.textContent = "Add to Cart";
+        addBtn.classList.remove("out-of-stock");
 
-    addBtn.addEventListener("click", () => addToCart(product, addBtn));
-  }
-}
-
-
+        addBtn.addEventListener("click", () =>
+          addToCart(product, addBtn)
+        );
+      }
+    }
   } catch (err) {
     console.error("Error loading product:", err);
   }
@@ -157,7 +176,7 @@ function initSlider(slider, dotsContainer) {
 }
 
 /* ===============================
-   Cart
+   Cart Logic
 =============================== */
 function addToCart(product, button) {
   let userId = localStorage.getItem("userId");
@@ -169,7 +188,6 @@ function addToCart(product, button) {
   const key = `cart_${userId}`;
   const cart = JSON.parse(localStorage.getItem(key)) || [];
 
-  // 🔴 لو مفيش stock
   if (product.stock <= 0) {
     if (button) {
       button.disabled = true;
@@ -181,7 +199,6 @@ function addToCart(product, button) {
 
   const existing = cart.find(i => i.id === product.id);
 
-  // 🔴 لو وصلنا للحد الأقصى
   if (existing) {
     if (existing.quantity + 1 > product.stock) {
       alert("No more items in stock");
