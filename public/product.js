@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `EGP ${product.price}`;
 
     /* ===============================
-       Image Slider (FIXED PROPERLY)
+       Image Slider
     =============================== */
     const slider = document.getElementById("slider");
     const dotsContainer = document.getElementById("slider-dots");
@@ -58,20 +58,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     dotsContainer.innerHTML = "";
 
     let images = parseImages(product.images);
-
-    if (!images.length) {
-      images = ["images/default.jpg"];
-    }
+    if (!images.length) images = ["images/default.jpg"];
 
     images.forEach((img, index) => {
       const image = document.createElement("img");
       image.src = buildImageURL(img);
       image.alt = product.name;
       image.loading = "lazy";
-
-      // مهم: نخلي أول صورة active والباقي موجودين
       if (index === 0) image.classList.add("active");
-
       slider.appendChild(image);
 
       const dot = document.createElement("span");
@@ -83,7 +77,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     initSlider(slider, dotsContainer);
 
     /* ===============================
-       Add To Cart
+       Add To Cart (SAME AS ALL-PRODUCTS)
     =============================== */
     const addBtn = document.querySelector(".add-to-cart");
 
@@ -93,9 +87,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         addBtn.textContent = "Out of Stock";
         addBtn.classList.add("out-of-stock");
       } else {
-        addBtn.addEventListener("click", () =>
-          addToCart(product, addBtn)
-        );
+        addBtn.addEventListener("click", () => {
+          addToCart(product.id, product.name, product.price);
+
+          addBtn.textContent = "Added ✓";
+          addBtn.disabled = true;
+
+          setTimeout(() => {
+            addBtn.textContent = "Add to Cart";
+            addBtn.disabled = false;
+          }, 1200);
+        });
       }
     }
 
@@ -105,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ===============================
-   Slider Logic (DO NOT TOUCH)
+   Slider Logic (OUTSIDE)
 =============================== */
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");
@@ -157,7 +159,6 @@ function initSlider(slider, dotsContainer) {
     startAuto();
   }
 
-  /* Swipe */
   let startX = 0;
   slider.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
