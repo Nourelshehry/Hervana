@@ -1,4 +1,4 @@
-// serverless.js — FINAL (Cloudflare Workers + D1)
+//index.js— FINAL (Cloudflare Workers + D1)
 
 // ===============================
 // Helpers
@@ -196,8 +196,19 @@ export default {
     }
 
     // ------------------------------
-    // Fallback
-    // ------------------------------
-    return json({ message: "Not found" }, 404);
+  // ------------------------------
+// SPA Fallback
+// ------------------------------
+if (request.headers.get("accept")?.includes("text/html")) {
+  return env.ASSETS.fetch(
+    new Request(new URL("/index.html", request.url))
+  );
+}
+
+// ------------------------------
+// API Fallback
+// ------------------------------
+return json({ message: "Not found" }, 404);
+
   }
 };
