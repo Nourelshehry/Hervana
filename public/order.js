@@ -1,4 +1,173 @@
-// order.js — FINAL (Cloudflare + D1 compatible)
+
+// order.js — FINAL & CLEAN
+document.addEventListener("DOMContentLoaded", () => {
+  const summary = document.getElementById("order-summary");
+  const totalElem = document.getElementById("order-total");
+  const form = document.getElementById("order-form");
+  const thankYou = document.getElementById("thank-you");
+  const backBtn = document.getElementById("thank-back-btn");
+
+  let shippingCost = 0;
+  let isSubmitting = false;
+
+  /* =========================
+     User
+  ========================= */
+  function getUserId() {
+    let id = localStorage.getItem("userId");
+    if (!id) {
+      id = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+      localStorage.setItem("userId", id);
+    }
+    return id;
+  }
+
+  const userId = getUserId();
+  const cartKey = `cart_${userId}`;
+
+  function loadCart() {
+    return JSON.parse(localStorage.getItem(cartKey)) || [];
+  }
+
+  /* =========================
+     Render Summary
+  ========================= */
+  function renderSummary() {
+    const cart = loadCart();
+    summary.innerHTML = "";
+    let total = 0;
+
+    if (!cart.length) {
+      summary.innerHTML = "<li>Your cart is empty.</li>";
+      totalElem.textContent = "Total: 0 EGP";
+      return;
+    }
+
+    cart.forEach(item => {
+      const lineTotal =
+        (Number(item.price) || 0) * (Number(item.quantity) || 1);
+      total += lineTotal;
+
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
+      summary.appendChild(li);
+    });
+
+    totalElem.textContent = `Total: ${total} EGP`;
+    return total;
+  }
+
+  let displayTotal = renderSummary();
+
+  /* =========================
+     Shipping
+  ========================= */
+  document.querySelectorAll(".shipping-option").forEach(option => {
+    option.addEventListener("click", () => {
+      document
+        .querySelectorAll(".shipping-option")
+        .forEach(o => o.classList.remove("selected"));
+
+      option.classList.add("selected");
+      shippingCost = Number(option.dataset.price) || 0;
+
+      totalElem.textContent =
+        `Total: ${displayTotal + shippingCost} EGP (incl. shipping)`;
+    });
+  });
+
+  /* =========================
+     Submit Order
+  ========================= */
+    form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    isSubmitting = true;
+
+    const cart = loadCart();
+    if (!cart.length) {
+      alert("Your cart is empty");
+      isSubmitting = false;
+      return;
+    }
+
+    const customer = {
+      name: document.getElementById("name").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      email: document.getElementById("email").value.trim(),
+      address: document.getElementById("address").value.trim()
+    };
+
+    if (Object.values(customer).some(v => !v)) {
+      alert("Please fill in all fields");
+      isSubmitting = false;
+      return;
+    }
+
+    const total =
+      cart.reduce((s, i) => s + i.price * i.quantity, 0) + shippingCost;
+
+    try {
+      const res = await fetch(
+        "https://hervana.nourthranduil.workers.dev/order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            customer,
+            items: cart.map(i => ({
+              id: i.id,
+              quantity: i.quantity
+            })),
+            total
+          })
+        }
+      );
+
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        alert(result.message || "Order failed");
+        isSubmitting = false;
+        return;
+      }
+
+      // ✅ نجاح
+      localStorage.removeItem(cartKey);
+
+      form.style.display = "none";
+      document.querySelector("header")?.style.display = "none";
+      document.querySelector("footer")?.style.display = "none";
+
+      thankYou.classList.add("show");
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2500);
+
+    } catch (err) {
+      console.error(err);
+      alert("Network error");
+      isSubmitting = false;
+    }
+  });
+
+  /* =========================
+     Back to Home
+  ========================= */
+  backBtn?.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+});
+
+
+
+
+
+
+
+/*// order.js — FINAL (Cloudflare + D1 compatible)
 
 document.addEventListener("DOMContentLoaded", () => {
   const summary = document.getElementById("order-summary");
@@ -12,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
      User
-  ========================= */
+  ========================= 
   function getUserId() {
     let id = localStorage.getItem("userId");
     if (!id) {
@@ -28,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
      Render Summary
-  ========================= */
+  ========================= 
   if (!summary || !totalElem || !form) return;
 
   if (cart.length === 0) {
@@ -47,7 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
      Submit Order
-  ========================= */
+  ========================= 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
@@ -127,171 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
      Back to Home
-  ========================= */
-  backBtn?.addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
-});
-
-/*// order.js — FINAL & CLEAN
-document.addEventListener("DOMContentLoaded", () => {
-  const summary = document.getElementById("order-summary");
-  const totalElem = document.getElementById("order-total");
-  const form = document.getElementById("order-form");
-  const thankYou = document.getElementById("thank-you");
-  const backBtn = document.getElementById("thank-back-btn");
-
-  let shippingCost = 0;
-  let isSubmitting = false;
-
-  /* =========================
-     User
-  ========================= 
-  function getUserId() {
-    let id = localStorage.getItem("userId");
-    if (!id) {
-      id = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-      localStorage.setItem("userId", id);
-    }
-    return id;
-  }
-
-  const userId = getUserId();
-  const cartKey = `cart_${userId}`;
-
-  function loadCart() {
-    return JSON.parse(localStorage.getItem(cartKey)) || [];
-  }
-
-  /* =========================
-     Render Summary
-  ========================= 
-  function renderSummary() {
-    const cart = loadCart();
-    summary.innerHTML = "";
-    let total = 0;
-
-    if (!cart.length) {
-      summary.innerHTML = "<li>Your cart is empty.</li>";
-      totalElem.textContent = "Total: 0 EGP";
-      return;
-    }
-
-    cart.forEach(item => {
-      const lineTotal =
-        (Number(item.price) || 0) * (Number(item.quantity) || 1);
-      total += lineTotal;
-
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
-      summary.appendChild(li);
-    });
-
-    totalElem.textContent = `Total: ${total} EGP`;
-    return total;
-  }
-
-  let displayTotal = renderSummary();
-
-  /* =========================
-     Shipping
-  ========================= 
-  document.querySelectorAll(".shipping-option").forEach(option => {
-    option.addEventListener("click", () => {
-      document
-        .querySelectorAll(".shipping-option")
-        .forEach(o => o.classList.remove("selected"));
-
-      option.classList.add("selected");
-      shippingCost = Number(option.dataset.price) || 0;
-
-      totalElem.textContent =
-        `Total: ${displayTotal + shippingCost} EGP (incl. shipping)`;
-    });
-  });
-
-  /* =========================
-     Submit Order
-  ========================= 
-    form.addEventListener("submit", async e => {
-    e.preventDefault();
-    if (isSubmitting) return;
-    isSubmitting = true;
-
-    const cart = loadCart();
-    if (!cart.length) {
-      alert("Your cart is empty");
-      isSubmitting = false;
-      return;
-    }
-
-    const customer = {
-      name: document.getElementById("name").value.trim(),
-      phone: document.getElementById("phone").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      address: document.getElementById("address").value.trim()
-    };
-
-    if (Object.values(customer).some(v => !v)) {
-      alert("Please fill in all fields");
-      isSubmitting = false;
-      return;
-    }
-
-    const total =
-      cart.reduce((s, i) => s + i.price * i.quantity, 0) + shippingCost;
-
-    try {
-      const res = await fetch(
-        "https://hervana.nourthranduil.workers.dev/order",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId,
-            customer,
-            items: cart.map(i => ({
-              id: i.id,
-              quantity: i.quantity
-            })),
-            total
-          })
-        }
-      );
-
-      const result = await res.json();
-
-      if (!res.ok || !result.success) {
-        alert(result.message || "Order failed");
-        isSubmitting = false;
-        return;
-      }
-
-      // ✅ نجاح
-      localStorage.removeItem(cartKey);
-
-      form.style.display = "none";
-      document.querySelector("header")?.style.display = "none";
-      document.querySelector("footer")?.style.display = "none";
-
-      thankYou.classList.add("show");
-
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2500);
-
-    } catch (err) {
-      console.error(err);
-      alert("Network error");
-      isSubmitting = false;
-    }
-  });
-
-  /* =========================
-     Back to Home
   ========================= 
   backBtn?.addEventListener("click", () => {
     window.location.href = "index.html";
   });
-});
-*/
+});*/
