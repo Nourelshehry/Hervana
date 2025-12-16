@@ -1,147 +1,37 @@
-// order.js — FINAL (Cloudflare + D1 compatible)
-
 document.addEventListener("DOMContentLoaded", () => {
-  const summary = document.getElementById("order-summary");
-  const totalElem = document.getElementById("order-total");
-  const form = document.getElementById("order-form");
-  const thankYou = document.getElementById("thank-you");
-  const backBtn = document.getElementById("thank-back-btn");
+  const ordersList = document.getElementById("orders-list");
 
-  let displayTotal = 0;
-  let shippingCost = 0;
-  let isSubmitting = false;
-
-  /* =========================
-     User
-  ========================= */
-  function getUserId() {
-    let id = localStorage.getItem("userId");
-    if (!id) {
-      id = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-      localStorage.setItem("userId", id);
-    }
-    return id;
+  // تحديد userId
+  let userId = localStorage.getItem("userId");
+  if (!userId) {
+    userId = "guest_" + Date.now();
+    localStorage.setItem("userId", userId);
   }
 
-  const userId = getUserId();
-  const cartKey = `cart_${userId}`;
-  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  // جلب الأوردرات
+  let orders = JSON.parse(localStorage.getItem(`orders_user_${userId}`)) || [];
 
-  /* =========================
-     Render Summary (UI only)
-  ========================= */
-  if (cart.length === 0) {
-    summary.innerHTML = "<li>Your cart is empty.</li>";
-  } else {
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - EGP ${item.price} × ${item.quantity}`;
-      summary.appendChild(li);
-
-      displayTotal +=
-        (Number(item.price) || 0) * (Number(item.quantity) || 1);
-    });
+  if (orders.length === 0) {
+    ordersList.innerHTML = "<p>You have no orders yet.</p>";
+    return;
   }
 
-  totalElem.textContent = `Total: ${displayTotal} EGP`;
+  // عرض الأوردرات
+  orders.forEach((order, index) => {
+    const div = document.createElement("div");
+    div.classList.add("order");
 
-  /* =========================
-     Shipping (UI only)
-  ========================= */
-  const shippingOptions = document.querySelectorAll(".shipping-option");
-  shippingOptions.forEach(option => {
-    option.addEventListener("click", () => {
-      shippingOptions.forEach(o => o.classList.remove("selected"));
-      option.classList.add("selected");
+    const itemsHtml = order.items.map(item => `
+      <li>${item.name} - ${item.price} EGP × ${item.quantity}</li>
+    `).join("");
 
-      shippingCost = Number(option.dataset.price) || 0;
-      totalElem.textContent =
-        `Total: ${displayTotal} EGP + ${shippingCost} EGP (Shipping)`;
-    });
+    div.innerHTML = `
+      <h2>Order #${index + 1}</h2>
+      <p><strong>Date:</strong> ${new Date(order.date).toLocaleString()}</p>
+      <ul>${itemsHtml}</ul>
+      <p><strong>Total:</strong> ${order.total} EGP</p>
+    `;
+
+    ordersList.appendChild(div);
   });
-
-  /* =========================
-     Submit Order
-  ========================= */
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    if (isSubmitting) return;
-    isSubmitting = true;
-    form.querySelector("button[type=submit]").disabled = true;
-
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      isSubmitting = false;
-      return;
-    }
-
-    const customer = {
-      name: document.getElementById("name").value.trim(),
-      phone: document.getElementById("phone").value.trim(),
-      email: document.getElementById("email").value.trim(),
-      address: document.getElementById("address").value.trim(),
-    };
-
-    if (Object.values(customer).some(v => !v)) {
-      alert("Please fill in all fields.");
-      isSubmitting = false;
-      return;
-    }
-
-    const items = cart.map(item => ({
-      id: item.id,
-      quantity: item.quantity
-    }));
-
-    try {
-      const WORKER_BASE = "https://hervana.nourthranduil.workers.dev";
-
-      // ✅ متوافق مع الباك
-      const res = await fetch(`${WORKER_BASE}/checkout`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          items,
-          userDetails: customer,
-          total: displayTotal + shippingCost
-        })
-      });
-
-      const result = await res.json();
-
-      if (!res.ok || !result.success) {
-        alert("⚠️ " + (result.message || "Order failed"));
-        isSubmitting = false;
-        return;
-      }
-
-      // ===== SUCCESS =====
-      localStorage.removeItem(cartKey);
-
-      form.style.display = "none";
-      document.querySelector("header")?.style.display = "none";
-      document.querySelector("footer")?.style.display = "none";
-
-      thankYou.classList.add("show");
-
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 3000);
-
-    } catch (err) {
-      console.error("❌ Order Error:", err);
-      alert("An error occurred. Please try again.");
-      isSubmitting = false;
-    }
-  });
-
-  /* =========================
-     Back to Home
-  ========================= */
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      window.location.href = "index.html";
-    });
-  }
 });
