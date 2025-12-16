@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `EGP ${product.price}`;
 
     /* ===============================
-       Image Slider
+       Image Slider (FIXED PROPERLY)
     =============================== */
     const slider = document.getElementById("slider");
     const dotsContainer = document.getElementById("slider-dots");
@@ -58,22 +58,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     dotsContainer.innerHTML = "";
 
     let images = parseImages(product.images);
-    if (!images.length) images = ["images/default.jpg"];
+
+    if (!images.length) {
+      images = ["images/default.jpg"];
+    }
 
     images.forEach((img, index) => {
       const image = document.createElement("img");
       image.src = buildImageURL(img);
       image.alt = product.name;
       image.loading = "lazy";
-      image.onerror = () => {
-        image.src = "images/default.jpg";
-      };
 
+      // مهم: نخلي أول صورة active والباقي موجودين
       if (index === 0) image.classList.add("active");
+
       slider.appendChild(image);
 
       const dot = document.createElement("span");
-      dot.className = "dot" + (index === 0 ? " active" : "");
+      dot.className = "dot";
+      if (index === 0) dot.classList.add("active");
       dotsContainer.appendChild(dot);
     });
 
@@ -90,22 +93,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         addBtn.textContent = "Out of Stock";
         addBtn.classList.add("out-of-stock");
       } else {
-        addBtn.disabled = false;
-        addBtn.textContent = "Add to Cart";
-        addBtn.classList.remove("out-of-stock");
-
         addBtn.addEventListener("click", () =>
           addToCart(product, addBtn)
         );
       }
     }
+
   } catch (err) {
     console.error("Error loading product:", err);
   }
 });
 
 /* ===============================
-   Slider Logic
+   Slider Logic (DO NOT TOUCH)
 =============================== */
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");
@@ -157,7 +157,7 @@ function initSlider(slider, dotsContainer) {
     startAuto();
   }
 
-  /* Swipe (Mobile) */
+  /* Swipe */
   let startX = 0;
   slider.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
@@ -173,59 +173,4 @@ function initSlider(slider, dotsContainer) {
 
   show(0);
   startAuto();
-}
-
-/* ===============================
-   Cart Logic
-=============================== */
-function addToCart(product, button) {
-  let userId = localStorage.getItem("userId");
-  if (!userId) {
-    userId = "user_" + Date.now();
-    localStorage.setItem("userId", userId);
-  }
-
-  const key = `cart_${userId}`;
-  const cart = JSON.parse(localStorage.getItem(key)) || [];
-
-  if (product.stock <= 0) {
-    if (button) {
-      button.disabled = true;
-      button.textContent = "Out of Stock";
-      button.classList.add("out-of-stock");
-    }
-    return;
-  }
-
-  const existing = cart.find(i => i.id === product.id);
-
-  if (existing) {
-    if (existing.quantity + 1 > product.stock) {
-      alert("No more items in stock");
-      return;
-    }
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem(key, JSON.stringify(cart));
-  updateCartCount(cart);
-
-  const msg = document.getElementById("cart-message");
-  if (msg) {
-    msg.classList.add("show");
-    setTimeout(() => msg.classList.remove("show"), 1500);
-  }
-}
-
-function updateCartCount(cart) {
-  const count = cart.reduce((s, i) => s + i.quantity, 0);
-  const el = document.getElementById("cart-count");
-  if (el) el.textContent = count;
 }
