@@ -135,12 +135,16 @@ export default {
       total
     });
 
-  } catch (err) {
-    return json(
-      { success: false, error: err.message || "Order failed" },
-      500
-    );
   }
+   catch (err) {
+  console.error("ORDER ERROR:", err); // هنا هيتسجل كل تفاصيل الـ Error
+  return json(
+    { success: false, error: err.message || "Order failed" },
+    500
+  );
+}
+
+
 }
 
 
