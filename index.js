@@ -69,97 +69,80 @@ export default {
     }
 
     // POST /order
-    if (url.pathname === "/order" && method === "POST") {
-      let body;
+   if (url.pathname === "/order" && method === "POST") {
+  try {
+    const body = await request.json();
+    const { userId, customer, items } = body;
 
-      try {
-        body = await request.json();
-      } catch {
-        return json({ success: false, message: "Invalid JSON" }, 400);
+    if (!userId || !customer || !Array.isArray(items) || !items.length) {
+      return json({ success: false, message: "Invalid order data" }, 400);
+    }
+
+    let total = 0;
+
+    for (const item of items) {
+      const product = await queryDB(
+        env,
+        "SELECT * FROM products WHERE id = ?",
+        [item.id]
+      );
+
+      if (!product.length) {
+        return json({ success: false, message: "Product not found" }, 404);
       }
 
-      const { userId, customer, items } = body;
-
-      if (!userId || !customer || !Array.isArray(items) || !items.length) {
-        return json({ success: false, message: "Invalid order data" }, 400);
-      }
-
-      let total = 0;
-
-      try {
-        // Validate stock + calculate total
-        for (const item of items) {
-          const product = await queryDB(
-            env,
-            "SELECT * FROM products WHERE id = ?",
-            [item.id]
-          );
-
-          if (!product.length) {
-            return json(
-              { success: false, message: "Product not found" },
-              404
-            );
-          }
-
-          if (product[0].stock < item.quantity) {
-            return json(
-              {
-                success: false,
-                message: `Not enough stock for ${product[0].name}`
-              },
-              400
-            );
-          }
-
-          total += product[0].price * item.quantity;
-        }
-
-        // Deduct stock
-        for (const item of items) {
-          await env.DB.prepare(
-            "UPDATE products SET stock = stock - ? WHERE id = ?"
-          )
-            .bind(item.quantity, item.id)
-            .run();
-        }
-
-        const orderId = "order_" + Date.now();
-
-        // Save order (SAFE SCHEMA)
-     await env.DB.prepare(
-  `INSERT INTO orders 
-   (id, name, phone, email, address, items, total, created_at)
-   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-)
-.bind(
-  orderId,
-  customer.name,
-  customer.phone,
-  customer.email,
-  customer.address,
-  JSON.stringify(items),
-  total,
-  new Date().toISOString()
-)
-.run();
-
-
-        return json({
-          success: true,
-          message: "Order placed successfully",
-          orderId,
-          total
-        });
-
-      } catch (err) {
-        console.error("ORDER ERROR:", err);
+      if (product[0].stock < item.quantity) {
         return json(
-          { success: false, message: "Internal server error" },
-          500
+          { success: false, message: `Not enough stock for ${product[0].name}` },
+          400
         );
       }
+
+      total += product[0].price * item.quantity;
     }
+
+    for (const item of items) {
+      await env.DB.prepare(
+        "UPDATE products SET stock = stock - ? WHERE id = ?"
+      )
+        .bind(item.quantity, item.id)
+        .run();
+    }
+
+    const orderId = "order_" + Date.now();
+
+    await env.DB.prepare(
+      `INSERT INTO orders
+       (id, name, phone, email, address, items, total, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    )
+      .bind(
+        orderId,
+        customer.name,
+        customer.phone,
+        customer.email,
+        customer.address,
+        JSON.stringify(items),
+        total,
+        new Date().toISOString()
+      )
+      .run();
+
+    return json({
+      success: true,
+      message: "Order placed successfully",
+      orderId,
+      total
+    });
+
+  } catch (err) {
+    return json(
+      { success: false, error: err.message || "Order failed" },
+      500
+    );
+  }
+}
+
 
     // POST /restock/:id
     if (url.pathname.startsWith("/restock/") && method === "POST") {
