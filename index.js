@@ -127,22 +127,23 @@ export default {
         const orderId = "order_" + Date.now();
 
         // Save order (SAFE SCHEMA)
-        await env.DB.prepare(`
-          INSERT INTO orders
-          (id, name, phone, email, address, items, total, created_at)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `)
-          .bind(
-            orderId,
-            customer.name,
-            customer.phone,
-            customer.email,
-            customer.address,
-            JSON.stringify(items),
-            total,
-            new Date().toISOString()
-          )
-          .run();
+     await env.DB.prepare(
+  `INSERT INTO orders 
+   (id, name, phone, email, address, items, total, created_at)
+   VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+)
+.bind(
+  orderId,
+  customer.name,
+  customer.phone,
+  customer.email,
+  customer.address,
+  JSON.stringify(items),
+  total,
+  new Date().toISOString()
+)
+.run();
+
 
         return json({
           success: true,
