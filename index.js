@@ -1,8 +1,8 @@
-//index.js— FINAL (Cloudflare Workers + D1)
+// index.js — FINAL (Cloudflare Workers + Pages + D1)
 
-// ===============================
-// Helpers
-// ===============================
+/* ===============================
+   Helpers
+================================ */
 async function queryDB(env, sql, bindings = []) {
   const res = await env.DB.prepare(sql).bind(...bindings).all();
   return res.results;
@@ -19,17 +19,17 @@ const json = (data, status = 200) =>
     }
   });
 
-// ===============================
-// Workers Fetch Handler
-// ===============================
+/* ===============================
+   Worker
+================================ */
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const method = request.method;
 
-    // ===================================================
-    // (0) CORS Preflight
-    // ===================================================
+    /* =========================
+       CORS
+    ========================= */
     if (method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -42,29 +42,17 @@ export default {
       });
     }
 
-    // ===================================================
-    // (1) Static Assets
-    // ===================================================
-    try {
-      const staticResponse = await env.ASSETS.fetch(request);
-      if (staticResponse.status !== 404) return staticResponse;
-    } catch (_) {}
+    /* =========================
+       API ROUTES (FIRST)
+    ========================= */
 
-    // ===================================================
-    // (2) API ROUTES
-    // ===================================================
-
-    // ------------------------------
     // GET /products
-    // ------------------------------
     if (url.pathname === "/products" && method === "GET") {
       const products = await queryDB(env, "SELECT * FROM products");
       return json(products);
     }
 
-    // ------------------------------
     // GET /product/:id
-    // ------------------------------
     if (url.pathname.startsWith("/product/") && method === "GET") {
       const id = Number(url.pathname.split("/")[2]);
       const prod = await queryDB(
@@ -80,11 +68,10 @@ export default {
       return json({ success: true, product: prod[0] });
     }
 
-    // ------------------------------
-    // POST /order ✅ FINAL
-    // ------------------------------
+    // POST /order
     if (url.pathname === "/order" && method === "POST") {
       let body;
+
       try {
         body = await request.json();
       } catch {
@@ -99,67 +86,81 @@ export default {
 
       let total = 0;
 
-      // تحقق من المخزون + حساب السعر
-      for (const item of items) {
-        const product = await queryDB(
-          env,
-          "SELECT * FROM products WHERE id = ?",
-          [item.id]
-        );
-
-        if (!product.length) {
-          return json({ success: false, message: "Product not found" }, 404);
-        }
-
-        if (product[0].stock < item.quantity) {
-          return json(
-            {
-              success: false,
-              message: `Not enough stock for ${product[0].name}`
-            },
-            400
+      try {
+        // Validate stock + calculate total
+        for (const item of items) {
+          const product = await queryDB(
+            env,
+            "SELECT * FROM products WHERE id = ?",
+            [item.id]
           );
+
+          if (!product.length) {
+            return json(
+              { success: false, message: "Product not found" },
+              404
+            );
+          }
+
+          if (product[0].stock < item.quantity) {
+            return json(
+              {
+                success: false,
+                message: `Not enough stock for ${product[0].name}`
+              },
+              400
+            );
+          }
+
+          total += product[0].price * item.quantity;
         }
 
-        total += product[0].price * item.quantity;
-      }
+        // Deduct stock
+        for (const item of items) {
+          await env.DB.prepare(
+            "UPDATE products SET stock = stock - ? WHERE id = ?"
+          )
+            .bind(item.quantity, item.id)
+            .run();
+        }
 
-      // خصم المخزون
-      for (const item of items) {
-        await env.DB.prepare(
-          "UPDATE products SET stock = stock - ? WHERE id = ?"
-        )
-          .bind(item.quantity, item.id)
+        const orderId = "order_" + Date.now();
+
+        // Save order (SAFE SCHEMA)
+        await env.DB.prepare(`
+          INSERT INTO orders
+          (id, name, phone, email, address, items, total, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `)
+          .bind(
+            orderId,
+            customer.name,
+            customer.phone,
+            customer.email,
+            customer.address,
+            JSON.stringify(items),
+            total,
+            new Date().toISOString()
+          )
           .run();
-      }
 
-      const orderId = "order_" + Date.now();
-
-      // حفظ الأوردر
-      await env.DB.prepare(
-        `INSERT INTO orders (id, date, items, userDetails, total)
-         VALUES (?, ?, ?, ?, ?)`
-      )
-        .bind(
+        return json({
+          success: true,
+          message: "Order placed successfully",
           orderId,
-          new Date().toISOString(),
-          JSON.stringify(items),
-          JSON.stringify(customer),
           total
-        )
-        .run();
+        });
 
-      return json({
-        success: true,
-        message: "Order placed successfully",
-        orderId,
-        total
-      });
+      } catch (err) {
+        console.error("ORDER ERROR:", err);
+        return json(
+          { success: false, message: "Internal server error" },
+          500
+        );
+      }
     }
 
-    // ------------------------------
     // POST /restock/:id
-    // ------------------------------
     if (url.pathname.startsWith("/restock/") && method === "POST") {
       const id = Number(url.pathname.split("/")[2]);
       const body = await request.json();
@@ -195,20 +196,23 @@ export default {
       });
     }
 
-    // ------------------------------
-  // ------------------------------
-// SPA Fallback
-// ------------------------------
-if (request.headers.get("accept")?.includes("text/html")) {
-  return env.ASSETS.fetch(
-    new Request(new URL("/index.html", request.url))
-  );
-}
+    /* =========================
+       STATIC ASSETS (PAGES)
+    ========================= */
+    try {
+      const staticResponse = await env.ASSETS.fetch(request);
+      if (staticResponse.status !== 404) return staticResponse;
+    } catch (_) {}
 
-// ------------------------------
-// API Fallback
-// ------------------------------
-return json({ message: "Not found" }, 404);
+    /* =========================
+       SPA FALLBACK
+    ========================= */
+    if (request.headers.get("accept")?.includes("text/html")) {
+      return env.ASSETS.fetch(
+        new Request(new URL("/index.html", request.url))
+      );
+    }
 
+    return json({ message: "Not found" }, 404);
   }
 };
