@@ -1,25 +1,30 @@
-console.log("✅ CART CF VERSION – FIXED –", Date.now());
+console.log("✅ CART CF VERSION – FINAL CLEAN –", Date.now());
 
 /* =========================
-   Storage helpers (GLOBAL)
+   GLOBAL USER & CART KEY
 ========================= */
+if (!window.cartKey) {
+  const id = (() => {
+    let stored = localStorage.getItem("userId");
+    if (!stored) {
+      stored = "user_" + Date.now();
+      localStorage.setItem("userId", stored);
+    }
+    return stored;
+  })();
 
-// ❌ ممنوع نعرّف userId تاني
-const cartKey = (() => {
-  let id = localStorage.getItem("userId");
-  if (!id) {
-    id = "user_" + Date.now();
-    localStorage.setItem("userId", id);
-  }
-  return `cart_${id}`;
-})();
+  window.cartKey = `cart_${id}`;
+}
 
+/* =========================
+   Storage helpers
+========================= */
 function loadCart() {
-  return JSON.parse(localStorage.getItem(cartKey)) || [];
+  return JSON.parse(localStorage.getItem(window.cartKey)) || [];
 }
 
 function saveCart(cart) {
-  localStorage.setItem(cartKey, JSON.stringify(cart));
+  localStorage.setItem(window.cartKey, JSON.stringify(cart));
   updateCartCount();
 }
 
@@ -27,20 +32,18 @@ function saveCart(cart) {
    UI helpers
 ========================= */
 function showCartMessage(text) {
-  const cartMessage = document.getElementById("cart-message");
-  if (!cartMessage) return;
+  const msg = document.getElementById("cart-message");
+  if (!msg) return;
 
-  cartMessage.textContent = text;
-  cartMessage.classList.add("show");
-  setTimeout(() => cartMessage.classList.remove("show"), 2000);
+  msg.textContent = text;
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 2000);
 }
 
 /* =========================
-   Add to Cart (GLOBAL)
+   Add To Cart (GLOBAL)
 ========================= */
 async function addToCart(id, name, price) {
-  console.log("🟡 addToCart", { id, name, price });
-
   let cart = loadCart();
 
   id = Number(id);
@@ -72,12 +75,7 @@ async function addToCart(id, name, price) {
       }
       existing.quantity++;
     } else {
-      cart.push({
-        id,
-        name,
-        price,
-        quantity: 1
-      });
+      cart.push({ id, name, price, quantity: 1 });
     }
 
     saveCart(cart);
@@ -89,7 +87,6 @@ async function addToCart(id, name, price) {
   }
 }
 
-// 👈 لازم تكون GLOBAL
 window.addToCart = addToCart;
 
 /* =========================
@@ -125,18 +122,16 @@ function updateCartCount() {
   if (!cartCount) return;
 
   const cart = loadCart();
-  const qty = cart.reduce((sum, i) => sum + i.quantity, 0);
+  const qty = cart.reduce((s, i) => s + i.quantity, 0);
 
   cartCount.textContent = qty;
   cartCount.style.display = qty ? "inline-block" : "none";
 }
 
 /* =========================
-   DOMContentLoaded (UI only)
+   UI EVENTS
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🔥 thecart.js loaded");
-
   const cartBtn = document.getElementById("cart-btn");
   const cartSidebar = document.getElementById("cart-sidebar");
   const closeCart = document.getElementById("close-cart");
@@ -151,20 +146,14 @@ document.addEventListener("DOMContentLoaded", () => {
     cartSidebar.classList.remove("active")
   );
 
-  // delegation for add-to-cart
-  document.body.addEventListener("click", (e) => {
+  document.body.addEventListener("click", e => {
     const btn = e.target.closest(".add-to-cart");
     if (!btn) return;
 
-    addToCart(
-      btn.dataset.id,
-      btn.dataset.name,
-      btn.dataset.price
-    );
+    addToCart(btn.dataset.id, btn.dataset.name, btn.dataset.price);
   });
 
-  // quantity controls
-  cartItems?.addEventListener("click", async (e) => {
+  cartItems?.addEventListener("click", async e => {
     const idx = Number(e.target.dataset.index);
     if (Number.isNaN(idx)) return;
 
