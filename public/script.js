@@ -1,5 +1,5 @@
 /* ===============================
-   User & Keys
+   User & Cart Key
 =============================== */
 function getUserId() {
   let userId = localStorage.getItem("userId");
@@ -17,155 +17,106 @@ const cartKey = `cart_${userId}`;
    DOMContentLoaded
 =============================== */
 document.addEventListener("DOMContentLoaded", async () => {
-  const productGrid = document.querySelector(".product-grid");
-  const searchInput = document.getElementById("search");
-  const categorySelect = document.getElementById("category");
+  const heroSlider = document.getElementById("hero-slider");
+  const dotsContainer = heroSlider?.querySelector(".dots");
+  const featuredGrid = document.getElementById("featured-products");
 
-  if (!productGrid) return;
+  let products = [];
 
   /* ===============================
-     Fetch products (API الموحد)
+     Fetch Products
   =============================== */
-  let products = [];
   try {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
+    if (!res.ok) throw new Error("Failed to load products");
     products = await res.json();
   } catch (err) {
-    console.error("Failed to load products:", err);
-    productGrid.innerHTML = "<p>⚠️ Failed to load products.</p>";
+    console.error(err);
     return;
   }
 
   /* ===============================
-     Fill categories
+     HERO SLIDER (Dynamic)
   =============================== */
-  if (categorySelect) {
-    const categories = [...new Set(products.map(p => p.category))];
-    categories.forEach(cat => {
-      const opt = document.createElement("option");
-      opt.value = cat;
-      opt.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
-      categorySelect.appendChild(opt);
+  if (heroSlider && dotsContainer) {
+    const slidesData = products
+      .filter(p => Array.isArray(p.images) && p.images.length)
+      .slice(0, 5);
+
+    let current = 0;
+    heroSlider.innerHTML = ""; // clean
+
+    slidesData.forEach((product, index) => {
+      const slide = document.createElement("div");
+      slide.className = "slide";
+      if (index === 0) slide.classList.add("active");
+
+      slide.innerHTML = `
+        <img src="${product.images[0]}" alt="${product.name}">
+      `;
+
+      slide.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
+
+      heroSlider.appendChild(slide);
+
+      const dot = document.createElement("span");
+      if (index === 0) dot.classList.add("active");
+
+      dot.addEventListener("click", () => goTo(index));
+
+      dotsContainer.appendChild(dot);
     });
+
+    const slides = heroSlider.querySelectorAll(".slide");
+    const dots = dotsContainer.querySelectorAll("span");
+
+    function goTo(index) {
+      slides[current].classList.remove("active");
+      dots[current].classList.remove("active");
+      current = index;
+      slides[current].classList.add("active");
+      dots[current].classList.add("active");
+    }
+
+    setInterval(() => {
+      goTo((current + 1) % slides.length);
+    }, 4000);
   }
 
   /* ===============================
-     Display products
+     FEATURED PRODUCTS (Flat)
   =============================== */
-  function displayProducts(filterText = "", filterCategory = "all") {
-    productGrid.innerHTML = "";
+  if (featuredGrid) {
+    const featured = products
+      .filter(p => Array.isArray(p.images) && p.images.length)
+      .slice(0, 8);
 
-    products.forEach(product => {
-      const isOut = product.stock <= 0;
+    featured.forEach(product => {
+      const item = document.createElement("div");
+      item.className = "product-item";
 
-      if (
-        product.name.toLowerCase().includes(filterText.toLowerCase()) &&
-        (filterCategory === "all" || product.category === filterCategory)
-      ) {
-        const card = document.createElement("div");
-        card.className = "product-card";
-
-        const img =
-          Array.isArray(product.images) && product.images.length
-            ? product.images[0]
-            : "";
-
-        card.innerHTML = `
-          <img src="${img}" alt="${product.name}" />
+      item.innerHTML = `
+        <img src="${product.images[0]}" alt="${product.name}">
+        <div class="product-info">
           <h3>${product.name}</h3>
-          <p>EGP ${product.price}</p>
+          <span class="price">EGP ${product.price}</span>
+        </div>
+      `;
 
-          <p class="stock ${isOut ? "out-of-stock" : "in-stock"}">
-            ${isOut ? "Out of Stock" : `In Stock: ${product.stock}`}
-          </p>
+      item.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
 
-          ${
-            isOut
-              ? `<button disabled class="out-of-stock">Out of Stock</button>`
-              : `<button class="add-to-cart">Add to Cart</button>`
-          }
-
-          <a href="product.html?id=${product.id}" class="view-btn">
-            View Details
-          </a>
-        `;
-
-        productGrid.appendChild(card);
-
-        /* Add to cart */
-        if (!isOut) {
-          const btn = card.querySelector(".add-to-cart");
-          btn.addEventListener("click", () => {
-            addToCart(product, btn);
-          });
-        }
-      }
+      featuredGrid.appendChild(item);
     });
-  }
-
-  displayProducts();
-
-  /* ===============================
-     Search & Filter
-  =============================== */
-  if (searchInput) {
-    searchInput.addEventListener("input", () =>
-      displayProducts(searchInput.value, categorySelect?.value || "all")
-    );
-  }
-
-  if (categorySelect) {
-    categorySelect.addEventListener("change", () =>
-      displayProducts(searchInput?.value || "", categorySelect.value)
-    );
   }
 
   updateCartCount();
 });
-
-/* ===============================
-   Add To Cart (موحد)
-=============================== */
-function addToCart(product, button) {
-  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-  if (product.stock <= 0) {
-    if (button) {
-      button.disabled = true;
-      button.textContent = "Out of Stock";
-      button.classList.add("out-of-stock");
-    }
-    return;
-  }
-
-  const existing = cart.find(i => i.id === product.id);
-
-  if (existing) {
-    if (existing.quantity + 1 > product.stock) {
-      alert("No more items in stock");
-      return;
-    }
-    existing.quantity += 1;
-  } else {
-    cart.push({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: 1
-    });
-  }
-
-  localStorage.setItem(cartKey, JSON.stringify(cart));
-  updateCartCount();
-
-  const msg = document.getElementById("cart-message");
-  if (msg) {
-    msg.classList.add("show");
-    setTimeout(() => msg.classList.remove("show"), 1500);
-  }
-}
 
 /* ===============================
    Cart Count
