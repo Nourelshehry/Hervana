@@ -4,15 +4,36 @@ console.log("🏠 HOME JS LOADED");
    Helpers
 ================================ */
 
-// لو الصورة اسم ملف فقط → نخليها URL
-function getImageUrl(img) {
-  if (!img) return "/images/placeholder.png";
- return img.startsWith("http")
-  ? img
-  : `https://hervanastore.nourthranduil.workers.dev/${img}`;
-// 👈 استخدميه زي ما جاي من السيرفر
+// نحول images لأي شكل Array مضمون
+function normalizeImages(product) {
+  if (!product || !product.images) return [];
+
+  // لو جاية string JSON
+  if (typeof product.images === "string") {
+    try {
+      return JSON.parse(product.images);
+    } catch (e) {
+      console.warn("❌ Invalid images JSON:", product.images);
+      return [];
+    }
+  }
+
+  // لو Array أصلًا
+  if (Array.isArray(product.images)) {
+    return product.images;
+  }
+
+  return [];
 }
 
+// نخلي الصورة URL مظبوط
+function getImageUrl(img) {
+  if (!img) return "/images/placeholder.png";
+
+  return img.startsWith("http")
+    ? img
+    : `https://hervanastore.nourthranduil.workers.dev/${img}`;
+}
 
 /* ===============================
    DOMContentLoaded
@@ -49,17 +70,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     dotsContainer.innerHTML = "";
 
     const slidesData = products
-      .filter(p => p.image || (Array.isArray(p.images) && p.images.length))
+      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+      .filter(p => p.imagesArr.length)
       .slice(0, 5);
 
     let current = 0;
 
     slidesData.forEach((product, index) => {
-      const imgSrc = product.image
-        ? getImageUrl(product.image)
-        : getImageUrl(product.images[0]);
+      const imgSrc = getImageUrl(product.imagesArr[0]);
 
-      // slide
       const slide = document.createElement("div");
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
@@ -74,12 +93,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       heroSlider.appendChild(slide);
 
-      // dot
       const dot = document.createElement("span");
       if (index === 0) dot.classList.add("active");
-
       dot.addEventListener("click", () => goTo(index));
-
       dotsContainer.appendChild(dot);
     });
 
@@ -94,11 +110,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       dots[current].classList.add("active");
     }
 
-    setInterval(() => {
-      if (slides.length > 1) {
+    if (slides.length > 1) {
+      setInterval(() => {
         goTo((current + 1) % slides.length);
-      }
-    }, 4000);
+      }, 4000);
+    }
   }
 
   /* ===============================
@@ -108,13 +124,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     featuredGrid.innerHTML = "";
 
     const featured = products
-      .filter(p => p.image || (Array.isArray(p.images) && p.images.length))
+      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+      .filter(p => p.imagesArr.length)
       .slice(0, 8);
 
     featured.forEach(product => {
-      const imgSrc = product.image
-        ? getImageUrl(product.image)
-        : getImageUrl(product.images[0]);
+      const imgSrc = getImageUrl(product.imagesArr[0]);
 
       const card = document.createElement("div");
       card.className = "product-item";
