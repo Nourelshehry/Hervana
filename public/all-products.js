@@ -69,38 +69,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         const firstImagePath = getFirstImage(product.images);
         const imageURL = buildImageURL(firstImagePath);
 
-        const safeName = product.name.replace(/'/g, "\\'");
+       const card = document.createElement("div");
+card.className = "product-card";
+card.dataset.id = product.id;
 
-        const card = document.createElement("div");
-        card.className = "product-card";
+card.innerHTML = `
+  <img 
+    src="${imageURL}" 
+    alt="${product.name}" 
+    loading="lazy"
+    onerror="this.src='images/default.jpg'"
+  >
 
-        card.innerHTML = `
-          <img 
-            src="${imageURL}" 
-            alt="${safeName}" 
-            loading="lazy"
-            onerror="this.src='images/default.jpg'"
-          >
+  <h3>${product.name}</h3>
+  <p>EGP ${product.price}</p>
 
-          <h3>${safeName}</h3>
-          <p>EGP ${product.price}</p>
+  ${
+    product.stock > 0
+      ? `<button class="add-to-cart">Add to Cart</button>`
+      : `<button disabled>Out of Stock</button>`
+  }
 
-          ${
-            product.stock > 0
-              ? `<button class="add-to-cart"
-                   onclick="addToCart('${product.id}', '${safeName}', '${product.price}')">
-                   Add to Cart
-                 </button>`
-              : `<button disabled>Out of Stock</button>`
-          }
-
-          <a href="product.html?id=${product.id}" class="view-btn">
-            View Details
-          </a>
-        `;
+  <a href="product.html?id=${product.id}" class="view-btn">
+    View Details
+  </a>
+`;
 
         productGrid.appendChild(card);
       });
+// كليك على الكارت كله
+card.addEventListener("click", () => {
+  window.location.href = `product.html?id=${product.id}`;
+});
+
+// زرار Add to Cart (منفصل)
+const addBtn = card.querySelector(".add-to-cart");
+if (addBtn) {
+  addBtn.addEventListener("click", e => {
+    e.stopPropagation(); // يمنع فتح صفحة المنتج
+    addToCart(product.id, product.name, product.price);
+  });
+}
+
+// زر View Details
+const viewBtn = card.querySelector(".view-btn");
+viewBtn.addEventListener("click", e => {
+  e.stopPropagation();
+});
 
       if (!productGrid.children.length) {
         productGrid.innerHTML = "<p>No products found.</p>";
