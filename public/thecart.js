@@ -1,19 +1,18 @@
-console.log("✅ CART CF VERSION – NO RAILWAY –", Date.now());
+console.log("✅ CART CF VERSION – FIXED –", Date.now());
 
 /* =========================
-   User & Storage (GLOBAL)
+   Storage helpers (GLOBAL)
 ========================= */
-function getUserId() {
+
+// ❌ ممنوع نعرّف userId تاني
+const cartKey = (() => {
   let id = localStorage.getItem("userId");
   if (!id) {
     id = "user_" + Date.now();
     localStorage.setItem("userId", id);
   }
-  return id;
-}
-
-const userId = getUserId();
-const cartKey = `cart_${userId}`;
+  return `cart_${id}`;
+})();
 
 function loadCart() {
   return JSON.parse(localStorage.getItem(cartKey)) || [];
@@ -25,11 +24,12 @@ function saveCart(cart) {
 }
 
 /* =========================
-   UI helpers (GLOBAL)
+   UI helpers
 ========================= */
 function showCartMessage(text) {
   const cartMessage = document.getElementById("cart-message");
   if (!cartMessage) return;
+
   cartMessage.textContent = text;
   cartMessage.classList.add("show");
   setTimeout(() => cartMessage.classList.remove("show"), 2000);
@@ -39,9 +39,9 @@ function showCartMessage(text) {
    Add to Cart (GLOBAL)
 ========================= */
 async function addToCart(id, name, price) {
-  console.log("🟡 addToCart called", { id, name, price });
+  console.log("🟡 addToCart", { id, name, price });
 
-  let cart = loadCart(); // ✅ أحدث نسخة دايمًا
+  let cart = loadCart();
 
   id = Number(id);
   price = Number(price);
@@ -67,10 +67,10 @@ async function addToCart(id, name, price) {
 
     if (existing) {
       if (existing.quantity + 1 > product.stock) {
-        showCartMessage("❌ الكمية المتاحة خلصت");
+        showCartMessage("❌ Not enough stock");
         return;
       }
-      existing.quantity += 1;
+      existing.quantity++;
     } else {
       cart.push({
         id,
@@ -82,22 +82,20 @@ async function addToCart(id, name, price) {
 
     saveCart(cart);
     renderCart();
-    showCartMessage("Added to cart");
+    showCartMessage("Added to cart ❤️");
   } catch (err) {
     console.error(err);
     showCartMessage("❌ Error adding to cart");
   }
 }
 
-// 👈 لازم GLOBAL
+// 👈 لازم تكون GLOBAL
 window.addToCart = addToCart;
 
 /* =========================
-   Render Cart (GLOBAL)
+   Render Cart
 ========================= */
 function renderCart() {
-  console.log("🔵 renderCart called");
-
   const cartItems = document.getElementById("cart-items");
   if (!cartItems) return;
 
@@ -134,7 +132,7 @@ function updateCartCount() {
 }
 
 /* =========================
-   DOMContentLoaded (UI فقط)
+   DOMContentLoaded (UI only)
 ========================= */
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔥 thecart.js loaded");
@@ -145,24 +143,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartItems = document.getElementById("cart-items");
 
-  if (cartBtn && cartSidebar) {
-    cartBtn.addEventListener("click", () =>
-      cartSidebar.classList.add("active")
-    );
-  }
+  cartBtn?.addEventListener("click", () =>
+    cartSidebar.classList.add("active")
+  );
 
-  if (closeCart && cartSidebar) {
-    closeCart.addEventListener("click", () =>
-      cartSidebar.classList.remove("active")
-    );
-  }
+  closeCart?.addEventListener("click", () =>
+    cartSidebar.classList.remove("active")
+  );
 
-  // ✅ add-to-cart (delegation)
+  // delegation for add-to-cart
   document.body.addEventListener("click", (e) => {
     const btn = e.target.closest(".add-to-cart");
     if (!btn) return;
-
-    console.log("🟢 add-to-cart clicked", btn.dataset);
 
     addToCart(
       btn.dataset.id,
@@ -171,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   });
 
-  // ✅ quantity controls
+  // quantity controls
   cartItems?.addEventListener("click", async (e) => {
     const idx = Number(e.target.dataset.index);
     if (Number.isNaN(idx)) return;
@@ -191,7 +183,6 @@ document.addEventListener("DOMContentLoaded", () => {
         showCartMessage("❌ Not enough stock");
         return;
       }
-
       item.quantity++;
     }
 
@@ -204,11 +195,9 @@ document.addEventListener("DOMContentLoaded", () => {
     renderCart();
   });
 
-  if (checkoutBtn) {
-    checkoutBtn.addEventListener("click", () => {
-      window.location.href = "order.html";
-    });
-  }
+  checkoutBtn?.addEventListener("click", () => {
+    window.location.href = "order.html";
+  });
 
   renderCart();
   updateCartCount();
