@@ -81,11 +81,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
    HERO SLIDER
 ============================== */
+/* ===============================
+   HERO SLIDER (FIXED + RANDOM)
+============================== */
 if (heroSlider && dotsContainer) {
   heroSlider.innerHTML = "";
   dotsContainer.innerHTML = "";
 
-  const slidesData = shuffleArray(
+  // ✅ حضّر المنتجات صح
+  const sliderProducts = shuffleArray(
     products
       .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
       .filter(p => p.imagesArr.length)
@@ -93,7 +97,7 @@ if (heroSlider && dotsContainer) {
 
   let current = 0;
 
-  slidesData.forEach((product, index) => {
+  sliderProducts.forEach((product, index) => {
     const imgSrc = getImageUrl(product.imagesArr[0]);
 
     const slide = document.createElement("div");
@@ -104,7 +108,7 @@ if (heroSlider && dotsContainer) {
       <img src="${imgSrc}" alt="${product.name}">
     `;
 
-    slide.dataset.id = product.id;
+    // ✅ اربطي الـ ID الصح
     slide.addEventListener("click", () => {
       window.location.href = `product.html?id=${product.id}`;
     });
@@ -113,6 +117,7 @@ if (heroSlider && dotsContainer) {
 
     const dot = document.createElement("span");
     if (index === 0) dot.classList.add("active");
+
     dot.addEventListener("click", () => goTo(index));
     dotsContainer.appendChild(dot);
   });
@@ -135,19 +140,23 @@ if (heroSlider && dotsContainer) {
   }
 }
 
-
   /* ===============================
      FEATURED PRODUCTS
   ============================== */
-  if (featuredGrid) {
+  /* ===============================
+   FEATURED PRODUCTS (ROTATING)
+============================== */
+if (featuredGrid) {
+  const featuredProducts = products
+    .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+    .filter(p => p.imagesArr.length);
+
+  function renderFeatured() {
     featuredGrid.innerHTML = "";
 
-    const featured = products
-      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
-      .filter(p => p.imagesArr.length)
-      .slice(0, 8);
+    const selected = shuffleArray(featuredProducts).slice(0, 8);
 
-    featured.forEach(product => {
+    selected.forEach(product => {
       const imgSrc = getImageUrl(product.imagesArr[0]);
 
       const card = document.createElement("div");
@@ -169,6 +178,10 @@ if (heroSlider && dotsContainer) {
     });
   }
 
+  renderFeatured();              // أول مرة
+  setInterval(renderFeatured, 30000); // كل 30 ثانية
+}
+
   /* ===============================
      Mobile Menu
   ============================== */
@@ -178,4 +191,17 @@ if (heroSlider && dotsContainer) {
   menuToggle?.addEventListener("click", () => {
     nav.classList.toggle("show");
   });
+/* ===============================
+   Mobile Dropdown Fix
+============================== */
+document.querySelectorAll(".dropbtn").forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const dropdown = btn.closest(".dropdown");
+    dropdown.classList.toggle("open");
+  });
+});
+
 });

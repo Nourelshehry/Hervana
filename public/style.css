@@ -564,3 +564,11 @@ footer a:hover {
 .product-card img {
   border-radius: 0 !important;
 }
+/* Mobile dropdown */
+.dropdown-menu {
+  display: none;
+}
+
+.dropdown.open .dropdown-menu {
+  display: block;
+}
