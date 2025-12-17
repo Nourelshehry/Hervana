@@ -3,29 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dolls-Toys - Hervana</title>
+  <title>Dolls - Hervana</title>
   <link rel="stylesheet" href="/public/all-products.css"/>
 </head>
 <body>
 
   <!-- Header -->
-   <header>
+  <header>
     <div class="logo"><a href="index.html">Hervana</a></div>
- <div class="header-actions">
+    <div class="header-actions">
       <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-      </div>
-    
- 
-
-   
+    </div>
   </header>
 
-
- <!-- Products -->
+  <!-- Products -->
   <section class="products">
     <h2>Dolls</h2>
     <div class="product-grid" id="product-list"></div>
   </section>
+
   <!-- Cart message -->
   <div id="cart-message" class="cart-message">Added to cart!</div>
 
@@ -37,62 +33,113 @@
     <button id="checkout-btn" class="checkout-btn">Checkout</button>
   </aside>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Hervana. All rights reserved.</p>
   </footer>
-  <script src="thecart.js"></script>
+
+  <!-- Scripts -->
+  <script src="/thecart.js" defer></script>
+  <script src="/dolls.js" defer></script>
 
 </body>
 </html>
 
 <script>
-  async function loadDolls() {
-    let data = [];
 
+console.log("🧸 DOLLS PAGE LOADED");
+
+/* ===============================
+   Helpers
+================================ */
+
+// نحول images لأي Array مضمون
+function normalizeImages(product) {
+  if (!product || !product.images) return [];
+
+  if (typeof product.images === "string") {
     try {
-      // الأول من local
-      const localRes = await fetch("products.json");
-      if (!localRes.ok) throw new Error("Local fetch failed");
-      data = await localRes.json();
-    } catch (err) {
-      console.warn("⚠️ Local failed, trying GitHub...");
-      try {
-        const githubRes = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
-        data = await githubRes.json();
-      } catch (githubErr) {
-        console.error("❌ Failed to load dolls.", githubErr);
-        document.getElementById("product-list").innerHTML = "<p>⚠️ Error loading dolls products.</p>";
-        return;
-      }
+      return JSON.parse(product.images);
+    } catch {
+      return [];
+    }
+  }
+
+  if (Array.isArray(product.images)) {
+    return product.images;
+  }
+
+  return [];
+}
+
+// نطلع URL مظبوط للصورة
+function getImageUrl(img) {
+  if (!img) return "/images/placeholder.png";
+  if (img.startsWith("http")) return img;
+  return `https://hervana.pages.dev/${img}`;
+}
+
+/* ===============================
+   Load Dolls from DB
+================================ */
+document.addEventListener("DOMContentLoaded", async () => {
+  const productList = document.getElementById("product-list");
+
+  try {
+    const res = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
+
+    if (!res.ok) throw new Error("Failed to fetch products");
+
+    const products = await res.json();
+    console.log("✅ PRODUCTS:", products);
+
+    // ✅ فلترة Dolls من الـ DB
+    const dolls = products
+      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+      .filter(
+        p =>
+          p.category?.toLowerCase() === "dolls" &&
+          p.imagesArr.length
+      );
+
+    productList.innerHTML = "";
+
+    if (!dolls.length) {
+      productList.innerHTML = "<p>No dolls found.</p>";
+      return;
     }
 
-    // ✅ فلترة بس الكاتيجوري "dolls"
-    const dolls = data.filter(p => p.category?.toLowerCase() === "dolls");
-
-    const productList = document.getElementById("product-list");
-    productList.innerHTML = ""; // مهم عشان ميكررّش
-
     dolls.forEach(product => {
+      const imgSrc = getImageUrl(product.imagesArr[0]);
+
       const card = document.createElement("div");
-      card.classList.add("product-card");
-     card.innerHTML = `
-  <img src="${product.images[0]}" alt="${product.name}">
-  <h3>${product.name}</h3>
-  <p>${product.price} EGP</p>
-  <button 
-    class="add-to-cart" 
-    data-id="${product.id}" 
-    data-name="${product.name}" 
-    data-price="${product.price}">
-    Add to Cart
-  </button>
-  <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
-`;
+      card.className = "product-card";
+
+      card.innerHTML = `
+        <img src="${imgSrc}" alt="${product.name}">
+        <h3>${product.name}</h3>
+        <p>${product.price} EGP</p>
+
+        <button 
+          class="add-to-cart"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${product.price}">
+          Add to Cart
+        </button>
+
+        <a href="product.html?id=${product.id}" class="view-btn">
+          View Details
+        </a>
+      `;
 
       productList.appendChild(card);
     });
+  } catch (err) {
+    console.error("❌ Failed to load dolls", err);
+    productList.innerHTML =
+      "<p>⚠️ Error loading dolls products.</p>";
   }
-
-  loadDolls();
+});
 </script>
