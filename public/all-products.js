@@ -50,77 +50,83 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ===============================
     // Render Products
     // ===============================
-    function displayProducts(filterText = "", filterCategory = "all") {
-      productGrid.innerHTML = "";
+   function displayProducts(filterText = "", filterCategory = "all") {
+  productGrid.innerHTML = "";
 
-      const searchLower = filterText.toLowerCase();
+  const searchLower = filterText.toLowerCase();
 
-      products.forEach(product => {
-        const matchesText =
-          product.name?.toLowerCase().includes(searchLower) ||
-          product.category?.toLowerCase().includes(searchLower) ||
-          product.description?.toLowerCase().includes(searchLower);
+  products.forEach(product => {
+    const matchesText =
+      product.name?.toLowerCase().includes(searchLower) ||
+      product.category?.toLowerCase().includes(searchLower) ||
+      product.description?.toLowerCase().includes(searchLower);
 
-        const matchesCategory =
-          filterCategory === "all" || product.category === filterCategory;
+    const matchesCategory =
+      filterCategory === "all" || product.category === filterCategory;
 
-        if (!matchesText || !matchesCategory) return;
+    if (!matchesText || !matchesCategory) return;
 
-        const firstImagePath = getFirstImage(product.images);
-        const imageURL = buildImageURL(firstImagePath);
+    const firstImagePath = getFirstImage(product.images);
+    const imageURL = buildImageURL(firstImagePath);
 
-       const card = document.createElement("div");
-card.className = "product-card";
-card.dataset.id = product.id;
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.dataset.id = product.id;
 
-card.innerHTML = `
-  <img 
-    src="${imageURL}" 
-    alt="${product.name}" 
-    loading="lazy"
-    onerror="this.src='images/default.jpg'"
-  >
+    card.innerHTML = `
+      <img 
+        src="${imageURL}" 
+        alt="${product.name}" 
+        loading="lazy"
+        onerror="this.src='images/default.jpg'"
+      >
 
-  <h3>${product.name}</h3>
-  <p>EGP ${product.price}</p>
+      <h3>${product.name}</h3>
+      <p>EGP ${product.price}</p>
 
-  ${
-    product.stock > 0
-      ? `<button class="add-to-cart">Add to Cart</button>`
-      : `<button disabled>Out of Stock</button>`
-  }
+      ${
+        product.stock > 0
+          ? `<button class="add-to-cart">Add to Cart</button>`
+          : `<button disabled>Out of Stock</button>`
+      }
 
-  <a href="product.html?id=${product.id}" class="view-btn">
-    View Details
-  </a>
-`;
+      <a href="product.html?id=${product.id}" class="view-btn">
+        View Details
+      </a>
+    `;
 
-        productGrid.appendChild(card);
+    /* ===============================
+       Click behaviors
+    =============================== */
+
+    // كليك على الكارت كله
+    card.addEventListener("click", () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    // زر Add to Cart
+    const addBtn = card.querySelector(".add-to-cart");
+    if (addBtn) {
+      addBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        addToCart(product.id, product.name, product.price);
       });
-// كليك على الكارت كله
-card.addEventListener("click", () => {
-  window.location.href = `product.html?id=${product.id}`;
-});
+    }
 
-// زرار Add to Cart (منفصل)
-const addBtn = card.querySelector(".add-to-cart");
-if (addBtn) {
-  addBtn.addEventListener("click", e => {
-    e.stopPropagation(); // يمنع فتح صفحة المنتج
-    addToCart(product.id, product.name, product.price);
+    // زر View Details
+    const viewBtn = card.querySelector(".view-btn");
+    viewBtn.addEventListener("click", e => {
+      e.stopPropagation();
+    });
+
+    productGrid.appendChild(card);
   });
+
+  if (!productGrid.children.length) {
+    productGrid.innerHTML = "<p>No products found.</p>";
+  }
 }
 
-// زر View Details
-const viewBtn = card.querySelector(".view-btn");
-viewBtn.addEventListener("click", e => {
-  e.stopPropagation();
-});
-
-      if (!productGrid.children.length) {
-        productGrid.innerHTML = "<p>No products found.</p>";
-      }
-    }
 
     // Initial render
     displayProducts();
