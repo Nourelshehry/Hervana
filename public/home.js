@@ -102,9 +102,13 @@ const slidesData = shuffleArray(
         <img src="${imgSrc}" alt="${product.name}">
       `;
 
-      slide.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
-      });
+   slide.dataset.id = product.id;
+
+slide.addEventListener("click", (e) => {
+  const id = e.currentTarget.dataset.id;
+  window.location.href = `product.html?id=${id}`;
+});
+
 
       heroSlider.appendChild(slide);
 
