@@ -1,21 +1,19 @@
+console.log("🏠 HOME JS LOADED");
+
 /* ===============================
-   USER & CART KEY (GLOBAL – ONE TIME)
-=============================== */
-function getUserId() {
-  let userId = localStorage.getItem("userId");
-  if (!userId) {
-    userId = "user_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
-    localStorage.setItem("userId", userId);
-  }
-  return userId;
+   Helpers
+================================ */
+
+// لو الصورة اسم ملف فقط → نخليها URL
+function getImageUrl(img) {
+  if (!img) return "/images/placeholder.png";
+  if (img.startsWith("http")) return img;
+  return `/images/${img}`;
 }
 
-const userId = getUserId();
-const cartKey = `cart_${userId}`;
-
 /* ===============================
-   DOM READY
-=============================== */
+   DOMContentLoaded
+================================ */
 document.addEventListener("DOMContentLoaded", async () => {
   const heroSlider = document.getElementById("hero-slider");
   const dotsContainer = document.querySelector(".slider-dots");
@@ -24,44 +22,47 @@ document.addEventListener("DOMContentLoaded", async () => {
   let products = [];
 
   /* ===============================
-     FETCH PRODUCTS
-  =============================== */
+     Fetch Products
+  ============================== */
   try {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
-    if (!res.ok) throw new Error("Failed to load products");
+
+    if (!res.ok) throw new Error("Failed to fetch products");
+
     products = await res.json();
+    console.log("✅ PRODUCTS:", products);
   } catch (err) {
-    console.error("Products fetch failed:", err);
+    console.error("❌ FETCH ERROR", err);
     return;
   }
 
   /* ===============================
-     HERO SLIDER (DYNAMIC)
-  =============================== */
+     HERO SLIDER
+  ============================== */
   if (heroSlider && dotsContainer) {
-    const slidesData = products
-      .filter(p => Array.isArray(p.images) && p.images.length)
-      .slice(0, 5);
-
     heroSlider.innerHTML = "";
     dotsContainer.innerHTML = "";
+
+    const slidesData = products
+      .filter(p => p.image || (Array.isArray(p.images) && p.images.length))
+      .slice(0, 5);
 
     let current = 0;
 
     slidesData.forEach((product, index) => {
-      /* Slide */
+      const imgSrc = product.image
+        ? getImageUrl(product.image)
+        : getImageUrl(product.images[0]);
+
+      // slide
       const slide = document.createElement("div");
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
       slide.innerHTML = `
-        <img 
-          src="${product.images[0]}" 
-          alt="${product.name}"
-          loading="lazy"
-        >
+        <img src="${imgSrc}" alt="${product.name}">
       `;
 
       slide.addEventListener("click", () => {
@@ -70,11 +71,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       heroSlider.appendChild(slide);
 
-      /* Dot */
+      // dot
       const dot = document.createElement("span");
       if (index === 0) dot.classList.add("active");
 
       dot.addEventListener("click", () => goTo(index));
+
       dotsContainer.appendChild(dot);
     });
 
@@ -82,11 +84,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dots = dotsContainer.querySelectorAll("span");
 
     function goTo(index) {
-      slides[current]?.classList.remove("active");
-      dots[current]?.classList.remove("active");
+      slides[current].classList.remove("active");
+      dots[current].classList.remove("active");
       current = index;
-      slides[current]?.classList.add("active");
-      dots[current]?.classList.add("active");
+      slides[current].classList.add("active");
+      dots[current].classList.add("active");
     }
 
     setInterval(() => {
@@ -98,29 +100,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   /* ===============================
      FEATURED PRODUCTS
-  =============================== */
+  ============================== */
   if (featuredGrid) {
-    const featured = products
-      .filter(p => Array.isArray(p.images) && p.images.length)
-      .slice(0, 8);
-
     featuredGrid.innerHTML = "";
 
+    const featured = products
+      .filter(p => p.image || (Array.isArray(p.images) && p.images.length))
+      .slice(0, 8);
+
     featured.forEach(product => {
+      const imgSrc = product.image
+        ? getImageUrl(product.image)
+        : getImageUrl(product.images[0]);
+
       const card = document.createElement("div");
-      card.className = "product-card";
+      card.className = "product-item";
 
       card.innerHTML = `
-        <img 
-          src="${product.images[0]}" 
-          alt="${product.name}"
-          loading="lazy"
-        >
-        <h3>${product.name}</h3>
-        <p>EGP ${product.price}</p>
-        <a href="product.html?id=${product.id}" class="view-btn">
-          View Details
-        </a>
+        <img src="${imgSrc}" alt="${product.name}">
+        <div class="product-info">
+          <h3>${product.name}</h3>
+          <span class="price">EGP ${product.price}</span>
+        </div>
       `;
 
       card.addEventListener("click", () => {
@@ -131,35 +132,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  updateCartCount();
-});
-
-/* ===============================
-   CART COUNT
-=============================== */
-function updateCartCount() {
-  const cartCount = document.getElementById("cart-count");
-  const cart = JSON.parse(localStorage.getItem(cartKey)) || [];
-
-  if (cartCount) {
-    cartCount.textContent = cart.reduce(
-      (sum, item) => sum + item.quantity,
-      0
-    );
-    cartCount.style.display = cart.length ? "inline-block" : "none";
-  }
-}
-
-/* ===============================
-   MOBILE MENU
-=============================== */
-document.addEventListener("DOMContentLoaded", () => {
+  /* ===============================
+     Mobile Menu
+  ============================== */
   const menuToggle = document.getElementById("menu-toggle");
   const nav = document.getElementById("nav");
 
-  if (menuToggle && nav) {
-    menuToggle.addEventListener("click", () => {
-      nav.classList.toggle("show");
-    });
-  }
+  menuToggle?.addEventListener("click", () => {
+    nav.classList.toggle("show");
+  });
 });
