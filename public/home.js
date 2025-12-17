@@ -148,7 +148,10 @@ slide.addEventListener("click", (e) => {
       .slice(0, 8);
 
     featured.forEach(product => {
-      const imgSrc = getImageUrl(product.imagesArr[0]);
+const imagesArr = normalizeImages(product);
+if (!imagesArr.length) return;
+
+const imgSrc = getImageUrl(imagesArr[0]);
 
       const card = document.createElement("div");
       card.className = "product-item";
