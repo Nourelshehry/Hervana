@@ -27,13 +27,17 @@ function normalizeImages(product) {
 }
 
 // نخلي الصورة URL مظبوط
+
 function getImageUrl(img) {
   if (!img) return "/images/placeholder.png";
 
-  return img.startsWith("http")
-    ? img
-    : `https://hervanastore.nourthranduil.workers.dev/${img}`;
+  if (img.startsWith("http")) return img;
+
+  // 👈 الصور على Pages مش Worker
+  return `https://hervana.pages.dev/${img}`;
 }
+
+
 
 /* ===============================
    DOMContentLoaded
