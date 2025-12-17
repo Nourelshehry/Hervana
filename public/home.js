@@ -1,5 +1,5 @@
 /* ===============================
-   User & Cart Key
+   USER & CART KEY (GLOBAL – ONE TIME)
 =============================== */
 function getUserId() {
   let userId = localStorage.getItem("userId");
@@ -14,17 +14,17 @@ const userId = getUserId();
 const cartKey = `cart_${userId}`;
 
 /* ===============================
-   DOMContentLoaded
+   DOM READY
 =============================== */
 document.addEventListener("DOMContentLoaded", async () => {
   const heroSlider = document.getElementById("hero-slider");
-  const dotsContainer = heroSlider?.querySelector(".dots");
+  const dotsContainer = document.querySelector(".slider-dots");
   const featuredGrid = document.getElementById("featured-products");
 
   let products = [];
 
   /* ===============================
-     Fetch Products
+     FETCH PRODUCTS
   =============================== */
   try {
     const res = await fetch(
@@ -33,28 +33,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!res.ok) throw new Error("Failed to load products");
     products = await res.json();
   } catch (err) {
-    console.error(err);
+    console.error("Products fetch failed:", err);
     return;
   }
 
   /* ===============================
-     HERO SLIDER (Dynamic)
+     HERO SLIDER (DYNAMIC)
   =============================== */
   if (heroSlider && dotsContainer) {
     const slidesData = products
       .filter(p => Array.isArray(p.images) && p.images.length)
       .slice(0, 5);
 
+    heroSlider.innerHTML = "";
+    dotsContainer.innerHTML = "";
+
     let current = 0;
-    heroSlider.innerHTML = ""; // clean
 
     slidesData.forEach((product, index) => {
+      /* Slide */
       const slide = document.createElement("div");
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
       slide.innerHTML = `
-        <img src="${product.images[0]}" alt="${product.name}">
+        <img 
+          src="${product.images[0]}" 
+          alt="${product.name}"
+          loading="lazy"
+        >
       `;
 
       slide.addEventListener("click", () => {
@@ -63,11 +70,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       heroSlider.appendChild(slide);
 
+      /* Dot */
       const dot = document.createElement("span");
       if (index === 0) dot.classList.add("active");
 
       dot.addEventListener("click", () => goTo(index));
-
       dotsContainer.appendChild(dot);
     });
 
@@ -75,43 +82,52 @@ document.addEventListener("DOMContentLoaded", async () => {
     const dots = dotsContainer.querySelectorAll("span");
 
     function goTo(index) {
-      slides[current].classList.remove("active");
-      dots[current].classList.remove("active");
+      slides[current]?.classList.remove("active");
+      dots[current]?.classList.remove("active");
       current = index;
-      slides[current].classList.add("active");
-      dots[current].classList.add("active");
+      slides[current]?.classList.add("active");
+      dots[current]?.classList.add("active");
     }
 
     setInterval(() => {
-      goTo((current + 1) % slides.length);
+      if (slides.length > 1) {
+        goTo((current + 1) % slides.length);
+      }
     }, 4000);
   }
 
   /* ===============================
-     FEATURED PRODUCTS (Flat)
+     FEATURED PRODUCTS
   =============================== */
   if (featuredGrid) {
     const featured = products
       .filter(p => Array.isArray(p.images) && p.images.length)
       .slice(0, 8);
 
-    featured.forEach(product => {
-      const item = document.createElement("div");
-      item.className = "product-item";
+    featuredGrid.innerHTML = "";
 
-      item.innerHTML = `
-        <img src="${product.images[0]}" alt="${product.name}">
-        <div class="product-info">
-          <h3>${product.name}</h3>
-          <span class="price">EGP ${product.price}</span>
-        </div>
+    featured.forEach(product => {
+      const card = document.createElement("div");
+      card.className = "product-card";
+
+      card.innerHTML = `
+        <img 
+          src="${product.images[0]}" 
+          alt="${product.name}"
+          loading="lazy"
+        >
+        <h3>${product.name}</h3>
+        <p>EGP ${product.price}</p>
+        <a href="product.html?id=${product.id}" class="view-btn">
+          View Details
+        </a>
       `;
 
-      item.addEventListener("click", () => {
+      card.addEventListener("click", () => {
         window.location.href = `product.html?id=${product.id}`;
       });
 
-      featuredGrid.appendChild(item);
+      featuredGrid.appendChild(card);
     });
   }
 
@@ -119,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /* ===============================
-   Cart Count
+   CART COUNT
 =============================== */
 function updateCartCount() {
   const cartCount = document.getElementById("cart-count");
@@ -135,7 +151,7 @@ function updateCartCount() {
 }
 
 /* ===============================
-   Mobile Menu
+   MOBILE MENU
 =============================== */
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menu-toggle");
