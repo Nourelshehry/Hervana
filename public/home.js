@@ -7,7 +7,10 @@ console.log("🏠 HOME JS LOADED");
 // لو الصورة اسم ملف فقط → نخليها URL
 function getImageUrl(img) {
   if (!img) return "/images/placeholder.png";
-  return img; // 👈 استخدميه زي ما جاي من السيرفر
+ return img.startsWith("http")
+  ? img
+  : `https://hervanastore.nourthranduil.workers.dev/${img}`;
+// 👈 استخدميه زي ما جاي من السيرفر
 }
 
 
