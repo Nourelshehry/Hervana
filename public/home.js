@@ -4,6 +4,15 @@ console.log("🏠 HOME JS LOADED");
    Helpers
 ================================ */
 
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 // نحول images لأي شكل Array مضمون
 function normalizeImages(product) {
   if (!product || !product.images) return [];
@@ -73,10 +82,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     heroSlider.innerHTML = "";
     dotsContainer.innerHTML = "";
 
-    const slidesData = products
-      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
-      .filter(p => p.imagesArr.length)
-      .slice(0, 5);
+const slidesData = shuffleArray(
+  products.filter(
+    p => p.image || (Array.isArray(p.images) && p.images.length)
+  )
+).slice(0, 5);
+
 
     let current = 0;
 
