@@ -565,10 +565,10 @@ footer a:hover {
   border-radius: 0 !important;
 }
 /* Mobile dropdown */
-.dropdown-menu {
+/*.dropdown-menu {
   display: none;
 }
 
 .dropdown.open .dropdown-menu {
   display: block;
-}
+}*/

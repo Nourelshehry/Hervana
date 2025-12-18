@@ -193,7 +193,7 @@ if (featuredGrid) {
   });
 /* ===============================
    Mobile Dropdown Fix
-============================== */
+============================== 
 document.querySelectorAll(".dropbtn").forEach(btn => {
   btn.addEventListener("click", (e) => {
     e.preventDefault();
@@ -202,6 +202,6 @@ document.querySelectorAll(".dropbtn").forEach(btn => {
     const dropdown = btn.closest(".dropdown");
     dropdown.classList.toggle("open");
   });
-});
+});*/
 
 });
