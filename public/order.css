@@ -36,6 +36,32 @@
   max-width: 400px;
   width: 90%;
 }
+/* Back to Home Button */
+.checkout-page #thank-back-btn {
+  margin-top: 25px;
+  padding: 12px 26px;
+  background: linear-gradient(135deg, #ff7aa2, #c0392b);
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 6px 15px rgba(192, 57, 43, 0.35);
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.checkout-page #thank-back-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(192, 57, 43, 0.45);
+  background: linear-gradient(135deg, #c0392b, #ff7aa2);
+}
+
+/* Click */
+.checkout-page #thank-back-btn:active {
+  transform: scale(0.96);
+}
 
 /* Container */
 .checkout-page .order-container {
