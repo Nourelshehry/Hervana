@@ -9,22 +9,19 @@
 <body>
 
   <!-- Header -->
-   <header>
+  <header>
     <div class="logo"><a href="index.html">Hervana</a></div>
- <div class="header-actions">
+    <div class="header-actions">
       <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-      </div>
-
-   
+    </div>
   </header>
 
-
-
- <!-- Products -->
+  <!-- Products -->
   <section class="products">
     <h2>Totebags</h2>
     <div class="product-grid" id="product-list"></div>
   </section>
+
   <!-- Cart message -->
   <div id="cart-message" class="cart-message">Added to cart!</div>
 
@@ -36,62 +33,71 @@
     <button id="checkout-btn" class="checkout-btn">Checkout</button>
   </aside>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Hervana. All rights reserved.</p>
   </footer>
+
   <script src="thecart.js"></script>
 
-</body>
-</html>
+  <script>
+    const CATEGORY = "totebags";
 
-<script>
-  async function loadTotebags() {
-    let data = [];
+    function normalizeImages(images) {
+      if (!images) return [];
+      if (typeof images === "string") {
+        try { return JSON.parse(images); } catch { return []; }
+      }
+      return Array.isArray(images) ? images : [];
+    }
 
-    try {
-      // الأول من local
-      const localRes = await fetch("products.json");
-      if (!localRes.ok) throw new Error("Local fetch failed");
-      data = await localRes.json();
-    } catch (err) {
-      console.warn("⚠️ Local failed, trying GitHub...");
+    function getImageUrl(img) {
+      if (!img) return "/images/placeholder.png";
+      if (img.startsWith("http")) return img;
+      return `https://hervana.pages.dev/${img}`;
+    }
+
+    async function loadProducts() {
+      const grid = document.getElementById("product-list");
+      grid.innerHTML = "";
+
       try {
-        const githubRes = await fetch("https://raw.githubusercontent.com/Nourelshehry/Hervana/master/products.json");
-        data = await githubRes.json();
-      } catch (githubErr) {
-        console.error("❌ Failed to load totebags.", githubErr);
-        document.getElementById("product-list").innerHTML = "<p>⚠️ Error loading totebags products.</p>";
-        return;
+        const res = await fetch(
+          "https://hervanastore.nourthranduil.workers.dev/products"
+        );
+        const products = await res.json();
+
+        products
+          .filter(p => p.category?.toLowerCase() === CATEGORY)
+          .forEach(product => {
+            const imgs = normalizeImages(product.images);
+            if (!imgs.length) return;
+
+            const card = document.createElement("div");
+            card.className = "product-card";
+            card.innerHTML = `
+              <img src="${getImageUrl(imgs[0])}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p>${product.price} EGP</p>
+              <button class="add-to-cart"
+                data-id="${product.id}"
+                data-name="${product.name}"
+                data-price="${product.price}">
+                Add to Cart
+              </button>
+              <a href="product.html?id=${product.id}" class="view-btn">
+                View Details
+              </a>
+            `;
+            grid.appendChild(card);
+          });
+
+      } catch (e) {
+        grid.innerHTML = "<p>⚠️ Failed to load products.</p>";
       }
     }
 
-    // ✅ فلترة بس الكاتيجوري "totebags"
-    const totebags = data.filter(p => p.category?.toLowerCase() === "totebags");
+    loadProducts();
+  </script>
 
-    const productList = document.getElementById("product-list");
-    productList.innerHTML = ""; // مهم عشان ميكررّش
-
-    totebags.forEach(product => {
-      const card = document.createElement("div");
-      card.classList.add("product-card");
-     card.innerHTML = `
-  <img src="${product.images[0]}" alt="${product.name}">
-  <h3>${product.name}</h3>
-  <p>${product.price} EGP</p>
-  <button 
-    class="add-to-cart" 
-    data-id="${product.id}" 
-    data-name="${product.name}" 
-    data-price="${product.price}">
-    Add to Cart
-  </button>
-  <a href="product.html?id=${product.id}" class="view-btn">View Details</a>
-`;
-
-      productList.appendChild(card);
-    });
-  }
-
-  loadTotebags();
-</script>
+</body>
+</html>

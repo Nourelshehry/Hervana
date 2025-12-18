@@ -4,137 +4,134 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Decor - Hervana</title>
-
-  <!-- نفس CSS -->
-  <link rel="stylesheet" href="/all-products.css"/>
+  <link rel="stylesheet" href="/public/all-products.css"/>
 </head>
 <body>
 
-<!-- ================= Header ================= -->
-<header>
-  <div class="logo">
-    <a href="index.html">Hervana</a>
-  </div>
+  <!-- ================= Header ================= -->
+  <header>
+    <div class="logo">
+      <a href="index.html">Hervana</a>
+    </div>
 
-  <div class="header-actions">
-    <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-  </div>
-</header>
+    <div class="header-actions">
+      <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
+    </div>
+  </header>
 
-<!-- ================= Products ================= -->
-<section class="products">
-  <h2>Decor</h2>
-  <div class="product-grid" id="product-list"></div>
-</section>
+  <!-- ================= Products ================= -->
+  <section class="products">
+    <h2>Decor</h2>
+    <div class="product-grid" id="product-list"></div>
+  </section>
 
-<!-- ================= Cart Message ================= -->
-<div id="cart-message" class="cart-message">Added to cart!</div>
+  <!-- ================= Cart Message ================= -->
+  <div id="cart-message" class="cart-message">Added to cart!</div>
 
-<!-- ================= Cart Sidebar ================= -->
-<aside id="cart-sidebar" class="cart-sidebar">
-  <button id="close-cart" class="close-btn">✖</button>
-  <h2>Your Cart</h2>
-  <ul id="cart-items"></ul>
-  <button id="checkout-btn" class="checkout-btn">Checkout</button>
-</aside>
+  <!-- ================= Cart Sidebar ================= -->
+  <aside id="cart-sidebar" class="cart-sidebar">
+    <button id="close-cart" class="close-btn">✖</button>
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <button id="checkout-btn" class="checkout-btn">Checkout</button>
+  </aside>
 
-<!-- ================= Footer ================= -->
-<footer>
-  <p>&copy; 2025 Hervana. All rights reserved.</p>
-</footer>
+  <!-- ================= Footer ================= -->
+  <footer>
+    <p>&copy; 2025 Hervana. All rights reserved.</p>
+  </footer>
 
-<!-- ================= Scripts ================= -->
-<script src="thecart.js"></script>
+  <!-- ================= Scripts ================= -->
+  <script src="thecart.js"></script>
 
-<script>
-  /* ===============================
-     Helpers
-  ============================== */
+  <script>
+    /* ===============================
+       CONFIG
+    ============================== */
+    const CATEGORY = "decor";
 
-  function normalizeImages(images) {
-    if (!images) return [];
+    /* ===============================
+       Helpers
+    ============================== */
+    function normalizeImages(images) {
+      if (!images) return [];
+      if (typeof images === "string") {
+        try {
+          return JSON.parse(images);
+        } catch {
+          return [];
+        }
+      }
+      return Array.isArray(images) ? images : [];
+    }
 
-    if (typeof images === "string") {
+    function getImageUrl(img) {
+      if (!img) return "/images/placeholder.png";
+      if (img.startsWith("http")) return img;
+      return `https://hervana.pages.dev/${img}`;
+    }
+
+    /* ===============================
+       Load Decor Products
+    ============================== */
+    async function loadDecor() {
+      const grid = document.getElementById("product-list");
+      grid.innerHTML = "";
+
       try {
-        return JSON.parse(images);
-      } catch {
-        return [];
+        const res = await fetch(
+          "https://hervanastore.nourthranduil.workers.dev/products"
+        );
+
+        if (!res.ok) throw new Error("Fetch failed");
+
+        const products = await res.json();
+
+        const decorProducts = products.filter(
+          p => p.category?.toLowerCase() === CATEGORY
+        );
+
+        if (!decorProducts.length) {
+          grid.innerHTML = "<p>No decor products found.</p>";
+          return;
+        }
+
+        decorProducts.forEach(product => {
+          const imagesArr = normalizeImages(product.images);
+          if (!imagesArr.length) return;
+
+          const card = document.createElement("div");
+          card.className = "product-card";
+
+          card.innerHTML = `
+            <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>${product.price} EGP</p>
+
+            <button
+              class="add-to-cart"
+              data-id="${product.id}"
+              data-name="${product.name}"
+              data-price="${product.price}">
+              Add to Cart
+            </button>
+
+            <a href="product.html?id=${product.id}" class="view-btn">
+              View Details
+            </a>
+          `;
+
+          grid.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error("❌ Decor load error:", err);
+        grid.innerHTML = "<p>⚠️ Failed to load decor products.</p>";
       }
     }
 
-    if (Array.isArray(images)) return images;
-    return [];
-  }
-
-  function getImageUrl(img) {
-    if (!img) return "/images/placeholder.png";
-    if (img.startsWith("http")) return img;
-    return `https://hervana.pages.dev/${img}`;
-  }
-
-  /* ===============================
-     Load Decor from DB
-  ============================== */
-  async function loadDecor() {
-    const productList = document.getElementById("product-list");
-    productList.innerHTML = "";
-
-    try {
-      const res = await fetch(
-        "https://hervanastore.nourthranduil.workers.dev/products"
-      );
-
-      if (!res.ok) throw new Error("Fetch failed");
-
-      const products = await res.json();
-
-      // ✅ Decor فقط
-      const decor = products.filter(
-        p => p.category?.toLowerCase() === "decor"
-      );
-
-      if (!decor.length) {
-        productList.innerHTML = "<p>No decor products found.</p>";
-        return;
-      }
-
-      decor.forEach(product => {
-        const imagesArr = normalizeImages(product.images);
-        if (!imagesArr.length) return;
-
-        const card = document.createElement("div");
-        card.classList.add("product-card");
-
-        card.innerHTML = `
-          <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
-          <h3>${product.name}</h3>
-          <p>${product.price} EGP</p>
-
-          <button
-            class="add-to-cart"
-            data-id="${product.id}"
-            data-name="${product.name}"
-            data-price="${product.price}">
-            Add to Cart
-          </button>
-
-          <a href="product.html?id=${product.id}" class="view-btn">
-            View Details
-          </a>
-        `;
-
-        productList.appendChild(card);
-      });
-
-    } catch (err) {
-      console.error("❌ Failed to load decor:", err);
-      productList.innerHTML =
-        "<p>⚠️ Error loading decor products.</p>";
-    }
-  }
-
-  loadDecor();
-</script>
+    loadDecor();
+  </script>
 
 </body>
 </html>
