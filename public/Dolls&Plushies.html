@@ -3,309 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Products - Hervana</title>
+  <title>Dolls - Hervana</title>
 
-  <!-- CSS خاص بالصفحة -->
-  <link rel="stylesheet" href="products-page.css" />
+  <!-- نفس CSS بتاع الصفحات -->
+  <link rel="stylesheet" href="/public/all-products.css"/>
 </head>
 <body>
 
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">
-      <a href="index.html">Hervana</a>
-    </div>
+<!-- ================= Header ================= -->
+<header>
+  <div class="logo">
+    <a href="index.html">Hervana</a>
+  </div>
 
-    <nav class="categories" id="category-tabs">
-      <!-- بيتملوا ديناميك -->
-    </nav>
-
+  <div class="header-actions">
     <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-  </header>
+  </div>
+</header>
 
-  <!-- Products -->
-  <main class="products-wrapper">
-    <h2 id="page-title">All Products</h2>
-    <div class="products-grid" id="products-grid"></div>
-  </main>
+<!-- ================= Products ================= -->
+<section class="products">
+  <h2>Dolls</h2>
+  <div class="product-grid" id="product-list"></div>
+</section>
 
-  <!-- Cart -->
-  <script src="thecart.js"></script>
-  <script src="products-page.js"></script>
+<!-- ================= Cart Message ================= -->
+<div id="cart-message" class="cart-message">Added to cart!</div>
 
-</body>
-</html>
-<style>
-  * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-}
+<!-- ================= Cart Sidebar ================= -->
+<aside id="cart-sidebar" class="cart-sidebar">
+  <button id="close-cart" class="close-btn">✖</button>
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <button id="checkout-btn" class="checkout-btn">Checkout</button>
+</aside>
 
-body {
-  background: #fafafa;
-  color: #222;
-}
+<!-- ================= Footer ================= -->
+<footer>
+  <p>&copy; 2025 Hervana. All rights reserved.</p>
+</footer>
 
-/* ===============================
-   Header
-================================ */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 25px;
-  background: #fff;
-  border-bottom: 1px solid #eee;
-}
+<!-- ================= Scripts ================= -->
+<script src="thecart.js"></script>
 
-.logo a {
-  font-size: 22px;
-  font-weight: bold;
-  text-decoration: none;
-  color: #222;
-}
-
-.categories {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.categories button {
-  background: transparent;
-  border: 1px solid #ddd;
-  padding: 6px 14px;
-  cursor: pointer;
-  border-radius: 20px;
-  font-size: 14px;
-}
-
-.categories button.active {
-  background: #222;
-  color: #fff;
-  border-color: #222;
-}
-
-#cart-btn {
-  background: transparent;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-/* ===============================
-   Products
-================================ */
-.products-wrapper {
-  padding: 30px;
-}
-
-.products-wrapper h2 {
-  margin-bottom: 20px;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-/* ===============================
-   Product Card
-================================ */
-.product-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  transition: transform .2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-4px);
-}
-
-.product-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.product-card h3 {
-  font-size: 16px;
-  margin: 10px 0 5px;
-}
-
-.product-card p {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
-
-.product-card button {
-  padding: 8px;
-  border: none;
-  background: #222;
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-bottom: 6px;
-}
-
-.product-card a {
-  text-align: center;
-  text-decoration: none;
-  font-size: 14px;
-  color: #555;
-}
-
-</style>
 <script>
+  /* ===============================
+     Helpers
+  ============================== */
 
-  console.log("🛍️ PRODUCTS PAGE LOADED");
+  function normalizeImages(images) {
+    if (!images) return [];
 
-/* ===============================
-   Helpers
-================================ */
-function normalizeImages(product) {
-  if (!product || !product.images) return [];
+    if (typeof images === "string") {
+      try {
+        return JSON.parse(images);
+      } catch {
+        return [];
+      }
+    }
 
-  if (typeof product.images === "string") {
+    if (Array.isArray(images)) return images;
+    return [];
+  }
+
+  function getImageUrl(img) {
+    if (!img) return "/images/placeholder.png";
+    if (img.startsWith("http")) return img;
+    return `https://hervana.pages.dev/${img}`;
+  }
+
+  /* ===============================
+     Load Dolls from DB
+  ============================== */
+  async function loadDolls() {
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = "";
+
     try {
-      return JSON.parse(product.images);
-    } catch {
-      return [];
+      const res = await fetch(
+        "https://hervanastore.nourthranduil.workers.dev/products"
+      );
+
+      if (!res.ok) throw new Error("Fetch failed");
+
+      const products = await res.json();
+
+      // ✅ Dolls فقط
+      const dolls = products.filter(
+        p => p.category?.toLowerCase() === "dolls"
+      );
+
+      if (!dolls.length) {
+        productList.innerHTML = "<p>No dolls found.</p>";
+        return;
+      }
+
+      dolls.forEach(product => {
+        const imagesArr = normalizeImages(product.images);
+        if (!imagesArr.length) return;
+
+        const card = document.createElement("div");
+        card.classList.add("product-card");
+
+        card.innerHTML = `
+          <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>${product.price} EGP</p>
+
+          <button
+            class="add-to-cart"
+            data-id="${product.id}"
+            data-name="${product.name}"
+            data-price="${product.price}">
+            Add to Cart
+          </button>
+
+          <a href="product.html?id=${product.id}" class="view-btn">
+            View Details
+          </a>
+        `;
+
+        productList.appendChild(card);
+      });
+
+    } catch (err) {
+      console.error("❌ Failed to load dolls:", err);
+      productList.innerHTML =
+        "<p>⚠️ Error loading dolls products.</p>";
     }
   }
 
-  if (Array.isArray(product.images)) {
-    return product.images;
-  }
-
-  return [];
-}
-
-function getImageUrl(img) {
-  if (!img) return "/images/placeholder.png";
-  if (img.startsWith("http")) return img;
-  return `https://hervana.pages.dev/${img}`;
-}
-
-/* ===============================
-   State
-================================ */
-let allProducts = [];
-let currentCategory = "all";
-
-/* ===============================
-   DOM
-================================ */
-const grid = document.getElementById("products-grid");
-const tabs = document.getElementById("category-tabs");
-const title = document.getElementById("page-title");
-
-/* ===============================
-   Fetch Products
-================================ */
-async function loadProducts() {
-  const res = await fetch(
-    "https://hervanastore.nourthranduil.workers.dev/products"
-  );
-
-  if (!res.ok) throw new Error("Fetch failed");
-
-  allProducts = (await res.json()).map(p => ({
-    ...p,
-    imagesArr: normalizeImages(p)
-  }));
-
-  buildCategories();
-  renderProducts();
-}
-
-/* ===============================
-   Categories
-================================ */
-function buildCategories() {
-  const categories = [
-    "all",
-    ...new Set(allProducts.map(p => p.category?.toLowerCase()))
-  ];
-
-  tabs.innerHTML = "";
-
-  categories.forEach(cat => {
-    const btn = document.createElement("button");
-    btn.textContent = cat;
-    if (cat === currentCategory) btn.classList.add("active");
-
-    btn.onclick = () => {
-      currentCategory = cat;
-      document
-        .querySelectorAll(".categories button")
-        .forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderProducts();
-    };
-
-    tabs.appendChild(btn);
-  });
-}
-
-/* ===============================
-   Render
-================================ */
-function renderProducts() {
-  grid.innerHTML = "";
-
-  title.textContent =
-    currentCategory === "all"
-      ? "All Products"
-      : currentCategory.toUpperCase();
-
-  const filtered =
-    currentCategory === "all"
-      ? allProducts
-      : allProducts.filter(
-          p => p.category?.toLowerCase() === currentCategory
-        );
-
-  filtered.forEach(product => {
-    if (!product.imagesArr.length) return;
-
-    const card = document.createElement("div");
-    card.className = "product-card";
-
-    card.innerHTML = `
-      <img src="${getImageUrl(product.imagesArr[0])}">
-      <h3>${product.name}</h3>
-      <p>${product.price} EGP</p>
-
-      <button
-        class="add-to-cart"
-        data-id="${product.id}"
-        data-name="${product.name}"
-        data-price="${product.price}">
-        Add to Cart
-      </button>
-
-      <a href="product.html?id=${product.id}">View Details</a>
-    `;
-
-    grid.appendChild(card);
-  });
-}
-
-/* ===============================
-   Init
-================================ */
-loadProducts().catch(err => {
-  console.error("❌ PRODUCTS ERROR", err);
-  grid.innerHTML = "<p>Failed to load products.</p>";
-});
-
+  loadDolls();
 </script>
+
+</body>
+</html>
