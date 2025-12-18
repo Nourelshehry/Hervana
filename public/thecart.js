@@ -49,7 +49,7 @@ async function addToCart(id, name, price) {
   id = Number(id);
   price = Number(price);
 
-  if (!id || !name || isNaN(price)) {
+if (!id || !name || price <= 0) {
     showCartMessage("❌ Invalid product");
     return;
   }

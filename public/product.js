@@ -79,29 +79,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     /* ===============================
        Add To Cart (SAME AS ALL-PRODUCTS)
     =============================== */
-    const addBtn = document.querySelector(".add-to-cart");
+const addBtn = document.querySelector(".add-to-cart");
 
-    if (addBtn) {
-      if (product.stock <= 0) {
-        addBtn.disabled = true;
-        addBtn.textContent = "Out of Stock";
-        addBtn.classList.add("out-of-stock");
-      } else {
-        addBtn.addEventListener("click", () => {
-          addToCart(product.id, product.name, product.price);
-
-          addBtn.textContent = "Added ✓";
-          addBtn.disabled = true;
-
-          setTimeout(() => {
-            addBtn.textContent = "Add to Cart";
-            addBtn.disabled = false;
-          }, 1200);
-        });
-      }
-    }
-
-  } catch (err) {
+if (addBtn) {
+  if (product.stock <= 0) {
+    addBtn.disabled = true;
+    addBtn.textContent = "Out of Stock";
+    addBtn.classList.add("out-of-stock");
+  } else {
+    addBtn.dataset.id = product.id;
+    addBtn.dataset.name = product.name;
+    addBtn.dataset.price = product.price;
+  }
+}
+} catch (err) {
     console.error("Error loading product:", err);
   }
 });
