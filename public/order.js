@@ -148,9 +148,9 @@ form.addEventListener("submit", async e => {
 
     thankYou.classList.add("show");
 
-    setTimeout(() => {
+    /*setTimeout(() => {
       window.location.href = "index.html";
-    }, 2500);
+    }, 2500);*/
 
   } catch (err) {
     console.error("Order error:", err);
