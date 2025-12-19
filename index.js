@@ -165,7 +165,6 @@ if (url.pathname === "/order" && method === "POST") {
       items,
       total
     };
-console.log("RESEND:", env.RESEND_API_KEY ? "FOUND" : "MISSING");
 
     // 📧 Customer email
     await sendEmail(env, {
@@ -181,12 +180,17 @@ console.log("RESEND:", env.RESEND_API_KEY ? "FOUND" : "MISSING");
       html: adminOrderEmail(orderData)
     });
 
-    return json({
-      success: true,
-      message: "Order placed successfully",
-      orderId,
-      total
-    });
+  return json({
+  success: true,
+  message: "Order placed successfully",
+  orderId,
+  total,
+  debug: {
+    resendKeyExists: !!env.RESEND_API_KEY,
+    customerEmail: customer.email,
+    adminEmail: "nourthranduil@gmail.com"
+  }
+});
 
   } catch (err) {
     console.error("ORDER ERROR:", err);
