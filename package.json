@@ -13,7 +13,7 @@
     "formdata-polyfill": "^4.0.10",
     "node-domexception": "^1.0.0",
     "node-fetch": "^3.3.2",
+    "nodemailer": "^7.0.11",
     "web-streams-polyfill": "^3.3.3"
   }
 }
-

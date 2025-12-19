@@ -3,6 +3,30 @@
 /* ===============================
    Helpers
 ================================ */
+
+import {
+  customerOrderEmail,
+  adminOrderEmail
+} from "./emailTemplates";
+
+
+async function sendEmail(env, { to, subject, html }) {
+  return fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      from: "Hervana <onboarding@resend.dev>",
+      to,
+      subject,
+      html
+    })
+  });
+}
+
+
 async function queryDB(env, sql, bindings = []) {
   const res = await env.DB.prepare(sql).bind(...bindings).all();
   return res.results;
@@ -67,9 +91,8 @@ export default {
 
       return json({ success: true, product: prod[0] });
     }
-
-    // POST /order
-   if (url.pathname === "/order" && method === "POST") {
+// POST /order
+if (url.pathname === "/order" && method === "POST") {
   try {
     const body = await request.json();
     const { userId, customer, items } = body;
@@ -101,6 +124,7 @@ export default {
       total += product[0].price * item.quantity;
     }
 
+    // خصم الستوك
     for (const item of items) {
       await env.DB.prepare(
         "UPDATE products SET stock = stock - ? WHERE id = ?"
@@ -128,6 +152,34 @@ export default {
       )
       .run();
 
+    /* =========================
+       EMAILS (HERE ✅)
+    ========================= */
+
+    const orderData = {
+      orderId,
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone,
+      address: customer.address,
+      items,
+      total
+    };
+
+    // 📧 Customer email
+    await sendEmail(env, {
+      to: customer.email,
+      subject: "Your Hervana Order 💖",
+      html: customerOrderEmail(orderData)
+    });
+
+    // 📧 Admin email
+    await sendEmail(env, {
+      to: "YOUR_EMAIL@gmail.com",
+      subject: "🛒 New Order - Hervana",
+      html: adminOrderEmail(orderData)
+    });
+
     return json({
       success: true,
       message: "Order placed successfully",
@@ -135,17 +187,16 @@ export default {
       total
     });
 
+  } catch (err) {
+    console.error("ORDER ERROR:", err);
+    return json(
+      { success: false, error: err.message || "Order failed" },
+      500
+    );
   }
-   catch (err) {
-  console.error("ORDER ERROR:", err); // هنا هيتسجل كل تفاصيل الـ Error
-  return json(
-    { success: false, error: err.message || "Order failed" },
-    500
-  );
 }
 
 
-}
 
 
     // POST /restock/:id

@@ -144,7 +144,7 @@ header {
   margin-bottom: 10px;
 }
 
-/* Buttons */
+/* Buttons 
 .add-to-cart {
   background: #c0392b;
   color: #fff;
@@ -176,7 +176,7 @@ header {
 #checkout-btn:hover {
   background: #a93226;
 }
-
+*/
 /* Cart toast message */
 .cart-message {
   position: fixed;
