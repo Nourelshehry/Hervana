@@ -165,6 +165,7 @@ if (url.pathname === "/order" && method === "POST") {
       items,
       total
     };
+console.log("RESEND:", env.RESEND_API_KEY ? "FOUND" : "MISSING");
 
     // 📧 Customer email
     await sendEmail(env, {
