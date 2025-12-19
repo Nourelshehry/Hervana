@@ -165,6 +165,7 @@ if (url.pathname === "/order" && method === "POST") {
       items,
       total
     };
+console.log("ENV KEYS:", Object.keys(env));
 
     // 📧 Customer email
     await sendEmail(env, {
@@ -175,7 +176,7 @@ if (url.pathname === "/order" && method === "POST") {
 
     // 📧 Admin email
     await sendEmail(env, {
-      to: "YOUR_EMAIL@gmail.com",
+      to: "hervanacontact@gmail.com",
       subject: "🛒 New Order - Hervana",
       html: adminOrderEmail(orderData)
     });
