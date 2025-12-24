@@ -104,14 +104,13 @@ if (heroSlider && dotsContainer) {
     slide.className = "slide";
     if (index === 0) slide.classList.add("active");
 
-    slide.innerHTML = `
-      <img src="${imgSrc}" alt="${product.name}">
-    `;
+   slide.innerHTML = `
+  <img class="slide-img" src="${imgSrc}" alt="${product.name}">
+`;
 
-    // ✅ اربطي الـ ID الصح
-    slide.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
+slide.querySelector(".slide-img").addEventListener("click", () => {
+  window.location.href = `product.html?id=${product.id}`;
+});
 
     heroSlider.appendChild(slide);
 
