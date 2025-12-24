@@ -256,25 +256,43 @@ z-index: 1;}
 ===================== */
 .hero-search-container {
   position: absolute;
-  top: 90px;               /* تحت الهيدر */
+  top: 90px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 20;             /* فوق السلايدر */
+  z-index: 20;
   width: 90%;
   max-width: 420px;
-  display: flex;
-  justify-content: center;
 }
 
+/* نخلي input فيه مساحة للزر */
 .search-bar {
   width: 100%;
-  padding: 14px 18px;
+  padding: 14px 46px 14px 18px; /* مساحة على اليمين */
   border-radius: 30px;
   border: none;
   font-size: 15px;
   outline: none;
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
 }
+
+/* زر العدسة */
+.search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #c0392b;
+  padding: 4px;
+}
+
+.search-btn:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
 
 
 /* النقاط */

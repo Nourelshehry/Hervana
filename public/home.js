@@ -74,10 +74,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ FETCH ERROR", err);
     return;
   }
+const searchInput = document.getElementById("home-search");
+const searchBtn = document.getElementById("search-btn");
 
-  /* ===============================
-     HERO SLIDER
-  ============================== */
+function doSearch() {
+  const q = searchInput.value.trim();
+  if (!q) return;
+
+  // نفس سلوك Enter
+  window.location.href = `/all-products.html?search=${encodeURIComponent(q)}`;
+}
+
+// Enter
+searchInput?.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    doSearch();
+  }
+});
+
+// Click على العدسة
+searchBtn?.addEventListener("click", doSearch);
+
+ 
   /* ===============================
    HERO SLIDER
 ============================== */
