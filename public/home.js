@@ -180,6 +180,41 @@ if (featuredGrid) {
   renderFeatured();              // أول مرة
   setInterval(renderFeatured, 30000); // كل 30 ثانية
 }
+//search
+
+const homeSearch = document.getElementById("home-search");
+
+homeSearch?.addEventListener("input", () => {
+  const q = homeSearch.value.toLowerCase();
+
+  const filtered = products.filter(p =>
+    p.name.toLowerCase().includes(q)
+  );
+
+  featuredGrid.innerHTML = "";
+
+  filtered.slice(0, 8).forEach(product => {
+    const imgs = normalizeImages(product);
+    if (!imgs.length) return;
+
+    const card = document.createElement("div");
+    card.className = "product-item";
+
+    card.innerHTML = `
+      <img src="${getImageUrl(imgs[0])}">
+      <div class="product-info">
+        <h3>${product.name}</h3>
+        <span class="price">EGP ${product.price}</span>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    featuredGrid.appendChild(card);
+  });
+});
 
   /* ===============================
      Mobile Menu

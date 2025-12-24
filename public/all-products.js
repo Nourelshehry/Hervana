@@ -47,6 +47,66 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const products = await response.json();
 
+
+//search
+const searchInput = document.getElementById("search-input");
+
+let allProducts = [];
+
+async function loadProducts() {
+  const grid = document.getElementById("product-list");
+  grid.innerHTML = "";
+
+  const res = await fetch(
+    "https://hervanastore.nourthranduil.workers.dev/products"
+  );
+  allProducts = await res.json();
+
+  renderProducts(allProducts);
+}
+
+function renderProducts(list) {
+  const grid = document.getElementById("product-list");
+  grid.innerHTML = "";
+
+  list.forEach(product => {
+    const imgs = normalizeImages(product);
+    if (!imgs.length) return;
+
+    const card = document.createElement("div");
+    card.className = "product-item";
+
+    card.innerHTML = `
+      <img src="${getImageUrl(imgs[0])}">
+      <div class="product-info">
+        <h3>${product.name}</h3>
+        <span class="price">EGP ${product.price}</span>
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+/* 🔍 SEARCH */
+searchInput?.addEventListener("input", () => {
+  const q = searchInput.value.toLowerCase();
+
+  const filtered = allProducts.filter(p =>
+    p.name.toLowerCase().includes(q)
+  );
+
+  renderProducts(filtered);
+});
+
+loadProducts();
+
+
+
     // ===============================
     // Render Products
     // ===============================
