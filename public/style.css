@@ -231,6 +231,25 @@ nav ul {
 
 .slider-btn.prev { left: 20px; }
 .slider-btn.next { right: 20px; }
+/* === FIX HERO CLICK ISSUE === */
+
+/* السلايد نفسها ممنوع كليك */
+.hero-slider .slide {
+  pointer-events: none;
+}
+
+/* الصورة بس هي اللي تستقبل الكليك */
+.hero-slider .slide img {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+/* محتوى الهيرو (Shop All وغيره) */
+.hero-content {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
 
 /* النقاط */
 .dots {
