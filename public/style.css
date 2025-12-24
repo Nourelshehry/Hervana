@@ -193,7 +193,7 @@ nav ul {
 
 .hero-slider {
   height: 100vh;
-}
+z-index: 1;}
 
 .hero-slider .slide {
   position: absolute;
@@ -250,6 +250,32 @@ nav ul {
   z-index: 10;
   pointer-events: auto;
 }
+
+/* =====================
+   HERO SEARCH (FIXED)
+===================== */
+.hero-search-container {
+  position: absolute;
+  top: 90px;               /* تحت الهيدر */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;             /* فوق السلايدر */
+  width: 90%;
+  max-width: 420px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 30px;
+  border: none;
+  font-size: 15px;
+  outline: none;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
 
 /* النقاط */
 .dots {
