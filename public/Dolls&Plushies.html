@@ -122,6 +122,18 @@
             View Details
           </a>
         `;
+ // ✅ الكارد كله clickable
+  card.addEventListener("click", () => {
+    window.location.href = `product.html?id=${product.id}`;
+  });
+
+  // 🛑 خلي زرار الكارت مايفتحش المنتج
+  const addBtn = card.querySelector(".add-to-cart");
+  if (addBtn) {
+    addBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+  }
 
         productList.appendChild(card);
       });
