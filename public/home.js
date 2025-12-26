@@ -13,50 +13,39 @@ function shuffleArray(arr) {
   return a;
 }
 
-// نحول images لأي شكل Array مضمون
 function normalizeImages(product) {
   if (!product || !product.images) return [];
 
-  // لو جاية string JSON
   if (typeof product.images === "string") {
     try {
       return JSON.parse(product.images);
-    } catch (e) {
-      console.warn("❌ Invalid images JSON:", product.images);
+    } catch {
       return [];
     }
   }
 
-  // لو Array أصلًا
-  if (Array.isArray(product.images)) {
-    return product.images;
-  }
-
+  if (Array.isArray(product.images)) return product.images;
   return [];
 }
 
-// نخلي الصورة URL مظبوط
-
 function getImageUrl(img) {
   if (!img) return "/images/placeholder.png";
-
   if (img.startsWith("http")) return img;
-
-  // 👈 الصور على Pages مش Worker
   return `https://hervana.pages.dev/${img}`;
 }
-
-
 
 /* ===============================
    DOMContentLoaded
 ================================ */
+
 document.addEventListener("DOMContentLoaded", async () => {
   const heroSlider = document.getElementById("hero-slider");
   const dotsContainer = document.querySelector(".slider-dots");
   const featuredGrid = document.getElementById("featured-products");
+  const homeSearch = document.getElementById("home-search");
 
   let products = [];
+  let featuredInterval = null;
 
   /* ===============================
      Fetch Products
@@ -69,118 +58,91 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!res.ok) throw new Error("Failed to fetch products");
 
     products = await res.json();
-    console.log("✅ PRODUCTS:", products);
+    console.log("✅ PRODUCTS LOADED:", products.length);
   } catch (err) {
     console.error("❌ FETCH ERROR", err);
     return;
   }
-const searchInput = document.getElementById("home-search");
-const searchBtn = document.getElementById("search-btn");
 
-function doSearch() {
-  const q = searchInput.value.trim();
-  if (!q) return;
-
-  // نفس سلوك Enter
-  window.location.href = `/all-products.html?search=${encodeURIComponent(q)}`;
-}
-
-// Enter
-searchInput?.addEventListener("keydown", e => {
-  if (e.key === "Enter") {
-    doSearch();
-  }
-});
-
-// Click على العدسة
-searchBtn?.addEventListener("click", doSearch);
-
- 
   /* ===============================
-   HERO SLIDER
-============================== */
-/* ===============================
-   HERO SLIDER (FIXED + RANDOM)
-============================== */
-if (heroSlider && dotsContainer) {
-  heroSlider.innerHTML = "";
-  dotsContainer.innerHTML = "";
+     HERO SLIDER
+  ============================== */
+  if (heroSlider && dotsContainer) {
+    heroSlider.innerHTML = "";
+    dotsContainer.innerHTML = "";
 
-  // ✅ حضّر المنتجات صح
-  const sliderProducts = shuffleArray(
-    products
-      .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
-      .filter(p => p.imagesArr.length)
-  ).slice(0, 5);
+    const sliderProducts = shuffleArray(
+      products
+        .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+        .filter(p => p.imagesArr.length)
+    ).slice(0, 5);
 
-  let current = 0;
+    let current = 0;
 
-  sliderProducts.forEach((product, index) => {
-    const imgSrc = getImageUrl(product.imagesArr[0]);
+    sliderProducts.forEach((product, index) => {
+      const slide = document.createElement("div");
+      slide.className = "slide";
+      if (index === 0) slide.classList.add("active");
 
-    const slide = document.createElement("div");
-    slide.className = "slide";
-    if (index === 0) slide.classList.add("active");
+      slide.innerHTML = `
+        <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
+      `;
 
-   slide.innerHTML = `
-  <img class="slide-img" src="${imgSrc}" alt="${product.name}">
-`;
+      slide.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
 
-slide.querySelector(".slide-img").addEventListener("click", () => {
-  window.location.href = `product.html?id=${product.id}`;
-});
+      heroSlider.appendChild(slide);
 
-    heroSlider.appendChild(slide);
+      const dot = document.createElement("span");
+      if (index === 0) dot.classList.add("active");
 
-    const dot = document.createElement("span");
-    if (index === 0) dot.classList.add("active");
+      dot.addEventListener("click", () => goTo(index));
+      dotsContainer.appendChild(dot);
+    });
 
-    dot.addEventListener("click", () => goTo(index));
-    dotsContainer.appendChild(dot);
-  });
+    const slides = heroSlider.querySelectorAll(".slide");
+    const dots = dotsContainer.querySelectorAll("span");
 
-  const slides = heroSlider.querySelectorAll(".slide");
-  const dots = dotsContainer.querySelectorAll("span");
+    function goTo(i) {
+      slides[current].classList.remove("active");
+      dots[current].classList.remove("active");
+      current = i;
+      slides[current].classList.add("active");
+      dots[current].classList.add("active");
+    }
 
-  function goTo(index) {
-    slides[current].classList.remove("active");
-    dots[current].classList.remove("active");
-    current = index;
-    slides[current].classList.add("active");
-    dots[current].classList.add("active");
+    if (slides.length > 1) {
+      setInterval(() => {
+        goTo((current + 1) % slides.length);
+      }, 4000);
+    }
   }
-
-  if (slides.length > 1) {
-    setInterval(() => {
-      goTo((current + 1) % slides.length);
-    }, 4000);
-  }
-}
 
   /* ===============================
      FEATURED PRODUCTS
   ============================== */
-  /* ===============================
-   FEATURED PRODUCTS (ROTATING)
-============================== */
-if (featuredGrid) {
+
   const featuredProducts = products
     .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
     .filter(p => p.imagesArr.length);
 
-  function renderFeatured() {
+  function renderFeatured(list = null) {
     featuredGrid.innerHTML = "";
 
-    const selected = shuffleArray(featuredProducts).slice(0, 8);
+    const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
-    selected.forEach(product => {
-      const imgSrc = getImageUrl(product.imagesArr[0]);
+    if (!source.length) {
+      featuredGrid.innerHTML = "<p>No products found</p>";
+      return;
+    }
 
+    source.forEach(product => {
       const card = document.createElement("div");
       card.className = "product-item";
 
       card.innerHTML = `
-        <img src="${imgSrc}" alt="${product.name}">
+        <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
         <div class="product-info">
           <h3>${product.name}</h3>
           <span class="price">EGP ${product.price}</span>
@@ -195,44 +157,37 @@ if (featuredGrid) {
     });
   }
 
-  renderFeatured();              // أول مرة
-  setInterval(renderFeatured, 30000); // كل 30 ثانية
-}
-//search
+  renderFeatured();
+  featuredInterval = setInterval(renderFeatured, 30000);
 
-const homeSearch = document.getElementById("home-search");
+  /* ===============================
+     SEARCH (HOME)
+  ============================== */
 
-homeSearch?.addEventListener("input", () => {
-  const q = homeSearch.value.toLowerCase();
+  if (homeSearch) {
+    homeSearch.addEventListener("input", () => {
+      const q = homeSearch.value.trim().toLowerCase();
 
-  const filtered = products.filter(p =>
-    p.name.toLowerCase().includes(q)
-  );
+      // لو السيرش فاضي → رجوع featured الطبيعي
+      if (!q) {
+        renderFeatured();
+        if (!featuredInterval) {
+          featuredInterval = setInterval(renderFeatured, 30000);
+        }
+        return;
+      }
 
-  featuredGrid.innerHTML = "";
+      // وقف الروتيشن
+      clearInterval(featuredInterval);
+      featuredInterval = null;
 
-  filtered.slice(0, 8).forEach(product => {
-    const imgs = normalizeImages(product);
-    if (!imgs.length) return;
+      const filtered = featuredProducts.filter(p =>
+        p.name.toLowerCase().includes(q)
+      );
 
-    const card = document.createElement("div");
-    card.className = "product-item";
-
-    card.innerHTML = `
-      <img src="${getImageUrl(imgs[0])}">
-      <div class="product-info">
-        <h3>${product.name}</h3>
-        <span class="price">EGP ${product.price}</span>
-      </div>
-    `;
-
-    card.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
+      renderFeatured(filtered.slice(0, 8));
     });
-
-    featuredGrid.appendChild(card);
-  });
-});
+  }
 
   /* ===============================
      Mobile Menu
@@ -243,17 +198,4 @@ homeSearch?.addEventListener("input", () => {
   menuToggle?.addEventListener("click", () => {
     nav.classList.toggle("show");
   });
-/* ===============================
-   Mobile Dropdown Fix
-============================== 
-document.querySelectorAll(".dropbtn").forEach(btn => {
-  btn.addEventListener("click", (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    const dropdown = btn.closest(".dropdown");
-    dropdown.classList.toggle("open");
-  });
-});*/
-
 });
