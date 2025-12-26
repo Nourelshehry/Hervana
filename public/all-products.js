@@ -54,8 +54,9 @@ const searchInput = document.getElementById("search-input");
 let allProducts = [];
 
 async function loadProducts() {
-  const grid = document.getElementById("product-list");
-  grid.innerHTML = "";
+ const grid = document.getElementById("product-list");
+if (!grid) return; // 👈 أمان
+grid.innerHTML = "";
 
   const res = await fetch(
     "https://hervanastore.nourthranduil.workers.dev/products"
