@@ -134,6 +134,60 @@ form.addEventListener("submit", async e => {
       isSubmitting = false;
       return;
     }
+async function loadGiftSuggestions() {
+  const container = document.getElementById("gift-suggestions");
+  if (!container) return;
+
+  try {
+    const res = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
+    const products = await res.json();
+
+    // ✅ نفس category بتاعة صفحة Gift
+    const giftProducts = products.filter(
+      p => p.category && p.category.toLowerCase() === "gift"
+    );
+
+    if (!giftProducts.length) return;
+
+    // نختار 3 عشوائي
+    const selected = giftProducts
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+
+    selected.forEach(product => {
+      let images = [];
+      try {
+        images = JSON.parse(product.images || "[]");
+      } catch {}
+
+      const img = images[0] || "/images/placeholder.png";
+
+      const card = document.createElement("div");
+      card.className = "gift-card";
+
+      card.innerHTML = `
+        <img src="${img}" alt="${product.name}">
+        <p>${product.name}</p>
+        <strong>${product.price} EGP</strong>
+        <button class="add-to-cart"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${product.price}">
+          + Add
+        </button>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("❌ Gift suggestion error:", err);
+  }
+}
+
+loadGiftSuggestions();
 
     // ✅ SUCCESS
     localStorage.removeItem(cartKey);
