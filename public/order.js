@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const backBtn = document.getElementById("thank-back-btn");
 
   if (!summary || !totalElem || !form) {
-    console.error("Order page elements missing");
+    console.error("❌ Order page elements missing");
     return;
   }
 
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let baseTotal = 0;
 
   /* =========================
-     User
+     USER
   ========================= */
   function getUserId() {
     let id = localStorage.getItem("userId");
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* =========================
-     Render Summary
+     RENDER SUMMARY
   ========================= */
   function renderSummary() {
     const cart = loadCart();
@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderSummary();
 
   /* =========================
-     Shipping
+     SHIPPING
   ========================= */
   document.querySelectorAll(".shipping-option").forEach(option => {
     option.addEventListener("click", () => {
@@ -83,138 +83,146 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   /* =========================
-   Submit Order
-========================= */
-form.addEventListener("submit", async e => {
-  e.preventDefault();
-  if (isSubmitting) return;
-  isSubmitting = true;
+     GIFT SUGGESTIONS
+  ========================= */
+  async function loadGiftSuggestions() {
+    const container = document.getElementById("gift-suggestions");
 
-  const cart = loadCart();
-  if (!cart.length) {
-    alert("Your cart is empty");
-    isSubmitting = false;
-    return;
-  }
+    if (!container) {
+      console.warn("⚠️ gift-suggestions container not found");
+      return;
+    }
 
-  const customer = {
-    name: document.getElementById("name")?.value.trim(),
-    phone: document.getElementById("phone")?.value.trim(),
-    email: document.getElementById("email")?.value.trim(),
-    address: document.getElementById("address")?.value.trim()
-  };
+    container.innerHTML = "";
 
-  if (Object.values(customer).some(v => !v)) {
-    alert("Please fill in all fields");
-    isSubmitting = false;
-    return;
-  }
+    try {
+      const res = await fetch(
+        "https://hervanastore.nourthranduil.workers.dev/products"
+      );
+      const products = await res.json();
 
-  try {
-    const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/order",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          customer,
-          items: cart.map(i => ({
-            id: i.id,
-            quantity: i.quantity
-          }))
-        })
+      const giftProducts = products.filter(
+        p => p.category && p.category.toLowerCase() === "gift"
+      );
+
+      if (!giftProducts.length) {
+        container.innerHTML = "<p>No gift suggestions available.</p>";
+        return;
       }
-    );
 
-    const result = await res.json();
+      const selected = giftProducts
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3);
 
-    if (!res.ok || !result.success) {
-      alert(result.message || "Order failed");
+      selected.forEach(product => {
+        let images = [];
+        try {
+          images = JSON.parse(product.images || "[]");
+        } catch {}
+
+        const img = images[0] || "/images/placeholder.png";
+
+        const card = document.createElement("div");
+        card.className = "gift-card";
+
+        card.innerHTML = `
+          <img src="${img}" alt="${product.name}">
+          <p>${product.name}</p>
+          <strong>${product.price} EGP</strong>
+          <button class="add-to-cart"
+            data-id="${product.id}"
+            data-name="${product.name}"
+            data-price="${product.price}">
+            + Add
+          </button>
+        `;
+
+        container.appendChild(card);
+      });
+
+      console.log("🎁 Gift suggestions loaded");
+
+    } catch (err) {
+      console.error("❌ Gift suggestion error:", err);
+    }
+  }
+
+  /* =========================
+     SUBMIT ORDER
+  ========================= */
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (isSubmitting) return;
+    isSubmitting = true;
+
+    const cart = loadCart();
+    if (!cart.length) {
+      alert("Your cart is empty");
       isSubmitting = false;
       return;
     }
-async function loadGiftSuggestions() {
-  const container = document.getElementById("gift-suggestions");
-  if (!container) return;
 
-  try {
-    const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
-    );
-    const products = await res.json();
+    const customer = {
+      name: document.getElementById("name")?.value.trim(),
+      phone: document.getElementById("phone")?.value.trim(),
+      email: document.getElementById("email")?.value.trim(),
+      address: document.getElementById("address")?.value.trim()
+    };
 
-    // ✅ نفس category بتاعة صفحة Gift
-    const giftProducts = products.filter(
-      p => p.category && p.category.toLowerCase() === "gift"
-    );
+    if (Object.values(customer).some(v => !v)) {
+      alert("Please fill in all fields");
+      isSubmitting = false;
+      return;
+    }
 
-    if (!giftProducts.length) return;
+    try {
+      const res = await fetch(
+        "https://hervanastore.nourthranduil.workers.dev/order",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId,
+            customer,
+            items: cart.map(i => ({
+              id: i.id,
+              quantity: i.quantity
+            }))
+          })
+        }
+      );
 
-    // نختار 3 عشوائي
-    const selected = giftProducts
-      .sort(() => 0.5 - Math.random())
-      .slice(0, 3);
+      const result = await res.json();
 
-    selected.forEach(product => {
-      let images = [];
-      try {
-        images = JSON.parse(product.images || "[]");
-      } catch {}
+      if (!res.ok || !result.success) {
+        alert(result.message || "Order failed");
+        isSubmitting = false;
+        return;
+      }
 
-      const img = images[0] || "/images/placeholder.png";
+      /* ✅ SUCCESS */
+      loadGiftSuggestions();
 
-      const card = document.createElement("div");
-      card.className = "gift-card";
+      localStorage.removeItem(cartKey);
+      form.style.display = "none";
 
-      card.innerHTML = `
-        <img src="${img}" alt="${product.name}">
-        <p>${product.name}</p>
-        <strong>${product.price} EGP</strong>
-        <button class="add-to-cart"
-          data-id="${product.id}"
-          data-name="${product.name}"
-          data-price="${product.price}">
-          + Add
-        </button>
-      `;
+      const header = document.querySelector("header");
+      const footer = document.querySelector("footer");
 
-      container.appendChild(card);
-    });
+      if (header) header.style.display = "none";
+      if (footer) footer.style.display = "none";
 
-  } catch (err) {
-    console.error("❌ Gift suggestion error:", err);
-  }
-}
+      thankYou.classList.add("show");
 
-loadGiftSuggestions();
-
-    // ✅ SUCCESS
-    localStorage.removeItem(cartKey);
-
-    form.style.display = "none";
-
-    const header = document.querySelector("header");
-    const footer = document.querySelector("footer");
-
-    if (header) header.style.display = "none";
-    if (footer) footer.style.display = "none";
-
-    thankYou.classList.add("show");
-
-    /*setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2500);*/
-
-  } catch (err) {
-    console.error("Order error:", err);
-    alert("Network error");
-    isSubmitting = false;
-  }
-});
+    } catch (err) {
+      console.error("❌ Order error:", err);
+      alert("Network error");
+      isSubmitting = false;
+    }
+  });
 
   /* =========================
-     Back to Home
+     BACK TO HOME
   ========================= */
   backBtn?.addEventListener("click", () => {
     window.location.href = "index.html";
