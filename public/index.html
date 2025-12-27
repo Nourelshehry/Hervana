@@ -95,23 +95,6 @@
     <h2>Featured Products</h2>
     <div class="product-grid" id="featured-products"></div>
   </section>
-<p class="price">
-  ${
-    product.on_sale
-      ? `<span class="old-price">${product.price} EGP</span>
-         <span class="sale-price">${product.sale_price} EGP</span>`
-      : `${product.price} EGP`
-  }
-</p>
-<p class="price">
-  ${
-    product.on_sale
-      ? `<span class="old-price">${product.price} EGP</span>
-         <span class="sale-price">${product.sale_price} EGP</span>`
-      : `${product.price} EGP`
-  }
-</p>
-${product.on_sale ? `<span class="sale-badge">-${product.sale_percent}%</span>` : ""}
 
   <!-- ================= Footer ================= -->
   <footer>

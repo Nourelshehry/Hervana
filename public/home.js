@@ -141,16 +141,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       const card = document.createElement("div");
       card.className = "product-item";
 
-      card.innerHTML = `
-        <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
-        <div class="product-info">
-          <h3>${product.name}</h3>
-       const finalPrice = product.on_sale
-  ? product.sale_price
-  : product.price;
+      const priceHTML = product.on_sale
+  ? `
+    <span class="old-price">${product.price} EGP</span>
+    <span class="sale-price">${product.sale_price} EGP</span>
+    <span class="sale-badge">-${product.sale_percent}%</span>
+  `
+  : `<span class="price">${product.price} EGP</span>`;
 
-        </div>
-      `;
+card.innerHTML = `
+  <div class="product-item">
+    <img src="${imgSrc}" alt="${product.name}">
+    <div class="product-info">
+      <h3>${product.name}</h3>
+      ${priceHTML}
+    </div>
+  </div>
+`;
+
 
       card.addEventListener("click", () => {
         window.location.href = `product.html?id=${product.id}`;
