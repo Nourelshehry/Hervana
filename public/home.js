@@ -128,45 +128,46 @@ document.addEventListener("DOMContentLoaded", async () => {
     .filter(p => p.imagesArr.length);
 
   function renderFeatured(list = null) {
-    featuredGrid.innerHTML = "";
+  featuredGrid.innerHTML = "";
 
-    const source = list || shuffleArray(featuredProducts).slice(0, 8);
+  const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
-    if (!source.length) {
-      featuredGrid.innerHTML = "<p>No products found</p>";
-      return;
-    }
-
-    source.forEach(product => {
-      const card = document.createElement("div");
-      card.className = "product-item";
-
-      const priceHTML = product.on_sale
-  ? `
-    <span class="old-price">${product.price} EGP</span>
-    <span class="sale-price">${product.sale_price} EGP</span>
-    <span class="sale-badge">-${product.sale_percent}%</span>
-  `
-  : `<span class="price">${product.price} EGP</span>`;
-
-card.innerHTML = `
-  <div class="product-item">
-    <img src="${imgSrc}" alt="${product.name}">
-    <div class="product-info">
-      <h3>${product.name}</h3>
-      ${priceHTML}
-    </div>
-  </div>
-`;
-
-
-      card.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
-      });
-
-      featuredGrid.appendChild(card);
-    });
+  if (!source.length) {
+    featuredGrid.innerHTML = "<p>No products found</p>";
+    return;
   }
+
+  source.forEach(product => {
+    const imgSrc = getImageUrl(product.imagesArr[0]);
+
+    const card = document.createElement("div");
+    card.className = "product-item";
+
+    const priceHTML = product.on_sale
+      ? `
+        <span class="old-price">${product.price} EGP</span>
+        <span class="sale-price">${product.sale_price} EGP</span>
+        <span class="sale-badge">-${product.sale_percent}%</span>
+      `
+      : `<span class="price">${product.price} EGP</span>`;
+
+    card.innerHTML = `
+      <img src="${imgSrc}" alt="${product.name}">
+      <div class="product-info">
+        <h3>${product.name}</h3>
+        ${priceHTML}
+      </div>
+    `;
+
+    card.addEventListener("click", () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    featuredGrid.appendChild(card);
+  });
+}
+
+  
 
   renderFeatured();
   featuredInterval = setInterval(renderFeatured, 30000);
