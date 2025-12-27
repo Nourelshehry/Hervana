@@ -115,7 +115,66 @@ function renderCart() {
   });
 
   updateCartCount();
+
+  // ⬇⬇⬇ أضيفي السطرين دول
+  const giftBox = document.querySelector(".cart-gifts");
+  if (giftBox) giftBox.style.display = cart.length ? "block" : "none";
 }
+
+async function renderGiftSuggestionsInCart() {
+  const container = document.getElementById("cart-gift-list");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  try {
+    const res = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/products"
+    );
+    const products = await res.json();
+
+    // ✅ gift category فقط
+    const gifts = products.filter(
+      p => p.category && p.category.toLowerCase() === "gift"
+    );
+
+    if (!gifts.length) return;
+
+    const selected = gifts
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+
+    selected.forEach(product => {
+      let images = [];
+      try {
+        images = JSON.parse(product.images || "[]");
+      } catch {}
+
+      const img = images[0] || "/images/placeholder.png";
+
+      const div = document.createElement("div");
+      div.className = "cart-gift-item";
+
+      div.innerHTML = `
+        <img src="${img}">
+        <div>${product.name}</div>
+        <strong>${product.price} EGP</strong>
+        <button
+          class="add-to-cart"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${product.price}">
+          + Add
+        </button>
+      `;
+
+      container.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Gift cart error:", err);
+  }
+}
+
 
 function updateCartCount() {
   const cartCount = document.getElementById("cart-count");
@@ -138,9 +197,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const checkoutBtn = document.getElementById("checkout-btn");
   const cartItems = document.getElementById("cart-items");
 
-  cartBtn?.addEventListener("click", () =>
-    cartSidebar.classList.add("active")
-  );
+  cartBtn?.addEventListener("click", () => {
+  cartSidebar.classList.add("active");
+  renderGiftSuggestionsInCart();
+});
+
 
   closeCart?.addEventListener("click", () =>
     cartSidebar.classList.remove("active")
