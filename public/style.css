@@ -335,6 +335,27 @@ z-index: 1;}
   border-radius: 4px;
   cursor: pointer;
 }
+.old-price {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 13px;
+}
+
+.sale-price {
+  color: #c0392b;
+  font-weight: bold;
+}
+
+.sale-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #c0392b;
+  color: #fff;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+}
 
 /* النقاط */
 .dots {

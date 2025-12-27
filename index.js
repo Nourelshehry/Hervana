@@ -121,7 +121,11 @@ if (url.pathname === "/order" && method === "POST") {
         );
       }
 
-      total += product[0].price * item.quantity;
+const unitPrice = product[0].on_sale
+  ? product[0].sale_price
+  : product[0].price;
+
+total += unitPrice * item.quantity;
     }
 
     // خصم الستوك

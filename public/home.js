@@ -145,7 +145,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
         <div class="product-info">
           <h3>${product.name}</h3>
-          <span class="price">EGP ${product.price}</span>
+       const finalPrice = product.on_sale
+  ? product.sale_price
+  : product.price;
+
         </div>
       `;
 
