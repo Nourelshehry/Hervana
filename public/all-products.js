@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      DOM ELEMENTS
   ============================== */
-  const grid = document.querySelector(".all-products-grid");
+const grid = document.querySelector(".all-products-grid");
   const searchInput = document.getElementById("search-input");
   const categorySelect = document.getElementById("category");
 
