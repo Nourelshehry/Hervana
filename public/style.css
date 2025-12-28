@@ -348,16 +348,16 @@ z-index: 1;}
 
 .sale-badge {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: 10px;
+  left: 10px;
   background: #e63946;
   color: #fff;
-  font-size: 12px;
-  font-weight: bold;
   padding: 4px 8px;
-  border-radius: 4px;
+  font-size: 12px;
+  border-radius: 6px;
   z-index: 2;
 }
+
 
 /* عشان الكارد يكون relative */
 .product-card {
@@ -420,6 +420,10 @@ color: #fff;
   border:none;
   cursor:pointer;
   font-size:16px;
+}
+.product-item,
+.product-card {
+  position: relative;
 }
 
 /* Search bar */
@@ -708,3 +712,67 @@ footer a:hover {
 .dropdown.open .dropdown-menu {
   display: block;
 }*/
+@media (min-width: 769px) {
+  header {
+    display: flex;
+    align-items: center;
+  }
+
+  /* المنيو أقصى الشمال */
+  .nav-links {
+    order: 1;
+  }
+
+  /* اللوجو في النص */
+  .logo {
+    order: 2;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  /* الكارت أقصى اليمين */
+  .menu-cart {
+    order: 3;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  /* إخفاء زرار الموبايل */
+  .menu-toggle {
+    display: none;
+  }
+}
+@media (max-width: 768px) {
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* المنيو أقصى الشمال */
+  .menu-toggle {
+    order: 1;
+    display: block;
+  }
+
+  /* اللوجو في النص بالظبط */
+  .logo {
+    order: 2;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+
+  /* الكارت أقصى اليمين */
+  .menu-cart {
+    order: 3;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}
