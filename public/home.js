@@ -18,7 +18,8 @@ function normalizeImages(product) {
 
   if (typeof product.images === "string") {
     try {
-      return JSON.parse(product.images);
+      const parsed = JSON.parse(product.images);
+      return Array.isArray(parsed) ? parsed : [];
     } catch {
       return [];
     }
@@ -31,7 +32,7 @@ function normalizeImages(product) {
 function getImageUrl(img) {
   if (!img) return "/images/placeholder.png";
   if (img.startsWith("http")) return img;
-  return `https://hervana.pages.dev/${img}`;
+  return `https://hervana.pages.dev/${img.replace(/^\/+/, "")}`;
 }
 
 /* ===============================
@@ -65,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     HERO SLIDER
+     HERO SLIDER (NO SALE BADGE HERE ❌)
   ============================== */
   if (heroSlider && dotsContainer) {
     heroSlider.innerHTML = "";
@@ -128,53 +129,55 @@ document.addEventListener("DOMContentLoaded", async () => {
     .filter(p => p.imagesArr.length);
 
   function renderFeatured(list = null) {
-  featuredGrid.innerHTML = "";
+    featuredGrid.innerHTML = "";
 
-  const source = list || shuffleArray(featuredProducts).slice(0, 8);
+    const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
-  if (!source.length) {
-    featuredGrid.innerHTML = "<p>No products found</p>";
-    return;
-  }
+    if (!source.length) {
+      featuredGrid.innerHTML = "<p>No products found</p>";
+      return;
+    }
 
-  source.forEach(product => {
-  const imgSrc = getImageUrl(product.imagesArr[0]);
+    source.forEach(product => {
+      const imgSrc = getImageUrl(product.imagesArr[0]);
 
-  const card = document.createElement("div");
-  card.className = "product-item";
+      // ✅ FIX NUMBERS
+      const isOnSale = Number(product.on_sale) === 1;
+      const salePercent = Number(product.sale_percent);
 
-  card.innerHTML = `
-    ${product.on_sale ? `
-      <span class="sale-badge">
-        -${product.sale_percent}%
-      </span>
-    ` : ""}
+      const card = document.createElement("div");
+      card.className = "product-item";
 
-    <img src="${imgSrc}" alt="${product.name}">
-
-    <div class="product-info">
-      <h3>${product.name}</h3>
-
-      <p class="price">
+      card.innerHTML = `
         ${
-          product.on_sale
-            ? `<span class="old-price">${product.price} EGP</span>
-               <span class="sale-price">${product.sale_price} EGP</span>`
-            : `${product.price} EGP`
+          isOnSale && salePercent
+            ? `<span class="sale-badge">-${salePercent}%</span>`
+            : ""
         }
-      </p>
-    </div>
-  `;
 
-  card.addEventListener("click", () => {
-    window.location.href = `product.html?id=${product.id}`;
-  });
+        <img src="${imgSrc}" alt="${product.name}">
 
-  featuredGrid.appendChild(card);
-});
+        <div class="product-info">
+          <h3>${product.name}</h3>
 
+          <p class="price">
+            ${
+              isOnSale
+                ? `<span class="old-price">${product.price} EGP</span>
+                   <span class="sale-price">${product.sale_price} EGP</span>`
+                : `${product.price} EGP`
+            }
+          </p>
+        </div>
+      `;
+
+      card.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
+
+      featuredGrid.appendChild(card);
+    });
   }
-  
 
   renderFeatured();
   featuredInterval = setInterval(renderFeatured, 30000);
@@ -187,7 +190,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     homeSearch.addEventListener("input", () => {
       const q = homeSearch.value.trim().toLowerCase();
 
-      // لو السيرش فاضي → رجوع featured الطبيعي
       if (!q) {
         renderFeatured();
         if (!featuredInterval) {
@@ -196,7 +198,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
       }
 
-      // وقف الروتيشن
       clearInterval(featuredInterval);
       featuredInterval = null;
 

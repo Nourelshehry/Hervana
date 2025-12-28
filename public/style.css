@@ -363,7 +363,10 @@ z-index: 1;}
 .product-card {
   position: relative;
 }
-
+.hero-slider .sale-badge
+{
+  display: none;
+}
 
 /* النقاط */
 .dots {
