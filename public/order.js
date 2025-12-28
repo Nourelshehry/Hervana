@@ -10,7 +10,11 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  let shippingCost = 0;
+  /* =========================
+     CONSTANTS
+  ========================= */
+  const SHIPPING_COST = 75;
+
   let isSubmitting = false;
   let baseTotal = 0;
 
@@ -57,95 +61,86 @@ document.addEventListener("DOMContentLoaded", () => {
       summary.appendChild(li);
     });
 
+    /* Shipping line */
+    const shipLi = document.createElement("li");
+    shipLi.textContent = `Shipping Fees - EGP ${SHIPPING_COST}`;
+    summary.appendChild(shipLi);
+
     updateTotal();
   }
 
   function updateTotal() {
     totalElem.textContent =
-      `Total: ${baseTotal + shippingCost} EGP`;
+      `Total: ${baseTotal + SHIPPING_COST} EGP`;
   }
 
   renderSummary();
 
-  /* =========================
-     SHIPPING
-  ========================= */
-  document.querySelectorAll(".shipping-option").forEach(option => {
-    option.addEventListener("click", () => {
-      document
-        .querySelectorAll(".shipping-option")
-        .forEach(o => o.classList.remove("selected"));
+  /* ===============================
+     Governorate → Area Dropdown
+  ================================ */
+  const governorateSelect = document.getElementById("governorate");
+  const areaSelect = document.getElementById("area");
+  const manualAreaGroup = document.getElementById("manual-area-group");
+  const manualAreaInput = document.getElementById("manual-area");
 
-      option.classList.add("selected");
-      shippingCost = Number(option.dataset.price) || 0;
-      updateTotal();
-    });
-  });
+  const areasData = {
+    cairo: [
+      "Nasr City",
+      "New Cairo",
+      "Heliopolis",
+      "Maadi",
+      "Downtown",
+      "Other"
+    ],
+    giza: [
+      "Dokki",
+      "Mohandessin",
+      "Haram",
+      "Faisal",
+      "Sheikh Zayed",
+      "Other"
+    ],
+    qalyubia: [
+      "Benha",
+      "Qalyub",
+      "Shubra El Kheima",
+      "Tukh",
+      "Other"
+    ]
+  };
 
-  /* =========================
-     GIFT SUGGESTIONS
-  ========================= */
-  async function loadGiftSuggestions() {
-    const container = document.getElementById("gift-suggestions");
+  governorateSelect?.addEventListener("change", () => {
+    const gov = governorateSelect.value;
 
-    if (!container) {
-      console.warn("⚠️ gift-suggestions container not found");
+    areaSelect.innerHTML = `<option value="">Select Area</option>`;
+    manualAreaGroup.style.display = "none";
+    manualAreaInput.value = "";
+
+    if (!gov) {
+      areaSelect.disabled = true;
       return;
     }
 
-    container.innerHTML = "";
+    areasData[gov].forEach(area => {
+      const option = document.createElement("option");
+      option.value = area.toLowerCase();
+      option.textContent = area;
+      areaSelect.appendChild(option);
+    });
 
-    try {
-      const res = await fetch(
-        "https://hervanastore.nourthranduil.workers.dev/products"
-      );
-      const products = await res.json();
+    areaSelect.disabled = false;
+  });
 
-      const giftProducts = products.filter(
-        p => p.category && p.category.toLowerCase() === "gift"
-      );
-
-      if (!giftProducts.length) {
-        container.innerHTML = "<p>No gift suggestions available.</p>";
-        return;
-      }
-
-      const selected = giftProducts
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3);
-
-      selected.forEach(product => {
-        let images = [];
-        try {
-          images = JSON.parse(product.images || "[]");
-        } catch {}
-
-        const img = images[0] || "/images/placeholder.png";
-
-        const card = document.createElement("div");
-        card.className = "gift-card";
-
-        card.innerHTML = `
-          <img src="${img}" alt="${product.name}">
-          <p>${product.name}</p>
-          <strong>${product.price} EGP</strong>
-          <button class="add-to-cart"
-            data-id="${product.id}"
-            data-name="${product.name}"
-            data-price="${product.price}">
-            + Add
-          </button>
-        `;
-
-        container.appendChild(card);
-      });
-
-      console.log("🎁 Gift suggestions loaded");
-
-    } catch (err) {
-      console.error("❌ Gift suggestion error:", err);
+  areaSelect?.addEventListener("change", () => {
+    if (areaSelect.value === "other") {
+      manualAreaGroup.style.display = "block";
+      manualAreaInput.required = true;
+    } else {
+      manualAreaGroup.style.display = "none";
+      manualAreaInput.required = false;
     }
-  }
+  });
 
   /* =========================
      SUBMIT ORDER
@@ -166,6 +161,11 @@ document.addEventListener("DOMContentLoaded", () => {
       name: document.getElementById("name")?.value.trim(),
       phone: document.getElementById("phone")?.value.trim(),
       email: document.getElementById("email")?.value.trim(),
+      governorate: governorateSelect?.value,
+      area:
+        areaSelect?.value === "other"
+          ? manualAreaInput?.value.trim()
+          : areaSelect?.value,
       address: document.getElementById("address")?.value.trim()
     };
 
@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
           body: JSON.stringify({
             userId,
             customer,
+            shipping: SHIPPING_COST,
             items: cart.map(i => ({
               id: i.id,
               quantity: i.quantity
@@ -200,17 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      /* ✅ SUCCESS */
-      loadGiftSuggestions();
-
+      /* SUCCESS */
       localStorage.removeItem(cartKey);
       form.style.display = "none";
 
-      const header = document.querySelector("header");
-      const footer = document.querySelector("footer");
-
-      if (header) header.style.display = "none";
-      if (footer) footer.style.display = "none";
+      document.querySelector("header")?.remove();
+      document.querySelector("footer")?.remove();
 
       thankYou.classList.add("show");
 
@@ -227,72 +223,4 @@ document.addEventListener("DOMContentLoaded", () => {
   backBtn?.addEventListener("click", () => {
     window.location.href = "index.html";
   });
-/* ===============================
-   Governorate → Area Dropdown
-================================ */
-
-const governorateSelect = document.getElementById("governorate");
-const areaSelect = document.getElementById("area");
-const manualAreaGroup = document.getElementById("manual-area-group");
-const manualAreaInput = document.getElementById("manual-area");
-
-const areasData = {
-  cairo: [
-    "Nasr City",
-    "New Cairo",
-    "Heliopolis",
-    "Maadi",
-    "Downtown",
-    "Other"
-  ],
-  giza: [
-    "Dokki",
-    "Mohandessin",
-    "Haram",
-    "Faisal",
-    "Sheikh Zayed",
-    "Other"
-  ],
-  qalyubia: [
-    "Benha",
-    "Qalyub",
-    "Shubra El Kheima",
-    "Tukh",
-    "Other"
-  ]
-};
-
-governorateSelect.addEventListener("change", () => {
-  const gov = governorateSelect.value;
-
-  areaSelect.innerHTML = `<option value="">Select Area</option>`;
-  manualAreaGroup.style.display = "none";
-  manualAreaInput.value = "";
-
-  if (!gov) {
-    areaSelect.disabled = true;
-    return;
-  }
-
-  areasData[gov].forEach(area => {
-    const option = document.createElement("option");
-    option.value = area.toLowerCase();
-    option.textContent = area;
-    areaSelect.appendChild(option);
-  });
-
-  areaSelect.disabled = false;
-});
-
-areaSelect.addEventListener("change", () => {
-  if (areaSelect.value === "other") {
-    manualAreaGroup.style.display = "block";
-    manualAreaInput.required = true;
-  } else {
-    manualAreaGroup.style.display = "none";
-    manualAreaInput.required = false;
-  }
-});
-
-
 });

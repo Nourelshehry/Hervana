@@ -102,10 +102,16 @@
   border-radius: 6px;
   border: none;
   width: 100%;
+  position:static;
 }
 
 .checkout-page button[type="submit"]:hover {
   background: #a93226;
+}
+/*option*/
+.shipping-option {
+  background: #ffe6ea;
+  border: 2px solid #c0392b;
 }
 
 /* Shipping */
