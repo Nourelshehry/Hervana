@@ -167,6 +167,44 @@
   cursor: pointer;
 }
 
+
+/* Governorate Select */
+select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
+  outline: none;
+  appearance: none;
+}
+
+/* Shipping Fees Box */
+.shipping-options {
+  margin: 20px 0;
+}
+
+.shipping-fee {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff5f8;
+  border: 1px solid #f2c6d4;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 15px;
+}
+
+.shipping-fee span {
+  color: #555;
+}
+
+.shipping-fee strong {
+  color: #c0392b;
+  font-weight: bold;
+}
+
 /*.thank-you { display: none; }
 .thank-you.show { display: block; }
 */

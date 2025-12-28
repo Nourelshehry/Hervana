@@ -36,6 +36,16 @@
       </div>
 
       <div class="form-group">
+  <label for="governorate">Governorate:</label>
+  <select id="governorate" required>
+    <option value="" disabled selected>Select Governorate</option>
+    <option value="Cairo">Cairo</option>
+    <option value="Giza">Giza</option>
+    <option value="Qalyubia">Qalyubia</option>
+  </select>
+</div>
+
+      <div class="form-group">
         <label for="address">Address:</label>
         <textarea id="address" rows="3" required></textarea>
       </div>
@@ -48,16 +58,13 @@
       </div>
 
       <!-- Shipping Options -->
-      <div class="shipping-options">
-        <label class="shipping-option" data-price="50">
-          <input type="radio" name="shipping" value="inside" required>
-          Inside Obour <br> +50 EGP
-        </label>
-        <label class="shipping-option" data-price="75">
-          <input type="radio" name="shipping" value="outside" required>
-          Outside Obour <br> +75 EGP
-        </label>
-      </div>
+    <div class="shipping-options">
+  <div class="shipping-fee">
+    <span>Shipping Fees</span>
+    <strong>75 EGP</strong>
+  </div>
+</div>
+
 <!-- ================= Gift Suggestions ================= 
 <section class="gift-suggestions">
   <h3>You may also like 🎁</h3>
