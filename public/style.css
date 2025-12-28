@@ -712,25 +712,25 @@ footer a:hover {
 .dropdown.open .dropdown-menu {
   display: block;
 }*/
-@media (min-width: 769px) {
+/*@media (min-width: 769px) {
   header {
     display: flex;
     align-items: center;
   }
 
-  /* المنيو أقصى الشمال */
+  /* المنيو أقصى الشمال 
   .nav-links {
     order: 1;
   }
 
-  /* اللوجو في النص */
+  /* اللوجو في النص 
   .logo {
     order: 2;
     margin: 0 auto;
     text-align: center;
   }
 
-  /* الكارت أقصى اليمين */
+  /* الكارت أقصى اليمين *
   .menu-cart {
     order: 3;
     margin-left: auto;
@@ -739,40 +739,40 @@ footer a:hover {
     gap: 15px;
   }
 
-  /* إخفاء زرار الموبايل */
+  /* إخفاء زرار الموبايل *
   .menu-toggle {
     display: none;
   }
-}
+}*/
 @media (max-width: 768px) {
   header {
-    display: flex;
-    align-items: center;
     justify-content: space-between;
-    position: relative;
   }
 
-  /* المنيو أقصى الشمال */
+  /* ☰ شمال */
   .menu-toggle {
     order: 1;
-    display: block;
+    color: white;
   }
 
-  /* اللوجو في النص بالظبط */
+  /* اللوجو في النص فوق السلايدر */
   .logo {
     order: 2;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    text-align: center;
+    color: white;
+    font-weight: bold;
   }
 
-  /* الكارت أقصى اليمين */
+  /* 🛒 يمين */
   .menu-cart {
     order: 3;
     margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: 10px;
   }
 }
+.hero,
+.hero-slider {
+  margin-top: 0 !important;
+}
+
