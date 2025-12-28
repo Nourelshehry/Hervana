@@ -1,6 +1,11 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
+  if (!productId) {
+    console.error("❌ No product id in URL");
+    return;
+  }
+
   /* ===============================
      Helpers
   =============================== */
@@ -11,12 +16,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const parsed = JSON.parse(images);
         return Array.isArray(parsed) ? parsed : [];
       }
-    } catch {}
+    } catch (e) {
+      console.warn("Invalid images JSON", images);
+    }
     return [];
   }
 
   function buildImageURL(path) {
-    if (!path) return "images/default.jpg";
+    if (!path) return "/images/placeholder.png";
     if (path.startsWith("http")) return path;
     return `https://hervana.pages.dev/${path.replace(/^\/+/, "")}`;
   }
@@ -28,10 +35,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
+
     if (!res.ok) throw new Error("Failed to load products");
 
     const products = await res.json();
-    const product = products.find(p => String(p.id) === productId);
+    const product = products.find(p => String(p.id) === String(productId));
 
     if (!product) {
       document.querySelector(".product-details").innerHTML =
@@ -45,8 +53,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent =
       product.description || "";
-    document.getElementById("product-price").textContent =
-      `EGP ${product.price}`;
+
+    const priceEl = document.getElementById("product-price");
+
+    if (product.on_sale) {
+  priceEl.innerHTML = `
+    <span class="old-price">${product.price} EGP</span>
+    <span class="sale-price">${product.sale_price} EGP</span>
+    <span class="sale-badge">-${product.sale_percent}%</span>
+  `;
+} else {
+  priceEl.textContent = `${product.price} EGP`;
+}
 
     /* ===============================
        Image Slider
@@ -58,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     dotsContainer.innerHTML = "";
 
     let images = parseImages(product.images);
-    if (!images.length) images = ["images/default.jpg"];
+    if (!images.length) images = ["/images/placeholder.png"];
 
     images.forEach((img, index) => {
       const image = document.createElement("img");
@@ -77,28 +95,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     initSlider(slider, dotsContainer);
 
     /* ===============================
-       Add To Cart (SAME AS ALL-PRODUCTS)
+       Add To Cart
     =============================== */
-const addBtn = document.querySelector(".add-to-cart");
+    const addBtn = document.querySelector(".add-to-cart");
 
-if (addBtn) {
-  if (product.stock <= 0) {
-    addBtn.disabled = true;
-    addBtn.textContent = "Out of Stock";
-    addBtn.classList.add("out-of-stock");
-  } else {
-    addBtn.dataset.id = product.id;
-    addBtn.dataset.name = product.name;
-    addBtn.dataset.price = product.price;
-  }
-}
-} catch (err) {
-    console.error("Error loading product:", err);
+    if (addBtn) {
+      if (product.stock <= 0) {
+        addBtn.disabled = true;
+        addBtn.textContent = "Out of Stock";
+        addBtn.classList.add("out-of-stock");
+      } else {
+        addBtn.dataset.id = product.id;
+        addBtn.dataset.name = product.name;
+        addBtn.dataset.price = product.on_sale
+          ? product.sale_price
+          : product.price;
+      }
+    }
+  } catch (err) {
+    console.error("❌ Error loading product:", err);
   }
 });
 
 /* ===============================
-   Slider Logic (OUTSIDE)
+   Slider Logic
 =============================== */
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");

@@ -218,6 +218,36 @@ header {
   border-radius: 4px;
   cursor: pointer;
 }
+ .old-price {
+  text-decoration: line-through;
+  color: #999;
+  margin-right: 8px;
+}
+
+.sale-price {
+  color: #e63946;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.sale-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #e63946;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+/* عشان الكارد يكون relative */
+.product-card {
+  position: relative;
+}
+
 
 /* Cart toast message */
 .cart-message {

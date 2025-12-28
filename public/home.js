@@ -138,35 +138,42 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   source.forEach(product => {
-    const imgSrc = getImageUrl(product.imagesArr[0]);
+  const imgSrc = getImageUrl(product.imagesArr[0]);
 
-    const card = document.createElement("div");
-    card.className = "product-item";
+  const card = document.createElement("div");
+  card.className = "product-item";
 
-    const priceHTML = product.on_sale
-      ? `
-        <span class="old-price">${product.price} EGP</span>
-        <span class="sale-price">${product.sale_price} EGP</span>
-        <span class="sale-badge">-${product.sale_percent}%</span>
-      `
-      : `<span class="price">${product.price} EGP</span>`;
+  card.innerHTML = `
+    ${product.on_sale ? `
+      <span class="sale-badge">
+        -${product.sale_percent}%
+      </span>
+    ` : ""}
 
-    card.innerHTML = `
-      <img src="${imgSrc}" alt="${product.name}">
-      <div class="product-info">
-        <h3>${product.name}</h3>
-        ${priceHTML}
-      </div>
-    `;
+    <img src="${imgSrc}" alt="${product.name}">
 
-    card.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
+    <div class="product-info">
+      <h3>${product.name}</h3>
 
-    featuredGrid.appendChild(card);
+      <p class="price">
+        ${
+          product.on_sale
+            ? `<span class="old-price">${product.price} EGP</span>
+               <span class="sale-price">${product.sale_price} EGP</span>`
+            : `${product.price} EGP`
+        }
+      </p>
+    </div>
+  `;
+
+  card.addEventListener("click", () => {
+    window.location.href = `product.html?id=${product.id}`;
   });
-}
 
+  featuredGrid.appendChild(card);
+});
+
+  }
   
 
   renderFeatured();

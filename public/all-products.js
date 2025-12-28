@@ -1,210 +1,182 @@
 document.addEventListener("DOMContentLoaded", async () => {
-  const productGrid = document.querySelector(".product-grid");
-  const searchInput = document.getElementById("search");
+  console.log("✅ All Products JS Loaded");
+
+  /* ===============================
+     DOM ELEMENTS
+  ============================== */
+  const grid = document.querySelector(".all-products-grid");
+  const searchInput = document.getElementById("search-input");
   const categorySelect = document.getElementById("category");
 
-  // ===============================
-  // Helpers
-  // ===============================
-  function getFirstImage(images) {
-    try {
-      if (Array.isArray(images) && images.length > 0) {
-        return images[0];
-      }
+  if (!grid) {
+    console.error("❌ product grid not found");
+    return;
+  }
 
-      if (typeof images === "string") {
-        const parsed = JSON.parse(images);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed[0];
-        }
+  /* ===============================
+     STATE
+  ============================== */
+  let allProducts = [];
+
+  /* ===============================
+     HELPERS
+  ============================== */
+  function normalizeImages(images) {
+    if (!images) return [];
+    if (Array.isArray(images)) return images;
+    if (typeof images === "string") {
+      try {
+        return JSON.parse(images);
+      } catch {
+        return [];
       }
-    } catch (e) {
-      console.warn("Invalid images field:", images);
+    }
+    return [];
+  }
+
+  function getImageUrl(img) {
+    if (!img) return "/images/placeholder.png";
+    if (img.startsWith("http")) return img;
+    return `https://hervana.pages.dev/${img.replace(/^\/+/, "")}`;
+  }
+
+  function priceHTML(product) {
+    if (product.on_sale) {
+      return `
+        <p class="price">
+          <span class="old-price">${product.price} EGP</span>
+          <span class="sale-price">${product.sale_price} EGP</span>
+        </p>
+        ${
+          product.sale_percent
+            ? `<span class="sale-badge">-${product.sale_percent}%</span>`
+            : ""
+        }
+      `;
     }
 
-    return "images/default.jpg";
+    return `<p class="price">${product.price} EGP</p>`;
   }
 
-  function buildImageURL(path) {
-    if (!path) return "images/default.jpg";
+  /* ===============================
+     FETCH PRODUCTS
+  ============================== */
+  async function loadProducts() {
+    try {
+      const res = await fetch(
+        "https://hervanastore.nourthranduil.workers.dev/products"
+      );
 
-    // لو URL كامل
-    if (path.startsWith("http")) return path;
+      if (!res.ok) throw new Error("Fetch failed");
 
-    // Cloudflare Pages ما بيستخدمش /public في الرابط
-    return `https://hervana.pages.dev/${path.replace(/^\/+/, "")}`;
+      allProducts = await res.json();
+      renderProducts(allProducts);
+    } catch (err) {
+      console.error("❌ Load error:", err);
+      grid.innerHTML = "<p>⚠️ Failed to load products.</p>";
+    }
   }
 
-  // ===============================
-  // Fetch Products
-  // ===============================
-  try {
-    const response = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
-    );
+  /* ===============================
+     RENDER
+  ============================== */
+  function renderProducts(list) {
+    grid.innerHTML = "";
 
-    if (!response.ok) throw new Error("Failed to load products");
+    if (!list.length) {
+      grid.innerHTML = "<p>No products found.</p>";
+      return;
+    }
 
-    const products = await response.json();
+    list.forEach(product => {
+      const images = normalizeImages(product.images);
+      const img = getImageUrl(images[0]);
 
+      const card = document.createElement("div");
+      card.className = "product-card";
 
-//search
-const searchInput = document.getElementById("search-input");
+      card.innerHTML = `
+  ${product.on_sale ? `
+    <span class="sale-badge">
+      -${product.sale_percent}%
+    </span>
+  ` : ""}
 
-let allProducts = [];
+  <img src="${img}" alt="${product.name}">
 
-async function loadProducts() {
- const grid = document.getElementById("product-list");
-if (!grid) return; // 👈 أمان
-grid.innerHTML = "";
+  <h3>${product.name}</h3>
 
-  const res = await fetch(
-    "https://hervanastore.nourthranduil.workers.dev/products"
-  );
-  allProducts = await res.json();
+  <p class="price">
+    ${
+      product.on_sale
+        ? `<span class="old-price">${product.price} EGP</span>
+           <span class="sale-price">${product.sale_price} EGP</span>`
+        : `${product.price} EGP`
+    }
+  </p>
 
-  renderProducts(allProducts);
-}
-
-function renderProducts(list) {
-  const grid = document.getElementById("product-list");
-  grid.innerHTML = "";
-
-  list.forEach(product => {
-    const imgs = normalizeImages(product);
-    if (!imgs.length) return;
-
-    const card = document.createElement("div");
-    card.className = "product-item";
-
-    card.innerHTML = `
-      <img src="${getImageUrl(imgs[0])}">
-      <div class="product-info">
-        <h3>${product.name}</h3>
-        <span class="price">EGP ${product.price}</span>
-      </div>
-    `;
-
-    card.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
-
-    grid.appendChild(card);
-  });
-}
-
-/* 🔍 SEARCH */
-searchInput?.addEventListener("input", () => {
-  const q = searchInput.value.toLowerCase();
-
-  const filtered = allProducts.filter(p =>
-    p.name.toLowerCase().includes(q)
-  );
-
-  renderProducts(filtered);
-});
-
-loadProducts();
+  <button
+    class="add-to-cart"
+    data-id="${product.id}"
+    data-name="${product.name}"
+    data-price="${product.on_sale ? product.sale_price : product.price}"
+  >
+    Add to Cart
+  </button>
+`;
 
 
+      // كارت clickable
+      card.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
 
-    // ===============================
-    // Render Products
-    // ===============================
-   function displayProducts(filterText = "", filterCategory = "all") {
-  productGrid.innerHTML = "";
-
-  const searchLower = filterText.toLowerCase();
-
-  products.forEach(product => {
-    const matchesText =
-      product.name?.toLowerCase().includes(searchLower) ||
-      product.category?.toLowerCase().includes(searchLower) ||
-      product.description?.toLowerCase().includes(searchLower);
-
-    const matchesCategory =
-      filterCategory === "all" || product.category === filterCategory;
-
-    if (!matchesText || !matchesCategory) return;
-
-    const firstImagePath = getFirstImage(product.images);
-    const imageURL = buildImageURL(firstImagePath);
-
-    const card = document.createElement("div");
-    card.className = "product-card";
-    card.dataset.id = product.id;
-
-    card.innerHTML = `
-      <img 
-        src="${imageURL}" 
-        alt="${product.name}" 
-        loading="lazy"
-        onerror="this.src='images/default.jpg'"
-      >
-
-      <h3>${product.name}</h3>
-      <p>EGP ${product.price}</p>
-
-      ${
-        product.stock > 0
-          ? `<button class="add-to-cart">Add to Cart</button>`
-          : `<button disabled>Out of Stock</button>`
-      }
-
-      <a href="product.html?id=${product.id}" class="view-btn">
-        View Details
-      </a>
-    `;
-
-    /* ===============================
-       Click behaviors
-    =============================== */
-
-    // كليك على الكارت كله
-    card.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
-
-    // زر Add to Cart
-    const addBtn = card.querySelector(".add-to-cart");
-    if (addBtn) {
+      // Add to cart
+      const addBtn = card.querySelector(".add-to-cart");
       addBtn.addEventListener("click", e => {
         e.stopPropagation();
-        addToCart(product.id, product.name, product.price);
+        addToCart(
+          addBtn.dataset.id,
+          addBtn.dataset.name,
+          addBtn.dataset.price
+        );
       });
-    }
 
-    // زر View Details
-    const viewBtn = card.querySelector(".view-btn");
-    viewBtn.addEventListener("click", e => {
-      e.stopPropagation();
+      // View
+      const viewBtn = card.querySelector(".view-btn");
+      viewBtn.addEventListener("click", e => e.stopPropagation());
+
+      grid.appendChild(card);
     });
-
-    productGrid.appendChild(card);
-  });
-
-  if (!productGrid.children.length) {
-    productGrid.innerHTML = "<p>No products found.</p>";
   }
-}
 
+  /* ===============================
+     FILTERS
+  ============================== */
+  function applyFilters() {
+    const q = searchInput?.value.toLowerCase() || "";
+    const cat = categorySelect?.value.toLowerCase() || "all";
 
-    // Initial render
-    displayProducts();
+    const filtered = allProducts.filter(p => {
+      const matchesSearch =
+        p.name?.toLowerCase().includes(q) ||
+        p.description?.toLowerCase().includes(q);
 
-    // ===============================
-    // Filters
-    // ===============================
-    searchInput?.addEventListener("input", () => {
-      displayProducts(searchInput.value, categorySelect?.value || "all");
+      const matchesCategory =
+        cat === "all" ||
+        p.category?.toLowerCase() === cat.toLowerCase();
+
+      return matchesSearch && matchesCategory;
     });
 
-    categorySelect?.addEventListener("change", () => {
-      displayProducts(searchInput?.value || "", categorySelect.value);
-    });
-  } catch (err) {
-    console.error(err);
-    productGrid.innerHTML =
-      "<p>⚠️ Error loading products. Please try again later.</p>";
+    renderProducts(filtered);
   }
+
+  searchInput?.addEventListener("input", applyFilters);
+  categorySelect?.addEventListener("change", applyFilters);
+
+  /* ===============================
+     INIT
+  ============================== */
+  loadProducts();
 });
