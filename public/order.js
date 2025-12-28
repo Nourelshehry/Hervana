@@ -227,4 +227,72 @@ document.addEventListener("DOMContentLoaded", () => {
   backBtn?.addEventListener("click", () => {
     window.location.href = "index.html";
   });
+/* ===============================
+   Governorate → Area Dropdown
+================================ */
+
+const governorateSelect = document.getElementById("governorate");
+const areaSelect = document.getElementById("area");
+const manualAreaGroup = document.getElementById("manual-area-group");
+const manualAreaInput = document.getElementById("manual-area");
+
+const areasData = {
+  cairo: [
+    "Nasr City",
+    "New Cairo",
+    "Heliopolis",
+    "Maadi",
+    "Downtown",
+    "Other"
+  ],
+  giza: [
+    "Dokki",
+    "Mohandessin",
+    "Haram",
+    "Faisal",
+    "Sheikh Zayed",
+    "Other"
+  ],
+  qalyubia: [
+    "Benha",
+    "Qalyub",
+    "Shubra El Kheima",
+    "Tukh",
+    "Other"
+  ]
+};
+
+governorateSelect.addEventListener("change", () => {
+  const gov = governorateSelect.value;
+
+  areaSelect.innerHTML = `<option value="">Select Area</option>`;
+  manualAreaGroup.style.display = "none";
+  manualAreaInput.value = "";
+
+  if (!gov) {
+    areaSelect.disabled = true;
+    return;
+  }
+
+  areasData[gov].forEach(area => {
+    const option = document.createElement("option");
+    option.value = area.toLowerCase();
+    option.textContent = area;
+    areaSelect.appendChild(option);
+  });
+
+  areaSelect.disabled = false;
+});
+
+areaSelect.addEventListener("change", () => {
+  if (areaSelect.value === "other") {
+    manualAreaGroup.style.display = "block";
+    manualAreaInput.required = true;
+  } else {
+    manualAreaGroup.style.display = "none";
+    manualAreaInput.required = false;
+  }
+});
+
+
 });

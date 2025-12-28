@@ -35,20 +35,37 @@
         <input type="email" id="email" required/>
       </div>
 
-      <div class="form-group">
+    <!-- Governorate -->
+<div class="form-group">
   <label for="governorate">Governorate:</label>
   <select id="governorate" required>
-    <option value="" disabled selected>Select Governorate</option>
-    <option value="Cairo">Cairo</option>
-    <option value="Giza">Giza</option>
-    <option value="Qalyubia">Qalyubia</option>
+    <option value="">Select Governorate</option>
+    <option value="cairo">Cairo</option>
+    <option value="giza">Giza</option>
+    <option value="qalyubia">Qalyubia</option>
   </select>
 </div>
 
-      <div class="form-group">
-        <label for="address">Address:</label>
-        <textarea id="address" rows="3" required></textarea>
-      </div>
+<!-- Area -->
+<div class="form-group">
+  <label for="area">Area:</label>
+  <select id="area" disabled required>
+    <option value="">Select Area</option>
+  </select>
+</div>
+
+<!-- Manual Area -->
+<div class="form-group" id="manual-area-group" style="display:none;">
+  <label for="manual-area">Write Area Manually:</label>
+  <input type="text" id="manual-area" placeholder="Enter your area"/>
+</div>
+
+<!-- Address -->
+<div class="form-group">
+  <label for="address">Full Address:</label>
+  <textarea id="address" rows="3" required></textarea>
+</div>
+
 
       <!-- Order Summary -->
       <div class="order-summary-box">
@@ -57,12 +74,12 @@
         <p id="order-total"></p>
       </div>
 
-      <!-- Shipping Options -->
     <div class="shipping-options">
-  <div class="shipping-fee">
-    <span>Shipping Fees</span>
-    <strong>75 EGP</strong>
-  </div>
+  <label class="shipping-option selected">
+    <input type="radio" name="shipping" value="shipping" checked>
+    Shipping Fees <br> +75 EGP
+  </label>
+</div>
 </div>
 
 <!-- ================= Gift Suggestions ================= 
