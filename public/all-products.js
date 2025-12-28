@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      DOM ELEMENTS
   ============================== */
-const grid = document.querySelector(".all-products-grid");
+  const grid = document.querySelector(".all-products-grid");
   const searchInput = document.getElementById("search-input");
   const categorySelect = document.getElementById("category");
 
@@ -24,9 +24,11 @@ const grid = document.querySelector(".all-products-grid");
   function normalizeImages(images) {
     if (!images) return [];
     if (Array.isArray(images)) return images;
+
     if (typeof images === "string") {
       try {
-        return JSON.parse(images);
+        const parsed = JSON.parse(images);
+        return Array.isArray(parsed) ? parsed : [];
       } catch {
         return [];
       }
@@ -38,24 +40,6 @@ const grid = document.querySelector(".all-products-grid");
     if (!img) return "/images/placeholder.png";
     if (img.startsWith("http")) return img;
     return `https://hervana.pages.dev/${img.replace(/^\/+/, "")}`;
-  }
-
-  function priceHTML(product) {
-    if (product.on_sale) {
-      return `
-        <p class="price">
-          <span class="old-price">${product.price} EGP</span>
-          <span class="sale-price">${product.sale_price} EGP</span>
-        </p>
-        ${
-          product.sale_percent
-            ? `<span class="sale-badge">-${product.sale_percent}%</span>`
-            : ""
-        }
-      `;
-    }
-
-    return `<p class="price">${product.price} EGP</p>`;
   }
 
   /* ===============================
@@ -70,6 +54,8 @@ const grid = document.querySelector(".all-products-grid");
       if (!res.ok) throw new Error("Fetch failed");
 
       allProducts = await res.json();
+      console.log("📦 Products:", allProducts.length);
+
       renderProducts(allProducts);
     } catch (err) {
       console.error("❌ Load error:", err);
@@ -83,70 +69,75 @@ const grid = document.querySelector(".all-products-grid");
   function renderProducts(list) {
     grid.innerHTML = "";
 
-    if (!list.length) {
+    if (!list || !list.length) {
       grid.innerHTML = "<p>No products found.</p>";
       return;
     }
 
     list.forEach(product => {
-      const images = normalizeImages(product.images);
-      const img = getImageUrl(images[0]);
+      try {
+        const images = normalizeImages(product.images);
+        const img = getImageUrl(images[0]);
 
-      const card = document.createElement("div");
-      card.className = "product-card";
+        const isOnSale = Number(product.on_sale) === 1;
+        const salePercent = Number(product.sale_percent);
 
-      card.innerHTML = `
-  ${product.on_sale ? `
-    <span class="sale-badge">
-      -${product.sale_percent}%
-    </span>
-  ` : ""}
+        const card = document.createElement("div");
+        card.className = "product-card";
 
-  <img src="${img}" alt="${product.name}">
+        card.innerHTML = `
+          ${isOnSale && salePercent ? `
+            <span class="sale-badge">-${salePercent}%</span>
+          ` : ""}
 
-  <h3>${product.name}</h3>
+          <img src="${img}" alt="${product.name}">
 
-  <p class="price">
-    ${
-      product.on_sale
-        ? `<span class="old-price">${product.price} EGP</span>
-           <span class="sale-price">${product.sale_price} EGP</span>`
-        : `${product.price} EGP`
-    }
-  </p>
+          <h3>${product.name}</h3>
 
-  <button
-    class="add-to-cart"
-    data-id="${product.id}"
-    data-name="${product.name}"
-    data-price="${product.on_sale ? product.sale_price : product.price}"
-  >
-    Add to Cart
-  </button>
-`;
+          <p class="price">
+            ${
+              isOnSale
+                ? `<span class="old-price">${product.price} EGP</span>
+                   <span class="sale-price">${product.sale_price} EGP</span>`
+                : `${product.price} EGP`
+            }
+          </p>
 
+          <button
+            class="add-to-cart"
+            data-id="${product.id}"
+            data-name="${product.name}"
+            data-price="${isOnSale ? product.sale_price : product.price}"
+          >
+            Add to Cart
+          </button>
+        `;
 
-      // كارت clickable
-      card.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
-      });
+        // الكارت كله يفتح صفحة المنتج
+        card.addEventListener("click", () => {
+          window.location.href = `product.html?id=${product.id}`;
+        });
 
-      // Add to cart
-      const addBtn = card.querySelector(".add-to-cart");
-      addBtn.addEventListener("click", e => {
-        e.stopPropagation();
-        addToCart(
-          addBtn.dataset.id,
-          addBtn.dataset.name,
-          addBtn.dataset.price
-        );
-      });
+        // Add to cart
+        const addBtn = card.querySelector(".add-to-cart");
+        addBtn.addEventListener("click", e => {
+          e.stopPropagation();
 
-      // View
-      const viewBtn = card.querySelector(".view-btn");
-      viewBtn.addEventListener("click", e => e.stopPropagation());
+          if (typeof addToCart === "function") {
+            addToCart(
+              addBtn.dataset.id,
+              addBtn.dataset.name,
+              addBtn.dataset.price
+            );
+          } else {
+            console.warn("⚠️ addToCart function not found");
+          }
+        });
 
-      grid.appendChild(card);
+        grid.appendChild(card);
+      } catch (err) {
+        console.error("❌ Error rendering product:", product, err);
+      }
     });
   }
 
@@ -154,7 +145,7 @@ const grid = document.querySelector(".all-products-grid");
      FILTERS
   ============================== */
   function applyFilters() {
-    const q = searchInput?.value.toLowerCase() || "";
+    const q = searchInput?.value.trim().toLowerCase() || "";
     const cat = categorySelect?.value.toLowerCase() || "all";
 
     const filtered = allProducts.filter(p => {
@@ -164,7 +155,7 @@ const grid = document.querySelector(".all-products-grid");
 
       const matchesCategory =
         cat === "all" ||
-        p.category?.toLowerCase() === cat.toLowerCase();
+        p.category?.toLowerCase() === cat;
 
       return matchesSearch && matchesCategory;
     });
