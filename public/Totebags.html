@@ -74,20 +74,39 @@
 
             const card = document.createElement("div");
             card.className = "product-card";
-            card.innerHTML = `
-              <img src="${getImageUrl(imgs[0])}" alt="${product.name}">
-              <h3>${product.name}</h3>
-              <p>${product.price} EGP</p>
-              <button class="add-to-cart"
-                data-id="${product.id}"
-                data-name="${product.name}"
-                data-price="${product.price}">
-                Add to Cart
-              </button>
-              <a href="product.html?id=${product.id}" class="view-btn">
-                View Details
-              </a>
-            `;
+            card.innerHTML = card.innerHTML = `
+  ${product.on_sale ? `
+    <span class="sale-badge">
+      -${product.sale_percent}%
+    </span>
+  ` : ""}
+
+  <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
+
+  <h3>${product.name}</h3>
+
+  <p class="price">
+    ${
+      product.on_sale
+        ? `<span class="old-price">${product.price} EGP</span>
+           <span class="sale-price">${product.sale_price} EGP</span>`
+        : `${product.price} EGP`
+    }
+  </p>
+
+  <button
+    class="add-to-cart"
+    data-id="${product.id}"
+    data-name="${product.name}"
+    data-price="${product.on_sale ? product.sale_price : product.price}">
+    Add to Cart
+  </button>
+
+  <a href="product.html?id=${product.id}" class="view-btn">
+    View Details
+  </a>
+`;
+
              // ✅ الكارد كله clickable
   card.addEventListener("click", () => {
     window.location.href = `product.html?id=${product.id}`;
