@@ -220,6 +220,7 @@ select {
   width: 100%;
   max-width: 420px;   /* شكله حلو على الموبايل */
   margin: 25px auto 0;
+  margin-bottom: 30px;
   padding: 14px;
   background: #c0392b;
   color: #fff;
