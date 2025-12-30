@@ -49,7 +49,7 @@ async function addToCart(id, name, price) {
   id = Number(id);
   price = Number(price);
 
-if (!id || !name || price <= 0) {
+  if (!id || !name || price <= 0) {
     showCartMessage("❌ Invalid product");
     return;
   }
@@ -116,11 +116,13 @@ function renderCart() {
 
   updateCartCount();
 
-  // ⬇⬇⬇ أضيفي السطرين دول
   const giftBox = document.querySelector(".cart-gifts");
   if (giftBox) giftBox.style.display = cart.length ? "block" : "none";
 }
 
+/* =========================
+   Gift Suggestions (CLICKABLE)
+========================= */
 async function renderGiftSuggestionsInCart() {
   const container = document.getElementById("cart-gift-list");
   if (!container) return;
@@ -133,7 +135,6 @@ async function renderGiftSuggestionsInCart() {
     );
     const products = await res.json();
 
-    // ✅ gift category فقط
     const gifts = products.filter(
       p => p.category && p.category.toLowerCase() === "gift"
     );
@@ -168,6 +169,17 @@ async function renderGiftSuggestionsInCart() {
         </button>
       `;
 
+      // ✅ الكارد يفتح صفحة المنتج
+      div.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
+
+      // 🛑 زر Add مايفتحش الصفحة
+      const addBtn = div.querySelector(".add-to-cart");
+      addBtn.addEventListener("click", e => {
+        e.stopPropagation();
+      });
+
       container.appendChild(div);
     });
   } catch (err) {
@@ -175,7 +187,9 @@ async function renderGiftSuggestionsInCart() {
   }
 }
 
-
+/* =========================
+   Cart Count
+========================= */
 function updateCartCount() {
   const cartCount = document.getElementById("cart-count");
   if (!cartCount) return;
@@ -198,10 +212,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartItems = document.getElementById("cart-items");
 
   cartBtn?.addEventListener("click", () => {
-  cartSidebar.classList.add("active");
-  renderGiftSuggestionsInCart();
-});
-
+    cartSidebar.classList.add("active");
+    renderGiftSuggestionsInCart();
+  });
 
   closeCart?.addEventListener("click", () =>
     cartSidebar.classList.remove("active")

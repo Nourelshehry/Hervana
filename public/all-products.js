@@ -13,6 +13,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
+
+  const params = new URLSearchParams(window.location.search);
+const categoryFromURL = params.get("category");
+
+if (categoryFromURL && categorySelect) {
+  categorySelect.value = categoryFromURL;
+}
+
   /* ===============================
      STATE
   ============================== */
@@ -115,7 +123,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // الكارت كله يفتح صفحة المنتج
         card.addEventListener("click", () => {
-          window.location.href = `product.html?id=${product.id}`;
+window.location.href =
+  `product.html?id=${product.id}&category=${product.category}`;
         });
 
         // Add to cart
@@ -169,5 +178,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      INIT
   ============================== */
-  loadProducts();
+ allProducts = await res.json();
+
+if (categoryFromURL) {
+  applyFilters();
+} else {
+  renderProducts(allProducts);
+}
+
 });
