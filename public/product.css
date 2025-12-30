@@ -312,26 +312,26 @@ header {
 }
 /* السعر الأساسي */
 .product-price {
-  font-size: 22px;
-  font-weight: 700;
-  color: #c0392b;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin: 12px 0;
 }
 
-/* السعر القديم 
+/* السعر القديم */
 .product-price .old-price {
-  font-size: 15px;
+  font-size: 16px;
   color: #999;
   text-decoration: line-through;
-  margin-right: 8px;
 }
 
-/* سعر السيل 
+/* السعر الجديد */
 .product-price .sale-price {
-  font-size: 24px;
-  font-weight: 800;
-  color: #e63946;
-}*/
+  font-size: 22px;
+  font-weight: 700;
+  color: #c0392b;
+}
+
 .product-price {
   animation: fadeUp 0.4s ease-out;
 }
