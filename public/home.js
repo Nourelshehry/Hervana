@@ -212,10 +212,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      Mobile Menu
   ============================== */
-  const menuToggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+
+openBtn.onclick = () => menu.classList.add("active");
+closeBtn.onclick = () => menu.classList.remove("active");
+
+  
+/*  const menuToggle = document.getElementById("menu-toggle");
   const nav = document.getElementById("nav");
 
   menuToggle?.addEventListener("click", () => {
     nav.classList.toggle("show");
-  });
+  });*/
 });
