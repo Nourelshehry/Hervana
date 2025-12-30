@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      CONSTANTS
   ========================= */
-  const SHIPPING_COST = 75;
+  const SHIPPING_COST = 55;
 
   let isSubmitting = false;
   let baseTotal = 0;
