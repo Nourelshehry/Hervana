@@ -310,27 +310,31 @@ header {
     z-index: 20;
   }
 }
-/* السعر الأساسي */
+/* PRODUCT PAGE PRICE FIX */
 .product-price {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  font-size: 22px;
+  font-weight: 700;
   margin: 12px 0;
 }
 
-/* السعر القديم */
 .product-price .old-price {
-  font-size: 16px;
   color: #999;
   text-decoration: line-through;
+  margin-right: 8px;
+  font-weight: 500;
 }
 
-/* السعر الجديد */
 .product-price .sale-price {
-  font-size: 22px;
-  font-weight: 700;
+  color: #c0392b; /* لون البراند */
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* لو المنتج مش عليه sale */
+.product-price:not(:has(.sale-price)) {
   color: #c0392b;
 }
+
 
 .product-price {
   animation: fadeUp 0.4s ease-out;

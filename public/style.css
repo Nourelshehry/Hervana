@@ -561,7 +561,7 @@ color: #fff;
 .product-item .product-info h3 {
   font-size: 13.5px;
   font-weight: 500;
-  color: #3b2c2c;        /* بني أنثوي */
+  color: #c0392b;        /* بني أنثوي */
   line-height: 1.4;
   margin: 6px 0 2px;
   letter-spacing: 0.2px;
@@ -578,8 +578,8 @@ color: #fff;
 
 /* Hover ناعم */
 .product-item:hover .product-info h3 {
-  color: #c0392b;        /* لون البراند */
-  text-decoration: underline;
+  color: #ff99cc;        /* لون البراند */
+ /* text-decoration: underline;*/
 }
 
 /* ===================== Footer ===================== */
