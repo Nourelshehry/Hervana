@@ -318,7 +318,7 @@ header {
   margin: 12px 0;
 }
 
-/* السعر القديم */
+/* السعر القديم 
 .product-price .old-price {
   font-size: 15px;
   color: #999;
@@ -326,12 +326,12 @@ header {
   margin-right: 8px;
 }
 
-/* سعر السيل */
+/* سعر السيل 
 .product-price .sale-price {
   font-size: 24px;
   font-weight: 800;
   color: #e63946;
-}
+}*/
 .product-price {
   animation: fadeUp 0.4s ease-out;
 }
