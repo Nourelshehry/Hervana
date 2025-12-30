@@ -170,9 +170,13 @@ async function renderGiftSuggestionsInCart() {
       `;
 
       // ✅ الكارد يفتح صفحة المنتج
-      div.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
-      });
+      div.style.cursor = "pointer";
+
+div.addEventListener("click", e => {
+  if (e.target.closest(".add-to-cart")) return;
+  window.location.href = `product.html?id=${product.id}`;
+});
+
 
       // 🛑 زر Add مايفتحش الصفحة
       const addBtn = div.querySelector(".add-to-cart");

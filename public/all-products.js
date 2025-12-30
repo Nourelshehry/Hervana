@@ -178,12 +178,10 @@ window.location.href =
   /* ===============================
      INIT
   ============================== */
- allProducts = await res.json();
+  loadProducts();
 
-if (categoryFromURL) {
+  if (categoryFromURL) {
   applyFilters();
-} else {
-  renderProducts(allProducts);
 }
 
 });
