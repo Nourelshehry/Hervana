@@ -579,7 +579,6 @@ color: #fff;
 /* Hover ناعم */
 .product-item:hover .product-info h3 {
   color: #c0392b;        /* لون البراند */
- /* text-decoration: underline;*/
 }
 
 /* ===================== Footer ===================== */

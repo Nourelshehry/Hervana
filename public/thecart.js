@@ -180,9 +180,15 @@ div.addEventListener("click", e => {
 
       // 🛑 زر Add مايفتحش الصفحة
       const addBtn = div.querySelector(".add-to-cart");
-      addBtn.addEventListener("click", e => {
-        e.stopPropagation();
-      });
+addBtn.addEventListener("click", e => {
+  e.stopPropagation();
+
+  addToCart(
+    addBtn.dataset.id,
+    addBtn.dataset.name,
+    addBtn.dataset.price
+  );
+});
 
       container.appendChild(div);
     });
