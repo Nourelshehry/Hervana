@@ -7,6 +7,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   const grid = document.querySelector(".all-products-grid");
   const searchInput = document.getElementById("search-input");
   const categorySelect = document.getElementById("category");
+/* ===============================
+   MOBILE MENU
+============================== */
+const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+
+if (menu && openBtn && closeBtn) {
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+  });
+
+  menu.addEventListener("click", e => {
+    if (e.target.tagName === "A") {
+      menu.classList.remove("active");
+    }
+  });
+}
 
   if (!grid) {
     console.error("❌ product grid not found");
@@ -185,28 +207,6 @@ window.location.href =
   applyFilters();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  const menu = document.getElementById("side-menu");
-  const openBtn = document.getElementById("menu-btn");
-  const closeBtn = document.getElementById("close-menu");
-
-  if (!menu || !openBtn || !closeBtn) return;
-
-  openBtn.addEventListener("click", () => {
-    menu.classList.add("active");
-  });
-
-  closeBtn.addEventListener("click", () => {
-    menu.classList.remove("active");
-  });
-
-  // اقفل المنيو لما أضغط على لينك
-  menu.addEventListener("click", e => {
-    if (e.target.tagName === "A") {
-      menu.classList.remove("active");
-    }
-  });
-});
 
 
 });
