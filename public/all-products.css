@@ -636,3 +636,57 @@ nav a {
   letter-spacing: 0.3px;
 }
 
+v.catalog-header {
+  background: #c23b2d;
+  padding: 35px 20px 30px;
+  text-align: center;
+}
+
+.catalog-title {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.catalog-subtitle {
+  color: #f6dcdc;
+  font-size: 14px;
+  font-style: italic;
+  max-width: 300px;
+  margin: 0 auto 22px;
+  line-height: 1.5;
+}
+
+#search-input,
+#category-filter {
+  width: 100%;
+  max-width: 320px;
+  margin: 10px auto;
+  display: block;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+}
+
+#search-input {
+  background: #fff;
+}
+
+#category-filter {
+  background: #fff;
+}
+.catalog-title::after {
+  content: "";
+  display: block;
+  width: 50px;
+  height: 3px;
+  background: #f6dcdc;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+#search-input,
+#category-filter {
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}

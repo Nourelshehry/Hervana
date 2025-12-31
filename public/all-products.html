@@ -8,26 +8,30 @@
 <body class="all-products">
 
   <!-- Header -->
-  <header>
-    <div class="logo"><a href="/index.html">Hervana</a></div>
- <div class="header-actions">
-      <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
-       <div class="menu-toggle" id="menu-toggle">&#9776;</div>
-      </div>
-  
-  <nav id="nav" class="nav-links">
-  <ul>
-    <li><a href="/index.html">Home</a></li>
-    <li><a href="/all-products.html">Products</a></li>
-    <!--<li><a href="Dolls-Toys.html">Dolls-Toys</a></li>-->
-    <li><a href="#">Contact Us</a></li>
-    <li><a href="orders.html">My Orders</a></li> <!-- ✅ زرار جديد -->
-  </ul>
-</nav>
+ <section class="catalog-header">
+  <h1 class="catalog-title">All Products</h1>
+  <p class="catalog-subtitle">
+    Thoughtfully made, just for you.
+  </p>
 
+  <input
+    type="text"
+    id="search-input"
+    placeholder="Search products..."
+  />
 
-   
-  </header>
+  <select id="category-filter">
+    <option value="">All Categories</option>
+    <option value="dolls">Dolls & Plushies</option>
+    <option value="notebooks">Notebooks</option>
+    <option value="totebags">Totebags</option>
+    <option value="decor">Decor</option>
+    <option value="candles">Candles</option>
+    <option value="stickers">Stickers</option>
+    <option value="gift">Gift Supplies</option>
+  </select>
+</section>
+</header>
 
   <!-- Filters -->
   <section class="filters">
