@@ -275,6 +275,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "order.html";
   });
 
-  renderCart();
-  updateCartCount();
+renderCart();
+renderGiftSuggestionsInCart(); // ⭐ ده السطر اللي كان ناقص
+updateCartCount();
+
 });

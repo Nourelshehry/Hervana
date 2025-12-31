@@ -178,10 +178,44 @@ window.location.href =
   /* ===============================
      INIT
   ============================== */
+
   loadProducts();
 
   if (categoryFromURL) {
   applyFilters();
 }
+
+const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+const overlay = document.getElementById("menu-overlay");
+
+function openMenu() {
+  menu.classList.add("active");
+  overlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeMenu() {
+  menu.classList.remove("active");
+  overlay.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+if (menu && openBtn && closeBtn && overlay) {
+  openBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+
+  overlay.addEventListener("click", closeMenu);
+
+  menu.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      closeMenu();
+    }
+  });
+} else {
+  console.warn("⚠️ Mobile menu elements not found");
+}
+  
 
 });
