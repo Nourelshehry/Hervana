@@ -67,118 +67,7 @@ header {
   display: none;
 }
 
-.menu-toggle {
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-}
 
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  align-items: flex-start;
-}
-
-/* منع الـ ul الفرعي من أن يتأثر بالـ display flex العام */
-.dropdown-menu {
-  display: none;
-  flex-direction: column;
-  gap: 0;
-  padding-left: 0;
-  margin: 0; /* مهم */
-  list-style: none;
-  background: #b46056ff;
-  border-radius:4px;
-}
-
-/* عند الفتح */
-.dropdown-menu.show {
-  display: flex;
-}
-.dropdown-menu li a {
-  padding: 10px 15px;
-  color: #fff;
-  text-decoration: none;
-}
-/* تأثير hover على Dropdown */
-.dropdown-menu li a:hover {
-  background: #682d2dff;
-  color: #fff;
-}
-
-/* زرار الـ dropdown */
-.dropbtn {
-  background: none;
-  border: none;
-  color: #fff;
-  /*font-weight: bold;*/
-  width: 100%;
-  text-align: left;
-  padding: 13px 15px;
-  font-size: 16px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* السهم */
-.arrow {
-  transition: transform 0.3s;
-}
-
-.rotate {
-  transform: rotate(180deg);
-}
-
-/* عناصر القائمة */
-.dropdown-menu li a {
-  font-weight: normal;
-  color: #fff;
-}
-
-.dropdown-menu li a:hover {
-  opacity: 0.7;
-}
-
-/* nav-links */
-.nav-links {
-  transition: max-height 0.3s ease;
-  overflow: auto;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-/* القائمة الرئيسية */
-.nav-links ul {
-  list-style: none; /* إزالة الـ bullets */
-  margin: 0;
-  padding: 0;
-}
-
-/* كل عناصر nav الرئيسية */
-.nav-links li {
-  margin: 0;
-  padding: 0;
-}
-
-/* روابط القائمة الرئيسية */
-.nav-links a {
-  text-decoration: none; /* إزالة underline */
-  color: #fff; /* اللون الأبيض */
-  padding: 10px 15px;
-  display: block;
-  transition: background 0.3s;
-}
-
-/* تأثير عند hover على الروابط */
-.nav-links a:hover {
-  background: #555;
-  color: #fff;
-}*/
 /* ===============================
    SIDE MENU (OFF-CANVAS)
 =============================== */
@@ -213,7 +102,6 @@ nav ul {
   font-size: 22px;
   color: #b53a2d;
 }
-
 .menu-links {
   list-style: none;
   padding: 0 20px;
@@ -893,3 +781,137 @@ footer a:hover {
   margin-top: 0 !important;
 }
 
+
+/* ===============================
+   HEADER (CLEAN)
+=============================== */
+.main-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10000;
+  background: transparent;
+}
+
+#menu-btn,
+#cart-btn {
+  font-size: 22px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ===============================
+   MENU OVERLAY
+=============================== */
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ===============================
+   SIDE MENU (BEAUTIFUL)
+=============================== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 82%;
+  max-width: 320px;
+  height: 100vh;
+  background: #fff;
+  z-index: 9999;
+  transition: left 0.35s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+  overflow-y: auto;
+}
+
+.side-menu.active {
+  left: 0;
+}
+
+.menu-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #c0392b;
+  border-bottom: 1px solid #eee;
+}
+
+#close-menu {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ===============================
+   MENU LINKS
+=============================== */
+.menu-links {
+  list-style: none;
+  padding: 15px 20px 30px;
+  margin: 0;
+}
+
+.menu-links li {
+  margin: 14px 0;
+}
+
+.menu-links a {
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-links a:hover {
+  color: #c0392b;
+}
+
+.menu-section {
+  margin-top: 22px;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+.contact-link {
+  font-weight: 700;
+  color: #c0392b;
+}

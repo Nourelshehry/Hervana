@@ -212,25 +212,40 @@ document.addEventListener("DOMContentLoaded", async () => {
      Mobile Menu ✅ (FIXED)
   ============================== */
 
-  const menu = document.getElementById("side-menu");
-  const openBtn = document.getElementById("menu-btn");
-  const closeBtn = document.getElementById("close-menu");
+ /* ===============================
+   Mobile Menu (CLEAN UX)
+============================== */
 
-  if (!menu || !openBtn || !closeBtn) {
-    console.warn("⚠️ Mobile menu elements not found");
-  } else {
-    openBtn.addEventListener("click", () => {
-      menu.classList.add("active");
-    });
+const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+const overlay = document.getElementById("menu-overlay");
 
-    closeBtn.addEventListener("click", () => {
-      menu.classList.remove("active");
-    });
+function openMenu() {
+  menu.classList.add("active");
+  overlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
 
-    menu.addEventListener("click", e => {
-      if (e.target.closest("a")) {
-        menu.classList.remove("active");
-      }
-    });
-  }
+function closeMenu() {
+  menu.classList.remove("active");
+  overlay.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+if (menu && openBtn && closeBtn && overlay) {
+  openBtn.addEventListener("click", openMenu);
+  closeBtn.addEventListener("click", closeMenu);
+
+  overlay.addEventListener("click", closeMenu);
+
+  menu.addEventListener("click", e => {
+    if (e.target.closest("a")) {
+      closeMenu();
+    }
+  });
+} else {
+  console.warn("⚠️ Mobile menu elements not found");
+}
+  
 });
