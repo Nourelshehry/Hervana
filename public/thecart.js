@@ -222,13 +222,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartItems = document.getElementById("cart-items");
 
   cartBtn?.addEventListener("click", () => {
-    cartSidebar.classList.add("active");
-    renderGiftSuggestionsInCart();
-  });
+  cartSidebar.classList.add("active");
+  document.body.classList.add("cart-open");
+});
 
-  closeCart?.addEventListener("click", () =>
-    cartSidebar.classList.remove("active")
-  );
+
+ closeCart?.addEventListener("click", () => {
+  cartSidebar.classList.remove("active");
+  document.body.classList.remove("cart-open");
+});
+
 
   document.body.addEventListener("click", e => {
     const btn = e.target.closest(".add-to-cart");

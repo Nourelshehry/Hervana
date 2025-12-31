@@ -67,6 +67,10 @@ header {
   display: none;
 }
 
+/* لما الكارت يكون مفتوح */
+.cart-open header {
+  visibility: hidden;
+}
 
 /* ===============================
    SIDE MENU (OFF-CANVAS)

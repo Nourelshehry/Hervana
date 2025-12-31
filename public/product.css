@@ -146,7 +146,7 @@ header {
 
 /*Buttons*/ 
 .add-to-cart {
-  background: #c0392b;
+  /*background: #c0392b;*/
   color: #fff;
   border: none;
   padding: 12px 20px;
@@ -156,7 +156,12 @@ header {
   font-weight: bold;
   transition: background 0.3s ease;
   margin: 10px 0;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(231,76,60,.4);
 }
+
+
+
 .add-to-cart:hover {
   background: #a93226;
 }

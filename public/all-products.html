@@ -7,12 +7,52 @@
  <link rel="stylesheet" href=" /all-products.css"></head>
 <body class="all-products">
 
-  <!-- Header -->
-<div id="cart-btn">🛒 <span id="cart-count">0</span></div>
+<!-- ================= Header ================= -->
+<header class="main-header">
+  <!-- Menu button -->
+  <button id="menu-btn" class="menu-btn">☰</button>
+
+  <!-- Side Menu -->
+  <nav id="side-menu" class="side-menu">
+    <div class="menu-header">
+      <h2>Hervana</h2>
+      <button id="close-menu">✕</button>
+    </div>
+
+    <ul class="menu-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="all-products.html">All Products</a></li>
+
+      <li class="menu-title">Categories</li>
+      <li><a href="Dolls&Plushies.html">🧸 Dolls & Plushies</a></li>
+      <li><a href="Totebags.html">👜 Totebags</a></li>
+      <li><a href="Candles.html">🕯 Candles</a></li>
+      <li><a href="Notebooks.html">📓 Notebooks</a></li>
+      <li><a href="Decor.html">🪴 Decor</a></li>
+      <li><a href="Stickers.html">✨ Stickers</a></li>
+      <li><a href="Gift.html">🎁 Gift Supplies</a></li>
+
+      <li class="menu-divider"></li>
+      <li><a href="contact.html">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Logo -->
+  <div class="logo">Hervana</div>
+
+  <!-- Cart -->
+  <div id="cart-btn" class="cart-btn">
+    🛒 <span id="cart-count">0</span>
+  </div>
+</header>
+
+<!-- Cart message -->
 <div id="cart-message" class="cart-message"></div>
 
-  <section class="catalog-header">
+<!-- ================= Catalog Header ================= -->
+<section class="catalog-header">
   <h1 class="catalog-title">All Products</h1>
+
   <p class="catalog-subtitle">
     Thoughtfully made, just for you.
   </p>
@@ -34,6 +74,7 @@
     <option value="gift">Gift Supplies</option>
   </select>
 </section>
+
 
 </header>
 
