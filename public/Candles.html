@@ -145,11 +145,19 @@
 
   // 🛑 خلي زرار الكارت مايفتحش المنتج
   const addBtn = card.querySelector(".add-to-cart");
-  if (addBtn) {
-    addBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-    });
-  }
+
+if (addBtn) {
+  addBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // يمنع فتح صفحة المنتج
+    addToCart(
+      this.dataset.id,
+      this.dataset.name,
+      this.dataset.price
+    );
+  });
+}
+
+
 
         productList.appendChild(card);
       });

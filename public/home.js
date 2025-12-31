@@ -212,18 +212,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      Mobile Menu
   ============================== */
+document.addEventListener("DOMContentLoaded", () => {
   const menu = document.getElementById("side-menu");
-const openBtn = document.getElementById("menu-btn");
-const closeBtn = document.getElementById("close-menu");
+  const openBtn = document.getElementById("menu-btn");
+  const closeBtn = document.getElementById("close-menu");
 
-openBtn.onclick = () => menu.classList.add("active");
-closeBtn.onclick = () => menu.classList.remove("active");
+  if (!menu || !openBtn || !closeBtn) {
+    console.warn("⚠️ Mobile menu elements not found");
+    return;
+  }
 
-  
-/*  const menuToggle = document.getElementById("menu-toggle");
-  const nav = document.getElementById("nav");
-*/
-  menu?.addEventListener("click", () => {
-    openBtn.classList.toggle("show");
+  // فتح المنيو
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
   });
+
+  // قفل المنيو
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+  });
+
+  // قفل المنيو لما أضغط على أي لينك جواه
+  menu.addEventListener("click", (e) => {
+    if (e.target.tagName === "A") {
+      menu.classList.remove("active");
+    }
+  });
+});
+
 });
