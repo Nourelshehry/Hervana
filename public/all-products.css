@@ -579,3 +579,24 @@ nav a {
 .checkout .product-card img {
   all: unset;
 }
+
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin: 40px 0 25px;
+  letter-spacing: 1px;
+  color: #3a2f2f;
+  position: relative;
+}
+
+.page-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #c29a5b; /* لونك الدافي */
+  margin: 10px auto 0;
+  border-radius: 3px;
+}

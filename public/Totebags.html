@@ -18,7 +18,7 @@
 
   <!-- Products -->
   <section class="products">
-    <h2>Totebags</h2>
+    <h2 class="page-title">Totebags</h2>
     <div class="product-grid" id="product-list"></div>
   </section>
 
@@ -66,69 +66,65 @@
         );
         const products = await res.json();
 
-        products
-          .filter(p => p.category?.toLowerCase() === CATEGORY)
-          .forEach(product => {
-            const imgs = normalizeImages(product.images);
-            if (!imgs.length) return;
+       products
+  .filter(p => p.category?.toLowerCase() === CATEGORY)
+  .forEach(product => {
+    const imgs = normalizeImages(product.images);
+    if (!imgs.length) return;
 
-            const card = document.createElement("div");
-            card.className = "product-card";
-            card.innerHTML = card.innerHTML = `
-  ${product.on_sale ? `
-    <span class="sale-badge">
-      -${product.sale_percent}%
-    </span>
-  ` : ""}
+    const card = document.createElement("div");
+    card.className = "product-card";
 
-  <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
+    card.innerHTML = `
+      ${product.on_sale ? `
+        <span class="sale-badge">-${product.sale_percent}%</span>
+      ` : ""}
 
-  <h3>${product.name}</h3>
+      <img src="${getImageUrl(imgs[0])}" alt="${product.name}">
 
-  <p class="price">
-    ${
-      product.on_sale
-        ? `<span class="old-price">${product.price} EGP</span>
-           <span class="sale-price">${product.sale_price} EGP</span>`
-        : `${product.price} EGP`
-    }
-  </p>
+      <h3>${product.name}</h3>
 
-  <button
-    class="add-to-cart"
-    data-id="${product.id}"
-    data-name="${product.name}"
-    data-price="${product.on_sale ? product.sale_price : product.price}">
-    Add to Cart
-  </button>
+      <p class="price">
+        ${
+          product.on_sale
+            ? `<span class="old-price">${product.price} EGP</span>
+               <span class="sale-price">${product.sale_price} EGP</span>`
+            : `${product.price} EGP`
+        }
+      </p>
 
-  <a href="product.html?id=${product.id}" class="view-btn">
-    View Details
-  </a>
-`;
+      <button
+        class="add-to-cart"
+        data-id="${product.id}"
+        data-name="${product.name}"
+        data-price="${product.on_sale ? product.sale_price : product.price}">
+        Add to Cart
+      </button>
 
-             // ✅ الكارد كله clickable
-  card.addEventListener("click", () => {
-    window.location.href = `product.html?id=${product.id}`;
+      <a href="product.html?id=${product.id}" class="view-btn">
+        View Details
+      </a>
+    `;
+
+    // الكارد كله يفتح صفحة المنتج
+    card.addEventListener("click", () => {
+      window.location.href = `product.html?id=${product.id}`;
+    });
+
+    // زرار Add يشتغل لوحده
+    const addBtn = card.querySelector(".add-to-cart");
+    addBtn.addEventListener("click", e => {
+      e.stopPropagation();
+      addToCart(
+        addBtn.dataset.id,
+        addBtn.dataset.name,
+        addBtn.dataset.price
+      );
+    });
+
+    grid.appendChild(card);
   });
 
-  // 🛑 خلي زرار الكارت مايفتحش المنتج
-const addBtn = card.querySelector(".add-to-cart");
-
-if (addBtn) {
-  addBtn.addEventListener("click", function (e) {
-    e.stopPropagation(); // يمنع فتح صفحة المنتج
-    addToCart(
-      this.dataset.id,
-      this.dataset.name,
-      this.dataset.price
-    );
-  });
-}
-
-
-            grid.appendChild(card);
-          });
 
       } catch (e) {
         grid.innerHTML = "<p>⚠️ Failed to load products.</p>";
