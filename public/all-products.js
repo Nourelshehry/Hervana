@@ -185,37 +185,28 @@ window.location.href =
   applyFilters();
 }
 
-const menu = document.getElementById("side-menu");
-const openBtn = document.getElementById("menu-btn");
-const closeBtn = document.getElementById("close-menu");
-const overlay = document.getElementById("menu-overlay");
+document.addEventListener("DOMContentLoaded", () => {
+  const menu = document.getElementById("side-menu");
+  const openBtn = document.getElementById("menu-btn");
+  const closeBtn = document.getElementById("close-menu");
 
-function openMenu() {
-  menu.classList.add("active");
-  overlay.classList.add("active");
-  document.body.style.overflow = "hidden";
-}
+  if (!menu || !openBtn || !closeBtn) return;
 
-function closeMenu() {
-  menu.classList.remove("active");
-  overlay.classList.remove("active");
-  document.body.style.overflow = "";
-}
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
+  });
 
-if (menu && openBtn && closeBtn && overlay) {
-  openBtn.addEventListener("click", openMenu);
-  closeBtn.addEventListener("click", closeMenu);
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+  });
 
-  overlay.addEventListener("click", closeMenu);
-
+  // اقفل المنيو لما أضغط على لينك
   menu.addEventListener("click", e => {
-    if (e.target.closest("a")) {
-      closeMenu();
+    if (e.target.tagName === "A") {
+      menu.classList.remove("active");
     }
   });
-} else {
-  console.warn("⚠️ Mobile menu elements not found");
-}
-  
+});
+
 
 });
