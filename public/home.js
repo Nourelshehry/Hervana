@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     HERO SLIDER (NO SALE BADGE HERE ❌)
+     HERO SLIDER
   ============================== */
   if (heroSlider && dotsContainer) {
     heroSlider.innerHTML = "";
@@ -141,7 +141,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     source.forEach(product => {
       const imgSrc = getImageUrl(product.imagesArr[0]);
 
-      // ✅ FIX NUMBERS
       const isOnSale = Number(product.on_sale) === 1;
       const salePercent = Number(product.sale_percent);
 
@@ -210,34 +209,28 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     Mobile Menu
+     Mobile Menu ✅ (FIXED)
   ============================== */
-document.addEventListener("DOMContentLoaded", () => {
+
   const menu = document.getElementById("side-menu");
   const openBtn = document.getElementById("menu-btn");
   const closeBtn = document.getElementById("close-menu");
 
   if (!menu || !openBtn || !closeBtn) {
     console.warn("⚠️ Mobile menu elements not found");
-    return;
-  }
+  } else {
+    openBtn.addEventListener("click", () => {
+      menu.classList.add("active");
+    });
 
-  // فتح المنيو
-  openBtn.addEventListener("click", () => {
-    menu.classList.add("active");
-  });
-
-  // قفل المنيو
-  closeBtn.addEventListener("click", () => {
-    menu.classList.remove("active");
-  });
-
-  // قفل المنيو لما أضغط على أي لينك جواه
-  menu.addEventListener("click", (e) => {
-    if (e.target.tagName === "A") {
+    closeBtn.addEventListener("click", () => {
       menu.classList.remove("active");
-    }
-  });
-});
+    });
 
+    menu.addEventListener("click", e => {
+      if (e.target.closest("a")) {
+        menu.classList.remove("active");
+      }
+    });
+  }
 });
