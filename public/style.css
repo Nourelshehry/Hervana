@@ -34,7 +34,7 @@ header {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .logo {
@@ -179,23 +179,29 @@ nav ul {
   background: #555;
   color: #fff;
 }*/
+/* ===============================
+   SIDE MENU (OFF-CANVAS)
+=============================== */
 
 .side-menu {
   position: fixed;
   top: 0;
-  left: 0;
+  left: -100%;              /* مخفية برة الشاشة */
   width: 80%;
   max-width: 320px;
   height: 100vh;
+
   background: #fff;
-  box-shadow: 10px 0 30px rgba(0,0,0,.15);
-  transform: translateX(-100%);
-  transition: .3s ease;
-  z-index: 1000;
+  z-index: 9999;
+
+  transition: left 0.3s ease;
+  box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+  overflow-y: auto;
 }
 
+/* لما تتفتح */
 .side-menu.active {
-  transform: translateX(0);
+  left: 0;
 }
 
 .menu-header {
