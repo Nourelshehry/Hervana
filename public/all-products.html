@@ -8,7 +8,10 @@
 <body class="all-products">
 
   <!-- Header -->
- <section class="catalog-header">
+<div id="cart-btn">🛒 <span id="cart-count">0</span></div>
+<div id="cart-message" class="cart-message"></div>
+
+  <section class="catalog-header">
   <h1 class="catalog-title">All Products</h1>
   <p class="catalog-subtitle">
     Thoughtfully made, just for you.
@@ -20,7 +23,7 @@
     placeholder="Search products..."
   />
 
-  <select id="category-filter">
+  <select id="category">
     <option value="">All Categories</option>
     <option value="dolls">Dolls & Plushies</option>
     <option value="notebooks">Notebooks</option>
@@ -31,6 +34,7 @@
     <option value="gift">Gift Supplies</option>
   </select>
 </section>
+
 </header>
 
 

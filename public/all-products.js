@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
   const params = new URLSearchParams(window.location.search);
-const categoryFromURL = params.get("category-filter");
+const categoryFromURL = params.get("category");
 
 if (categoryFromURL && categorySelect) {
   categorySelect.value = categoryFromURL;

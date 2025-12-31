@@ -659,7 +659,7 @@ v.catalog-header {
 }
 
 #search-input,
-#category-filter {
+#category {
   width: 100%;
   max-width: 320px;
   margin: 10px auto;
@@ -674,7 +674,7 @@ v.catalog-header {
   background: #fff;
 }
 
-#category-filter {
+#category {
   background: #fff;
 }
 .catalog-title::after {
@@ -687,6 +687,6 @@ v.catalog-header {
   border-radius: 2px;
 }
 #search-input,
-#category-filter {
+#category {
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
