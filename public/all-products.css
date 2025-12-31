@@ -746,13 +746,15 @@ v.catalog-header {
   background: #c23b2d;
   padding: 35px 20px 30px;
   text-align: center;
+
 }
 
 .catalog-title {
-  color: #fff;
+  color: #c23b2d;
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 6px;
+text-align: center;
 }
 
 .catalog-subtitle {
