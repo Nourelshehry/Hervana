@@ -15,7 +15,7 @@ header {
   background: #c0392b;
   color: #fff;
   padding: 12px 15px;
-  position: sticky;
+ /* position: sticky;*/
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
@@ -547,106 +547,10 @@ width: 100%;
   border-radius: 50%;
 }
 
-.menu-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.45);
-  z-index: 9998;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-
-.menu-overlay.active {
-  opacity: 1;
-  pointer-events: auto;
-}
 /* ===============================
    SIDE MENU (OFF CANVAS)
 ================================ */
-.side-menu {
- position: fixed;
-  top: 0;
-  left: -100%;              /* مخفية برة الشاشة */
-  width: 82%;
-  max-width: 320px;
-  height: 100vh;
 
-  background: #fff;
-  z-index: 9999;
-
-  transition: left 0.3s ease;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
-  overflow-y: auto;
-}
-
-.side-menu.active {
-  left: 0;
-}
-
-.menu-header {
-   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  font-weight: 800;
-  font-size: 22px;
-  color: #b53a2d;
- border-bottom: 1px solid #eee;}
-
-#close-menu {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-.menu-links {
-   list-style: none;
-  padding: 15px 20px 30px;
-  margin: 0;
-}
-
-.menu-links li {
-  padding: 14px 0;
-}
-
-.menu-links a {
- text-decoration: none;
-  font-size: 16px;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.menu-links a:hover {
-  color: #b53a2d;
-}
-
-.menu-title {
-  margin-top: 25px;
-  font-size: 13px;
-  color: #999;
-  text-transform: uppercase;
-
-}
-.menu-section {
-  margin-top: 22px;
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 1px;}
-
-.menu-divider {
-  height: 1px;
-  background: #eee;
-  margin: 20px 0;
-}
-
-.contact-link {
-  color: #b53a2d;
-  font-weight: 700;
-}
 /*.page-title {
   font-size: 28px;
   font-weight: 700;
@@ -759,84 +663,3 @@ text-align: center;
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
 }
 
-/*=============================== */
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  width: 82%;
-  max-width: 320px;
-  height: 100vh;
-  background: #fff;
-  z-index: 9999;
-  transition: left 0.35s ease;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
-  overflow-y: auto;
-}
-
-.side-menu.active {
-  left: 0;
-}
-
-.menu-header {
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 22px;
-  font-weight: 700;
-  color: #c0392b;
-  border-bottom: 1px solid #eee;
-}
-
-#close-menu {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* ===============================
-   MENU LINKS
-=============================== */
-.menu-links {
-  list-style: none;
-  padding: 15px 20px 30px;
-  margin: 0;
-}
-
-.menu-links li {
-  margin: 14px 0;
-}
-
-.menu-links a {
-  text-decoration: none;
-  font-size: 16px;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.menu-links a:hover {
-  color: #c0392b;
-}
-
-.menu-section {
-  margin-top: 22px;
-  font-size: 12px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.menu-divider {
-  height: 1px;
-  background: #eee;
-  margin: 20px 0;
-}
-
-.contact-link {
-  font-weight: 700;
-  color: #c0392b;
-}
