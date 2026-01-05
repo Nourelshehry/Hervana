@@ -48,7 +48,7 @@ header .header-actions button.back-btn:hover {
 }
 
 /* Cart Button */
-#cart-btn {
+#menu-btn,#cart-btn {
   font-size: 22px;
   cursor: pointer;
   position: relative;
@@ -71,35 +71,7 @@ header .header-actions button.back-btn:hover {
   right: -10px;
   display: none;
 }
-.menu-toggle {
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-}
 
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column; /* ✅ خلي العناصر تحت بعض */
-  gap: 15px;
-  align-items: flex-start; /* اختياري: تخليها تبدأ من الشمال */
-}
-
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.nav-links {
-  transition: max-height 0.3s ease;
-  overflow: hidden;
-  max-width: 100%; /* ✅ ضمان مايكسرش العرض */
-  box-sizing: border-box;
-}
 
 /* Filters */
 .filters {
@@ -457,11 +429,12 @@ footer {
   .product-card img {
     height: 150px;
   }
+
   #checkout-btn {
     font-size: 15px;
     padding: 12px;
   }
-   .menu-toggle { display:block; }
+
 }
 
 /* Desktop */
@@ -489,55 +462,6 @@ footer {
   color: #fff;
 }*/
 
-@media (max-width: 768px) {
-  .nav-links {
-    position: absolute;
-    top: 60px;
-    right: 0;
-    background: #c0392b;
-    flex-direction: column;
-    width: 200px;
-    padding: 15px;
-    display: none;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-}
-.menu-toggle {
-  font-size: 24px;
-  cursor: pointer;
-  display: none;
-}
-
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column; /* ✅ خلي العناصر تحت بعض */
-  gap: 15px;
-  align-items: flex-start; /* اختياري: تخليها تبدأ من الشمال */
-}
-
-
-nav a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.nav-links {
-  transition: max-height 0.3s ease;
-  overflow: hidden;
-  max-width: 100%; /* ✅ ضمان مايكسرش العرض */
-  box-sizing: border-box;
-}
 
 /* =========================
    SCOPE FIX (ALL PRODUCTS)
@@ -596,13 +520,7 @@ nav a {
   background: transparent; /* ❌ بدون لون */
 }
 
-/* menu button */
-.menu-btn {
-  font-size: 22px;
-  background: none;
-  border: none;
-  cursor: pointer;
-}
+
 
 /* logo */
 .logo {
@@ -707,7 +625,7 @@ nav a {
   color: #999;
   text-transform: uppercase;
   letter-spacing: 1px;}
-  
+
 .menu-divider {
   height: 1px;
   background: #eee;
