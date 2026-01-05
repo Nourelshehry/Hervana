@@ -593,6 +593,12 @@ footer {
   color: #b53a2d;
 }
 
+#close-menu {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
 .menu-links {
   list-style: none;
   padding: 0 20px;
@@ -746,4 +752,86 @@ text-align: center;
 #search-input,
 #category {
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+=============================== */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: -100%;
+  width: 82%;
+  max-width: 320px;
+  height: 100vh;
+  background: #fff;
+  z-index: 9999;
+  transition: left 0.35s ease;
+  box-shadow: 4px 0 20px rgba(0,0,0,0.2);
+  overflow-y: auto;
+}
+
+.side-menu.active {
+  left: 0;
+}
+
+.menu-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 22px;
+  font-weight: 700;
+  color: #c0392b;
+  border-bottom: 1px solid #eee;
+}
+
+#close-menu {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+/* ===============================
+   MENU LINKS
+=============================== */
+.menu-links {
+  list-style: none;
+  padding: 15px 20px 30px;
+  margin: 0;
+}
+
+.menu-links li {
+  margin: 14px 0;
+}
+
+.menu-links a {
+  text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-links a:hover {
+  color: #c0392b;
+}
+
+.menu-section {
+  margin-top: 22px;
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #eee;
+  margin: 20px 0;
+}
+
+.contact-link {
+  font-weight: 700;
+  color: #c0392b;
 }
