@@ -11,16 +11,49 @@
 <body>
 
 <!-- ================= Header ================= -->
-<header>
-  <div class="logo">
-    <a href="index.html">Hervana</a>
+<header class="main-header">
+  <!-- Menu button -->
+  <button id="menu-btn" class="menu-btn">☰</button>
+
+  <!-- Side Menu -->
+  <nav id="side-menu" class="side-menu">
+  <div class="menu-header">
+    <h2>Hervana</h2>
+    <button id="close-menu">✕</button>
   </div>
 
-  <div class="header-actions">
-    <button id="cart-btn">🛒 <span id="cart-count">0</span></button>
+  <ul class="menu-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="all-products.html">All Products</a></li>
+
+    <li class="menu-section">Categories</li>
+    <li><a href="/Dolls&Plushies.html">🧸 Dolls & Plushies</a></li>
+    <li><a href="/Totebags.html">👜 Totebags</a></li>
+    <li><a href="/Candles.html">🕯 Candles</a></li>
+    <li><a href="/Notebooks.html">📓 Notebooks</a></li>
+    <li><a href="/Decor.html">🪴 Decor</a></li>
+    <li><a href="/Stickers.html">✨ Stickers</a></li>
+    <li><a href="/Gift.html">🎁 Gift Supplies</a></li>
+
+    <li class="menu-divider"></li>
+
+    <li><a href="contact.html" class="contact-link">Contact Us</a></li>
+  </ul>
+</nav>
+
+
+  <!-- Logo -->
+<div class="logo">
+    <a href="index.html">Hervana</a>
+  </div>
+  <!-- Cart -->
+  <div id="cart-btn" class="cart-btn">
+    🛒 <span id="cart-count">0</span>
   </div>
 </header>
 
+<!-- Cart message -->
+<div id="cart-message" class="cart-message"></div>
 <!-- ================= Products ================= -->
 <section class="products">
 <div class="page-header">
@@ -173,6 +206,35 @@ if (addBtn) {
   }
 
   loadCandles();
+/* ===============================
+   Mobile Side Menu (HOME STYLE)
+================================ */
+const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+
+if (menu && openBtn && closeBtn) {
+  // فتح المنيو
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
+    document.body.classList.add("menu-open");
+  });
+
+  // قفل المنيو
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+    document.body.classList.remove("menu-open");
+  });
+
+  // قفل المنيو لما أضغط على لينك
+  menu.addEventListener("click", e => {
+    if (e.target.tagName === "A") {
+      menu.classList.remove("active");
+      document.body.classList.remove("menu-open");
+    }
+  });
+}
+
 </script>
 
 </body>

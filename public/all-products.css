@@ -632,18 +632,19 @@ nav a {
    SIDE MENU (OFF CANVAS)
 ================================ */
 .side-menu {
-  position: fixed;
+ position: fixed;
   top: 0;
-  left: -100%;
-  width: 75%;
+  left: -100%;              /* مخفية برة الشاشة */
+  width: 80%;
   max-width: 320px;
   height: 100vh;
-padding: 20px;
+
   background: #fff;
-  box-shadow: 2px 0 20px rgba(0,0,0,.15);
-  z-index: 2000;
+  z-index: 9999;
 
   transition: left 0.3s ease;
+  box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+  overflow-y: auto;
 }
 
 .side-menu.active {
@@ -651,19 +652,18 @@ padding: 20px;
 }
 
 .menu-header {
-  display: flex;
+   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  padding: 20px;
+  font-weight: 800;
+  font-size: 22px;
+  color: #b53a2d;
 }
-.menu-header h2{
-  font-size: 20px;
-  font-weight: 600;
-}
+
 .menu-links {
   list-style: none;
-  padding: 0;
-  margin: 0;
+  padding: 0 20px;
 }
 
 .menu-links li {
@@ -673,14 +673,17 @@ padding: 20px;
 .menu-links a {
   text-decoration: none;
   color: #222;
-  font-size: 15px;
+  font-size: 17px;
+  display:block;
+}
+.menu-links a:hover {
+  color: #b53a2d;
 }
 
 .menu-title {
-  font-size: 12px;
-  margin-top: 20px;
-  letter-spacing: 1px;
-  color: #888;
+  margin-top: 25px;
+  font-size: 13px;
+  color: #999;
   text-transform: uppercase;
 
 }
@@ -691,7 +694,10 @@ padding: 20px;
   margin: 20px 0;
 }
 
-
+.contact-link {
+  color: #b53a2d;
+  font-weight: 700;
+}
 /*.page-title {
   font-size: 28px;
   font-weight: 700;
