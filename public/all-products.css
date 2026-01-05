@@ -526,9 +526,11 @@ width: 100%;
 /* logo */
 .logo {
   font-size: 20px;
-  font-weight: bold;
-  position: absolute;
-  transform: translateX(-50%);
+   position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-weight: bold;
 }
 
 /* cart */
