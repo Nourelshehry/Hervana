@@ -136,8 +136,12 @@ header .header-actions button.back-btn:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 20px;
+  font-weight: 800;
+  font-size: 22px;
+  color: #b53a2d;
   border-bottom: 1px solid #eee;
+
 }
 
 .menu-header h2 {
@@ -180,12 +184,12 @@ header .header-actions button.back-btn:hover {
 .menu-divider {
   height: 1px;
   background: #eee;
-  margin: 10px 0;
+  margin: 20px 0;
 }
 
 .contact-link {
   color: #c0392b;
-  font-weight: bold;
+   font-weight: 700;;
 }
 
 /* Filters */
