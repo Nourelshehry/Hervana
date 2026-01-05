@@ -3,6 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  padding-top: 60px;
   background: #ffe6f0;
   color: #333;
 }
@@ -526,7 +527,7 @@ width: 100%;
 /* logo */
 .logo {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: bold;
 }
 
 /* cart */
@@ -744,4 +745,7 @@ text-align: center;
 .contact-link {
   font-weight: 700;
   color: #c0392b;
+}
+*{
+  box-sizing: border-box;
 }
