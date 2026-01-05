@@ -628,6 +628,20 @@ nav a {
   border-radius: 50%;
 }
 
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
 /* ===============================
    SIDE MENU (OFF CANVAS)
 ================================ */
