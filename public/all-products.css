@@ -510,14 +510,15 @@ footer {
 .main-header {
   position: sticky;
   top: 0;
-  z-index: 1000;
-
+  left: 0;
+  z-index: 10000;
+width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 12px 16px;
-  background: transparent; /* ❌ بدون لون */
+ padding: 14px 18px;
+   background: transparent; /* ❌ بدون لون */
 }
 
 
@@ -567,7 +568,7 @@ footer {
  position: fixed;
   top: 0;
   left: -100%;              /* مخفية برة الشاشة */
-  width: 80%;
+  width: 82%;
   max-width: 320px;
   height: 100vh;
 
@@ -575,7 +576,7 @@ footer {
   z-index: 9999;
 
   transition: left 0.3s ease;
-  box-shadow: 2px 0 15px rgba(0,0,0,0.15);
+  box-shadow: 4px 0 20px rgba(0,0,0,0.15);
   overflow-y: auto;
 }
 
@@ -591,7 +592,7 @@ footer {
   font-weight: 800;
   font-size: 22px;
   color: #b53a2d;
-}
+ border-bottom: 1px solid #eee;}
 
 #close-menu {
   background: none;
@@ -600,20 +601,24 @@ footer {
   cursor: pointer;
 }
 .menu-links {
-  list-style: none;
-  padding: 0 20px;
+   list-style: none;
+  padding: 15px 20px 30px;
+  margin: 0;
 }
 
 .menu-links li {
-  padding: 12px 0;
+  padding: 14px 0;
 }
 
 .menu-links a {
-  text-decoration: none;
-  color: #222;
-  font-size: 17px;
-  display:block;
+ text-decoration: none;
+  font-size: 16px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
+
 .menu-links a:hover {
   color: #b53a2d;
 }
