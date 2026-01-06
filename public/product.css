@@ -106,9 +106,7 @@ display: flex;
   cursor: pointer;
   z-index: 10;
 }
-.slider-btn:hover {
-  background: rgba(192, 57, 43, 1);
-}
+
 .slider-btn.prev { left: 15px; }
 .slider-btn.next { right: 15px; }
 
