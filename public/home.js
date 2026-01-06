@@ -124,9 +124,13 @@ document.addEventListener("DOMContentLoaded", async () => {
      FEATURED PRODUCTS
   ============================== */
 
-  const featuredProducts = products
-    .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
-    .filter(p => p.imagesArr.length);
+const featuredProducts = products
+  .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+  .filter(p => 
+    p.imagesArr.length &&
+    Number(p.stock) > 0
+  );
+
 
   function renderFeatured(list = null) {
     featuredGrid.innerHTML = "";
