@@ -97,7 +97,7 @@ display: flex;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(192, 57, 43, 0.8);
+  background: transparent;
   border: none;
   color: #fff;
   font-size: 22px;
