@@ -955,3 +955,6 @@ footer a:hover {
     padding: 10px 14px;
   }
 }
+#cart-sidebar .sale-badge {
+  display: none !important;
+}

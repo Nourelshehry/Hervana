@@ -801,3 +801,6 @@ text-align: center;
     padding: 10px 14px;
   }
 }
+#cart-sidebar .sale-badge {
+  display: none !important;
+}
