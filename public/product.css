@@ -128,7 +128,13 @@ display: flex;
 .slider-dots .dot.active {
   background: #c0392b;
 }
-
+.product-name {
+  font-family: "Cairo", sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c2c2c;
+  margin-bottom: 6px;
+}
 /* Product Details */
 .product-details {
   background: #fff;
@@ -157,23 +163,30 @@ display: flex;
 .add-to-cart {
   /*background: #c0392b;*/
   color: #c0392b;
+    background: linear-gradient(135deg, #ff5f8f, #ff8fb3);
   border: none;
-  padding: 12px 20px;
+  padding: 14px 20px;
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 600;
   transition: background 0.3s ease;
   margin: 10px 0;
   border-radius: 999px;
-  box-shadow: 0 8px 20px rgba(231,76,60,.4);
+  box-shadow: 0 8px 18px rgba(255, 95, 143, 0.35);
+position: sticky;
+  width: 100%;
+  margin-top: 18px;
 }
 
 
 
-.add-to-cart:hover {
-  background: #a93226;
+
+  .add-to-cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(255, 95, 143, 0.45);
 }
+
 /*
 #checkout-btn {
   background: #c0392b;
@@ -260,6 +273,15 @@ display: flex;
 /* عشان الكارد يكون relative */
 .product-card {
   position: relative;
+}
+.product-description {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 18px;
+  margin-top: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  font-family: "Cairo", sans-serif;
+  color: #444;
 }
 
 
