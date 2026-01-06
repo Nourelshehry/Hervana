@@ -99,7 +99,11 @@ function renderCart() {
   const cart = loadCart();
   cartItems.innerHTML = "";
 
+  let total = 0;
+
   cart.forEach((item, index) => {
+    total += item.price * item.quantity;
+
     const li = document.createElement("li");
     li.innerHTML = `
       <div class="cart-item">
@@ -113,6 +117,12 @@ function renderCart() {
     `;
     cartItems.appendChild(li);
   });
+
+  // ✅ TOTAL PRICE
+  const totalEl = document.getElementById("cart-total");
+  if (totalEl) {
+    totalEl.textContent = `Total: ${total} EGP`;
+  }
 
   updateCartCount();
 
@@ -153,42 +163,57 @@ async function renderGiftSuggestionsInCart() {
 
       const img = images[0] || "/images/placeholder.png";
 
+      const isOnSale = Number(product.on_sale) === 1;
+      const salePercent = Number(product.sale_percent);
+
       const div = document.createElement("div");
       div.className = "cart-gift-item";
+      div.style.cursor = "pointer";
 
       div.innerHTML = `
+        ${
+          isOnSale && salePercent
+            ? `<span class="sale-badge">-${salePercent}%</span>`
+            : ""
+        }
+
         <img src="${img}">
         <div>${product.name}</div>
-        <strong>${product.price} EGP</strong>
+
+        <strong>
+          ${
+            isOnSale
+              ? `<span class="old-price">${product.price} EGP</span>
+                 <span class="sale-price">${product.sale_price} EGP</span>`
+              : `${product.price} EGP`
+          }
+        </strong>
+
         <button
           class="add-to-cart"
           data-id="${product.id}"
           data-name="${product.name}"
-          data-price="${product.price}">
+          data-price="${isOnSale ? product.sale_price : product.price}">
           + Add
         </button>
       `;
 
-      // ✅ الكارد يفتح صفحة المنتج
-      div.style.cursor = "pointer";
+      // فتح صفحة المنتج
+      div.addEventListener("click", e => {
+        if (e.target.closest(".add-to-cart")) return;
+        window.location.href = `product.html?id=${product.id}`;
+      });
 
-div.addEventListener("click", e => {
-  if (e.target.closest(".add-to-cart")) return;
-  window.location.href = `product.html?id=${product.id}`;
-});
-
-
-      // 🛑 زر Add مايفتحش الصفحة
+      // Add to cart فقط
       const addBtn = div.querySelector(".add-to-cart");
-addBtn.addEventListener("click", e => {
-  e.stopPropagation();
-
-  addToCart(
-    addBtn.dataset.id,
-    addBtn.dataset.name,
-    addBtn.dataset.price
-  );
-});
+      addBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        addToCart(
+          addBtn.dataset.id,
+          addBtn.dataset.name,
+          addBtn.dataset.price
+        );
+      });
 
       container.appendChild(div);
     });
@@ -222,16 +247,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const cartItems = document.getElementById("cart-items");
 
   cartBtn?.addEventListener("click", () => {
-  cartSidebar.classList.add("active");
-  document.body.classList.add("cart-open");
-});
+    cartSidebar.classList.add("active");
+    document.body.classList.add("cart-open");
+  });
 
-
- closeCart?.addEventListener("click", () => {
-  cartSidebar.classList.remove("active");
-  document.body.classList.remove("cart-open");
-});
-
+  closeCart?.addEventListener("click", () => {
+    cartSidebar.classList.remove("active");
+    document.body.classList.remove("cart-open");
+  });
 
   document.body.addEventListener("click", e => {
     const btn = e.target.closest(".add-to-cart");
@@ -275,8 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "order.html";
   });
 
-renderCart();
-renderGiftSuggestionsInCart(); // ⭐ ده السطر اللي كان ناقص
-updateCartCount();
-
+  renderCart();
+  renderGiftSuggestionsInCart();
+  updateCartCount();
 });
