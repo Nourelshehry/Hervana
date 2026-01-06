@@ -8,11 +8,11 @@ body {
 }
 
 /* Header */
-header {
+/*header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #c0392b;
+  background: transparent;
   color: #fff;
   padding: 12px 15px;
   position: sticky;
@@ -20,7 +20,7 @@ header {
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
-
+*/
 header .logo a {
   color: #fff;
   text-decoration: none;
