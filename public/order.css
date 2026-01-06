@@ -290,3 +290,112 @@ select {
 .confirm-btn.loading::after {
   content: " Processing...";
 }
+/* =========================
+   CHECKOUT HEADER STYLE
+========================= */
+
+.checkout-page header {
+  background: transparent;
+  box-shadow: none;
+  padding: 25px 0 10px;
+  text-align: center;
+}
+
+.checkout-page header .logo a {
+  font-size: 34px;          /* كبرنا اللوجو */
+  font-weight: 800;
+  color: #c0392b;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.checkout-page header .logo a:hover {
+  opacity: 0.9;
+}
+/* =========================
+   CHECKOUT CONFIRM BUTTON
+========================= */
+
+.checkout-page .confirm-btn {
+  width: 100%;
+  max-width: 440px;
+  margin: 35px auto 40px;
+  padding: 16px;
+  background: linear-gradient(135deg, #ff7aa2, #c0392b);
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  display: block;
+  box-shadow: 0 10px 25px rgba(192, 57, 43, 0.35);
+  transition: all 0.3s ease;
+}
+
+/* Hover */
+.checkout-page .confirm-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 35px rgba(192, 57, 43, 0.45);
+}
+
+/* Click */
+.checkout-page .confirm-btn:active {
+  transform: scale(0.97);
+}
+/* =========================
+   CUSTOM SELECT STYLE
+========================= */
+
+.checkout-page select {
+  width: 100%;
+  padding: 14px 44px 14px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #f0c1cf;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+/* Arrow */
+.checkout-page .form-group {
+  position: relative;
+}
+
+.checkout-page .form-group::after {
+  content: "▾";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #c0392b;
+  pointer-events: none;
+}
+
+/* Hover */
+.checkout-page select:hover {
+  border-color: #c0392b;
+}
+
+/* Focus */
+.checkout-page select:focus {
+  outline: none;
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.15);
+}
+
+/* Disabled */
+.checkout-page select:disabled {
+  background: #f7f7f7;
+  color: #aaa;
+  cursor: not-allowed;
+}
