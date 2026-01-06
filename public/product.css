@@ -288,7 +288,7 @@ position: sticky;
 /* Cart toast message */
 .cart-message {
   position: fixed;
-  top: 20px;
+  top: 50px;
   right: 20px;
   background: #c0392b;
   color: #fff;
