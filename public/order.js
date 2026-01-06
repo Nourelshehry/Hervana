@@ -10,6 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
     console.error("❌ Order page elements missing");
     return;
   }
+if (!confirmBtn) {
+  console.error("Confirm button not found");
+  return;
+}
 
   /* =========================
      CONSTANTS
