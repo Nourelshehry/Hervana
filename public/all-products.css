@@ -473,6 +473,13 @@ footer {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
 }
+.all-products .product-card h3 {
+  min-height: 42px; /* اسم المنتج */
+}
+
+.all-products .price {
+  min-height: 24px;
+}
 
 /* الصور بس في صفحة all-products */
 .all-products .product-card img {
@@ -803,4 +810,37 @@ text-align: center;
 }
 #cart-sidebar .sale-badge {
   display: none !important;
+}
+.all-products .add-to-cart {
+  margin: 12px;
+  margin-top: auto;        /* ⬅️ ينزل لتحت */
+  padding: 12px 0;
+  width: calc(100% - 24px);
+
+  background: linear-gradient(135deg, #c0392b, #e75480);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.all-products .add-to-cart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(192,57,43,0.35);
+}
+.all-products .view-btn,
+.all-products .btns {
+  display: none !important;
+}
+.all-products .product-card:hover img {
+  transform: scale(1.03);
+}
+
+.all-products .product-card img {
+  transition: transform 0.3s ease;
 }
