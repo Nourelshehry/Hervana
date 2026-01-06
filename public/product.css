@@ -14,11 +14,12 @@ display: flex;
   background: transparent; /* ✅ شفاف */
   color: #fff;
   padding: 15px;
-  position: sticky; /* ✅ فوق الهيرو */
+  position: absolute;   /* 👈 overlay */
   top: 0;
   left: 0;
   width: 100%;
   z-index: 1000;
+  background: transparent;
 }
 
 .header-actions {
@@ -54,6 +55,7 @@ display: flex;
 .slider-container {
   position: relative;
   width: 100%;
+  height: 100vh;
   max-width: 600px;
   overflow: hidden;
   border-radius: 12px;
@@ -85,6 +87,12 @@ display: flex;
   display: block;             /* نعرض واحدة */
 }
 
+.product-details,
+.product-description {
+  position: relative;
+  margin-top: -80px;   /* optional aesthetic overlap */
+  z-index: 5;
+}
 
 @media (max-width: 480px) {
   .slider-container {
