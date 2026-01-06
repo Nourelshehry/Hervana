@@ -122,9 +122,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         card.className = "product-card";
 
         card.innerHTML = `
-          ${isOnSale && salePercent ? `
-            <span class="sale-badge">-${salePercent}%</span>
-          ` : ""}
+         ${isOnSale && salePercent && !isOutOfStock ? `
+  <span class="sale-badge">-${salePercent}%</span>
+` : ""}
+
 
           ${isOutOfStock ? `
             <span class="out-badge">Out of Stock</span>
