@@ -8,12 +8,17 @@ html, body {
 
 /* Header Grid Fix */
 header {
-  display: grid;
-  grid-template-columns: 60px auto 60px;
-  padding: 12px 20px;
-  background: #c0392b;
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent; /* ✅ شفاف */
   color: #fff;
-  align-items: center; /* نصوص الوسط تبقى محاذية */
+  padding: 15px;
+  position: absolute; /* ✅ فوق الهيرو */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
 }
 
 .header-actions {
