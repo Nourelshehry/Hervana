@@ -268,16 +268,46 @@ position: sticky;
 
 .sale-badge {
   position: absolute;
-  top: 60px;
-  left: 8px;
-  background: #e63946;
+
+  /* 👇 تحت الهيدر مباشرة */
+  top: 75px;           /* عدلي الرقم لو الهيدر كبر/صغر */
+  left: 12px;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;  /* 🔴 دايرة كاملة */
+
+  background: linear-gradient(135deg, #e63946, #ff6f91);
   color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   font-size: 12px;
-  font-weight: bold;
-  padding: 4px 8px;
-  border-radius: 4px;
-  z-index: 2;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+
+  z-index: 20;
+
+  box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
 }
+.sale-badge {
+  animation: popIn 0.35s ease-out;
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 
 /* عشان الكارد يكون relative */
 .product-card {
