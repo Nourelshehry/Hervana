@@ -28,6 +28,12 @@ header {
   font-weight: bold;
 }
 
+/* cart */
+#cart-btn {
+  font-size: 20px;
+  cursor: pointer;
+  position: relative;
+}
 /* Cart counter */
 #cart-btn span {
   background: #fff;
