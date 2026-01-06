@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("order-form");
   const thankYou = document.getElementById("thank-you");
   const backBtn = document.getElementById("thank-back-btn");
+  const confirmBtn = form.querySelector(".confirm-btn");
 
   if (!summary || !totalElem || !form) {
     console.error("❌ Order page elements missing");
@@ -102,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "Other"
     ],
     qalyubia: [
+     "Obour",
       "Benha",
       "Qalyub",
       "Shubra El Kheima",
@@ -150,10 +152,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isSubmitting) return;
     isSubmitting = true;
 
+    /* 🔥 UX FIX */
+    confirmBtn.classList.add("loading");
+    confirmBtn.textContent = "Processing...";
+
     const cart = loadCart();
     if (!cart.length) {
       alert("Your cart is empty");
       isSubmitting = false;
+      confirmBtn.classList.remove("loading");
+      confirmBtn.textContent = "Confirm Order";
       return;
     }
 
@@ -172,6 +180,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (Object.values(customer).some(v => !v)) {
       alert("Please fill in all fields");
       isSubmitting = false;
+      confirmBtn.classList.remove("loading");
+      confirmBtn.textContent = "Confirm Order";
       return;
     }
 
@@ -198,6 +208,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!res.ok || !result.success) {
         alert(result.message || "Order failed");
         isSubmitting = false;
+        confirmBtn.classList.remove("loading");
+        confirmBtn.textContent = "Confirm Order";
         return;
       }
 
@@ -208,12 +220,17 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelector("header")?.remove();
       document.querySelector("footer")?.remove();
 
+      confirmBtn.classList.remove("loading");
+      confirmBtn.textContent = "Confirm Order";
+
       thankYou.classList.add("show");
 
     } catch (err) {
       console.error("❌ Order error:", err);
       alert("Network error");
       isSubmitting = false;
+      confirmBtn.classList.remove("loading");
+      confirmBtn.textContent = "Confirm Order";
     }
   });
 
