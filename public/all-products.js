@@ -7,41 +7,44 @@ document.addEventListener("DOMContentLoaded", async () => {
   const grid = document.querySelector(".all-products-grid");
   const searchInput = document.getElementById("search-input");
   const categorySelect = document.getElementById("category");
-/* ===============================
-   MOBILE MENU
-============================== */
-const menu = document.getElementById("side-menu");
-const openBtn = document.getElementById("menu-btn");
-const closeBtn = document.getElementById("close-menu");
 
-if (menu && openBtn && closeBtn) {
-  openBtn.addEventListener("click", () => {
-    menu.classList.add("active");
-  });
+  /* ===============================
+     MOBILE MENU
+  ============================== */
+  const menu = document.getElementById("side-menu");
+  const openBtn = document.getElementById("menu-btn");
+  const closeBtn = document.getElementById("close-menu");
 
-  closeBtn.addEventListener("click", () => {
-    menu.classList.remove("active");
-  });
+  if (menu && openBtn && closeBtn) {
+    openBtn.addEventListener("click", () => {
+      menu.classList.add("active");
+    });
 
-  menu.addEventListener("click", e => {
-    if (e.target.tagName === "A") {
+    closeBtn.addEventListener("click", () => {
       menu.classList.remove("active");
-    }
-  });
-}
+    });
+
+    menu.addEventListener("click", e => {
+      if (e.target.tagName === "A") {
+        menu.classList.remove("active");
+      }
+    });
+  }
 
   if (!grid) {
     console.error("❌ product grid not found");
     return;
   }
 
-
+  /* ===============================
+     URL PARAMS
+  ============================== */
   const params = new URLSearchParams(window.location.search);
-const categoryFromURL = params.get("category");
+  const categoryFromURL = params.get("category");
 
-if (categoryFromURL && categorySelect) {
-  categorySelect.value = categoryFromURL;
-}
+  if (categoryFromURL && categorySelect) {
+    categorySelect.value = categoryFromURL;
+  }
 
   /* ===============================
      STATE
@@ -94,7 +97,7 @@ if (categoryFromURL && categorySelect) {
   }
 
   /* ===============================
-     RENDER
+     RENDER PRODUCTS
   ============================== */
   function renderProducts(list) {
     grid.innerHTML = "";
@@ -112,12 +115,19 @@ if (categoryFromURL && categorySelect) {
         const isOnSale = Number(product.on_sale) === 1;
         const salePercent = Number(product.sale_percent);
 
+        const stock = Number(product.stock ?? 0);
+        const isOutOfStock = stock === 0;
+
         const card = document.createElement("div");
         card.className = "product-card";
 
         card.innerHTML = `
           ${isOnSale && salePercent ? `
             <span class="sale-badge">-${salePercent}%</span>
+          ` : ""}
+
+          ${isOutOfStock ? `
+            <span class="out-badge">Out of Stock</span>
           ` : ""}
 
           <img src="${img}" alt="${product.name}">
@@ -135,24 +145,26 @@ if (categoryFromURL && categorySelect) {
 
           <button
             class="add-to-cart"
+            ${isOutOfStock ? "disabled" : ""}
             data-id="${product.id}"
             data-name="${product.name}"
             data-price="${isOnSale ? product.sale_price : product.price}"
           >
-            Add to Cart
+            ${isOutOfStock ? "Out of Stock" : "Add to Cart"}
           </button>
         `;
 
-        // الكارت كله يفتح صفحة المنتج
+        // فتح صفحة المنتج
         card.addEventListener("click", () => {
-window.location.href =
-  `product.html?id=${product.id}&category=${product.category}`;
+          window.location.href =
+            `product.html?id=${product.id}&category=${product.category}`;
         });
 
         // Add to cart
         const addBtn = card.querySelector(".add-to-cart");
         addBtn.addEventListener("click", e => {
           e.stopPropagation();
+          if (isOutOfStock) return;
 
           if (typeof addToCart === "function") {
             addToCart(
@@ -160,8 +172,6 @@ window.location.href =
               addBtn.dataset.name,
               addBtn.dataset.price
             );
-          } else {
-            console.warn("⚠️ addToCart function not found");
           }
         });
 
@@ -200,13 +210,9 @@ window.location.href =
   /* ===============================
      INIT
   ============================== */
-
   loadProducts();
 
   if (categoryFromURL) {
-  applyFilters();
-}
-
-
-
+    applyFilters();
+  }
 });
