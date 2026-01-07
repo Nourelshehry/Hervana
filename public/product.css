@@ -270,7 +270,7 @@ position: sticky;
 .sale-badge {
   position: absolute;
 
-  top: 26px;      /* 👈 نفس ارتفاع الهيدر */
+  top: 46px;      /* 👈 نفس ارتفاع الهيدر */
   left: 12px;
 
   transform: none;
