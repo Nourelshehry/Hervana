@@ -267,12 +267,12 @@ position: sticky;
 }
 
 .sale-badge {
-  position:static;
+  position:absolute;
 
   /* 👇 تحت الهيدر مباشرة */
-  top: 70px;           /* عدلي الرقم لو الهيدر كبر/صغر */
+  top: 0px;           /* عدلي الرقم لو الهيدر كبر/صغر */
   left: 12px;
-
+transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border-radius: 50%;  /* 🔴 دايرة كاملة */
