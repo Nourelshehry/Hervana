@@ -63,6 +63,7 @@ display: flex;
   margin: 0 auto 20px;
  aspect-ratio: 4 / 5;        /* نسبة ممتازة للمنتجات */
   background: #f7f7f7;
+  padding-top: 70px;   /* 👈 مهم جداً */
 }
 
 #slider { 
@@ -89,10 +90,9 @@ display: flex;
 
 .product-details,
 .product-description {
-  position: relative;
-  margin-top: -80px;   /* optional aesthetic overlap */
-  z-index: 5;
+  margin-top: 16px;   /* مسافة طبيعية */
 }
+
 
 @media (max-width: 480px) {
   .slider-container {
@@ -266,18 +266,44 @@ position: sticky;
   font-size: 1.2em;
 }
 
+
 .sale-badge {
-  position:absolute;
+  position: absolute;
+
+  top: 70px;      /* 👈 نفس ارتفاع الهيدر */
+  left: 12px;
+
+  transform: none;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e63946, #ff6f91);
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 12px;
+  font-weight: 700;
+  z-index: 20;
+}
+
+
+
+
+  /*position:absolute;
 
   /* 👇 تحت الهيدر مباشرة */
-  top: 0px;           /* عدلي الرقم لو الهيدر كبر/صغر */
-  left: 12px;
+  /*top: 0px;           /* عدلي الرقم لو الهيدر كبر/صغر */
+  /*left: 12px;
 transform: translateY(-50%);
   width: 44px;
   height: 44px;
   border-radius: 50%;  /* 🔴 دايرة كاملة */
 
-  background: linear-gradient(135deg, #e63946, #ff6f91);
+  /*background: linear-gradient(135deg, #e63946, #ff6f91);
   color: #fff;
 
   display: flex;
@@ -292,7 +318,7 @@ transform: translateY(-50%);
   z-index: 20;
 
   box-shadow: 0 6px 16px rgba(230, 57, 70, 0.35);
-}
+}*/
 .sale-badge {
   animation: popIn 0.35s ease-out;
 }
