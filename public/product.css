@@ -44,7 +44,7 @@ display: flex;
 /* Cart counter */
 #cart-btn span {
   background: #fff;
-  color: #38c526;
+  color: #c0392b;
   border-radius: 50%;
   padding: 2px 6px;
   font-size: 0.75rem;
@@ -135,7 +135,7 @@ display: flex;
   transition: background 0.3s ease;
 }
 .slider-dots .dot.active {
-  background: #37c02b;
+  background: #c0392b;
 }
 .product-name {
   font-family: "Cairo", sans-serif;
@@ -171,8 +171,8 @@ display: flex;
 /*Buttons*/ 
 .add-to-cart {
   /*background: #c0392b;*/
-  color: #6ec02b;
-    background: linear-gradient(135deg, #6ff74de5, #6fe441);
+  color: #c0392b;
+    background: linear-gradient(135deg, #ff5f8f, #ff8fb3);
   border: none;
   padding: 14px 20px;
   border-radius: 6px;
@@ -182,7 +182,7 @@ display: flex;
   transition: background 0.3s ease;
   margin: 10px 0;
   border-radius: 999px;
-  box-shadow: 0 8px 18px rgba(23, 238, 70, 0.774);
+  box-shadow: 0 8px 18px rgba(255, 95, 143, 0.35);
 position: sticky;
   width: 100%;
   margin-top: 18px;
@@ -193,7 +193,7 @@ position: sticky;
 
   .add-to-cart:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(95, 255, 116, 0.45);
+  box-shadow: 0 12px 22px rgba(255, 95, 143, 0.45);
 }
 
 /*
@@ -248,7 +248,7 @@ position: sticky;
   margin-top: 4px;
   font-size: 11px;
   padding: 4px 6px;
-  background: #5ac02b;
+  background: #c0392b;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -261,7 +261,7 @@ position: sticky;
 }
 
 .sale-price {
-  color: #58f331;
+  color: #e63946;
   font-weight: bold;
   font-size: 1.2em;
 }
@@ -275,10 +275,10 @@ position: sticky;
 
   transform: none;
 
-  width: 50px;
+  width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #3ac70f, #38e741);
+  background: linear-gradient(135deg, #e63946, #ff6f91);
   color: #fff;
 
   display: flex;
@@ -355,7 +355,7 @@ transform: translateY(-50%);
   position: fixed;
   top: 55px;
   right: 20px;
-  background: #2bc02b;
+  background: #c0392b;
   color: #fff;
   padding: 10px 16px;
   border-radius: 6px;
@@ -426,7 +426,7 @@ transform: translateY(-50%);
 }
 
 .product-price .sale-price {
-  color: #1b9b0b; /* لون البراند */
+  color: #c0392b; /* لون البراند */
   font-size: 24px;
   font-weight: 800;
 }
@@ -456,10 +456,10 @@ transform: translateY(-50%);
   padding: 12px 16px;
 
   background: #ffe6f0;        /* وردي فاتح من ألوان الصفحة */
-  border: 1px solid #6df05c;
+  border: 1px solid #f5b3cc;
   border-radius: 12px;
 
-  color: #53c730;
+  color: #7a1f4b;
   font-size: 16px;
   font-weight: 600;
 
@@ -467,14 +467,14 @@ transform: translateY(-50%);
   justify-content: space-between;
   align-items: center;
 
-  box-shadow: 0 4px 10px rgba(67, 189, 51, 0.12);
+  box-shadow: 0 4px 10px rgba(122, 31, 75, 0.12);
 }
 
 /* كلمة Total */
 .cart-total::before {
   content: "🧾 Total";
   font-weight: 500;
-  color: #4df05b;
+  color: #a63a6b;
 }
 
 /* موبايل */
