@@ -45,6 +45,10 @@ const json = (data, status = 200) =>
       "Access-Control-Allow-Headers": "Content-Type, Authorization"
     }
   });
+async function queryDB(env, sql, bindings = []) {
+  const res = await env.DB.prepare(sql).bind(...bindings).all();
+  return res.results;
+}
 
 /* ===============================
    Worker

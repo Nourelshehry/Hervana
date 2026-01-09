@@ -81,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadProducts() {
     try {
       const res = await fetch(
-        "https://hervanastore.nourthranduil.workers.dev/products"
+        "https://hervanastore.nourthranduil.workers.dev/api/products"
       );
 
       if (!res.ok) throw new Error("Fetch failed");

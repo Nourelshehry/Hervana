@@ -56,7 +56,8 @@ async function addToCart(id, name, price) {
 
   try {
     const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
+     "https://hervanastore.nourthranduil.workers.dev/api/products"
+
     );
     const products = await res.json();
     const product = products.find(p => Number(p.id) === id);
@@ -141,7 +142,7 @@ async function renderGiftSuggestionsInCart() {
 
   try {
     const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/products"
+"https://hervanastore.nourthranduil.workers.dev/api/products"
     );
     const products = await res.json();
 
@@ -273,7 +274,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (e.target.classList.contains("increase")) {
       const res = await fetch(
-        "https://hervanastore.nourthranduil.workers.dev/products"
+      "https://hervanastore.nourthranduil.workers.dev/api/products"
+
       );
       const products = await res.json();
       const product = products.find(p => Number(p.id) === item.id);
