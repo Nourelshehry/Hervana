@@ -10,7 +10,7 @@ import {
 ================================ */
 
 async function sendEmail(env, { to, subject, html }) {
-  return fetch("https://api.resend.com/emails", {
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       "Authorization": `Bearer ${env.RESEND_API_KEY}`,
@@ -23,12 +23,17 @@ async function sendEmail(env, { to, subject, html }) {
       html
     })
   });
+
+  const data = await res.text();
+
+  if (!res.ok) {
+    console.error("RESEND ERROR:", data);
+    throw new Error("Email sending failed");
+  }
+
+  return data;
 }
 
-async function queryDB(env, sql, bindings = []) {
-  const res = await env.DB.prepare(sql).bind(...bindings).all();
-  return res.results;
-}
 
 const json = (data, status = 200) =>
   new Response(JSON.stringify(data), {
@@ -95,15 +100,17 @@ export default {
     }
 
     // POST /api/order
-    if (pathname === "/order" && method === "POST") {
-      try {
-        const body = await request.json();
-       // const { customer, items } = body;
-const { customer, items } = await request.json();
+  if (pathname === "/order" && method === "POST") {
+  try {
+    const body = await request.json();
+    const { customer, items } = body;
 
-        if (!customer || !Array.isArray(items) || !items.length) {
-          return json({ success: false, message: "Invalid order data" }, 400);
-        }
+    if (!customer || !Array.isArray(items) || !items.length) {
+      return json({ success: false, message: "Invalid order data" }, 400);
+    }
+
+    // باقي الكود زي ما هو
+
 
         let total = 0;
 
