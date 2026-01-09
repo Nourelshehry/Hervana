@@ -959,37 +959,59 @@ footer a:hover {
   display: none !important;
 }
 /* ===== Our Story Section ===== */
+/* ================= Our Story ================= */
 .our-story {
-  background: #fff5f2; /* لون ناعم يناسب ثيم هيرفانا */
-  padding: 60px 20px;
+  background: #fff7f2; /* لون هادي دافئ */
+  color: #5a3d2b;      /* لون الكتابة دافيء ومرتب */
+  padding: 60px 20px;   /* padding من فوق وتحت + من الجوانب */
   text-align: center;
-  border-radius: 14px;
+  border-radius: 16px;
   max-width: 1000px;
-  margin: 40px auto;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-  opacity: 0; /* يبدأ مخفي */
-  transform: translateY(30px); /* تحرك بسيط للأعلى عند ظهور */
-  transition: opacity 1s ease-out, transform 1s ease-out;
+  margin: 60px auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  line-height: 1.7;
 }
 
-.our-story.visible {
+.our-story h2 {
+  font-size: 2.5rem;
+  margin-bottom: 24px;
+  color: #d38c7c; /* لون هدية وردي لطيف */
+  font-family: 'Cursive', sans-serif;
+}
+
+.our-story p {
+  font-size: 1.15rem;
+  margin-bottom: 30px;
+  color: #5a3d2b;
+  max-width: 850px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-our-story {
+  display: inline-block;
+  background: #d38c7c; /* لون يطابق العنوان */
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 30px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-our-story:hover {
+  background: #b76b5b;
+  transform: translateY(-3px);
+}
+
+/* Fade-in effect */
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s ease-out;
+}
+
+.fade-in-section.visible {
   opacity: 1;
   transform: translateY(0);
-}
-
-.our-story .section-title {
-  font-size: 32px;
-  color: #d38c7c;
-  margin-bottom: 30px;
-}
-
-.our-story .story-content p {
-  font-size: 18px;
-  line-height: 1.8;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.our-story .story-content p:last-child {
-  margin-bottom: 0;
 }
