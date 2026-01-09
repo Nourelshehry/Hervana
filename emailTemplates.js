@@ -1,42 +1,155 @@
+/* ===============================
+   CUSTOMER ORDER EMAIL
+================================ */
+
 export function customerOrderEmail(order) {
   const itemsHtml = order.items
     .map(
-      i => `<li>${i.name} × ${i.quantity} — ${i.price} EGP</li>`
+      i => `
+      <tr>
+        <td style="padding:12px 0; border-bottom:1px solid #eee;">
+          <img
+            src="${i.image}"
+            alt="${i.name}"
+            width="80"
+            style="border-radius:10px; display:block;"
+          />
+        </td>
+
+        <td style="padding-left:12px; border-bottom:1px solid #eee;">
+          <p style="margin:0; font-weight:600; font-size:15px;">
+            ${i.name}
+          </p>
+          <p style="margin:6px 0 0; color:#777; font-size:14px;">
+            Quantity: ${i.quantity}<br/>
+            Price: ${i.price} EGP
+          </p>
+        </td>
+      </tr>
+    `
     )
     .join("");
 
   return `
-    <div style="font-family:Arial">
-      <h2>Thank you for your order 💖</h2>
-      <p>Hi ${order.name},</p>
+  <div style="background:#f9f6f4; padding:20px;">
+    <table
+      width="100%"
+      cellpadding="0"
+      cellspacing="0"
+      style="
+        max-width:600px;
+        margin:auto;
+        background:#ffffff;
+        border-radius:14px;
+        padding:24px;
+        font-family:Arial, Helvetica, sans-serif;
+        color:#333;
+      "
+    >
+      <tr>
+        <td style="text-align:center;">
+          <h2 style="margin:0 0 8px;">Thank you for your order 💖</h2>
+          <p style="margin:0; color:#777;">
+            Hi ${order.name}, we’re so happy you chose Hervana 🌸
+          </p>
+        </td>
+      </tr>
 
-      <p>Your order has been received successfully.</p>
+      <tr><td style="height:20px;"></td></tr>
 
-      <ul>
-        ${itemsHtml}
-      </ul>
+      <tr>
+        <td>
+          <p style="margin:0 0 14px;">
+            Your order has been received successfully and is being prepared with love ✨
+          </p>
+        </td>
+      </tr>
 
-      <h3>Total: ${order.total} EGP</h3>
+      <tr>
+        <td>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            ${itemsHtml}
+          </table>
+        </td>
+      </tr>
 
-      <p>We’ll contact you soon.</p>
-      <p>Hervana 🌸</p>
-    </div>
+      <tr><td style="height:20px;"></td></tr>
+
+      <tr>
+        <td style="text-align:right;">
+          <p style="margin:0; font-size:16px;">
+            <strong>Total:</strong>
+            <span style="color:#d38c7c;">${order.total} EGP</span>
+          </p>
+        </td>
+      </tr>
+
+      <tr><td style="height:24px;"></td></tr>
+
+      <tr>
+        <td>
+          <p style="margin:0;">
+            We’ll contact you soon to confirm delivery 💬
+          </p>
+
+          <p style="margin:12px 0 0;">
+            With love,<br/>
+            <strong>Hervana</strong> 🌸
+          </p>
+        </td>
+      </tr>
+    </table>
+  </div>
   `;
 }
 
+/* ===============================
+   ADMIN ORDER EMAIL
+================================ */
+
 export function adminOrderEmail(order) {
   const itemsHtml = order.items
-    .map(i => `<li>${i.name} × ${i.quantity}</li>`)
+    .map(
+      i => `
+      <tr>
+        <td style="padding:6px 0;">${i.name}</td>
+        <td align="center">${i.quantity}</td>
+        <td align="right">${i.price} EGP</td>
+      </tr>
+    `
+    )
     .join("");
 
   return `
-    <h2>🛒 New Order</h2>
-    <p><strong>Name:</strong> ${order.name}</p>
-    <p><strong>Phone:</strong> ${order.phone}</p>
-    <p><strong>Address:</strong> ${order.address}</p>
+  <div style="font-family:Arial, Helvetica, sans-serif; max-width:600px;">
+    <h2>🛒 New Hervana Order</h2>
 
-    <ul>${itemsHtml}</ul>
+    <p>
+      <strong>Name:</strong> ${order.name}<br/>
+      <strong>Phone:</strong> ${order.phone}<br/>
+      <strong>Email:</strong> ${order.email}<br/>
+      <strong>Address:</strong> ${order.address}
+    </p>
 
-    <h3>Total: ${order.total} EGP</h3>
+    <table
+      width="100%"
+      cellpadding="8"
+      cellspacing="0"
+      border="1"
+      style="border-collapse:collapse; font-size:14px;"
+    >
+      <tr style="background:#f4f4f4;">
+        <th align="left">Product</th>
+        <th>Qty</th>
+        <th align="right">Price</th>
+      </tr>
+
+      ${itemsHtml}
+    </table>
+
+    <h3 style="text-align:right;">
+      Total: ${order.total} EGP
+    </h3>
+  </div>
   `;
 }
