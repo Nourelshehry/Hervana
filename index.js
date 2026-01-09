@@ -120,13 +120,15 @@ export default {
           return json({ success: false, message: "Invalid JSON body" }, 400);
         }
 
-        const { customer, items } = body;
+ const { customer, items, shipping } = body;
+
 
         if (!customer || !Array.isArray(items) || !items.length) {
           return json({ success: false, message: "Invalid order data" }, 400);
         }
 
-        let total = 0;
+let total = 0;
+const shippingFee = Number(shipping) || 0;
 
         for (const item of items) {
           const product = await queryDB(
@@ -151,6 +153,8 @@ export default {
             : product[0].price;
 
           total += unitPrice * item.quantity;
+          total += shippingFee;
+
         }
 
         // update stock
@@ -198,21 +202,24 @@ for (const item of items) {
 
 const images = JSON.parse(product[0].images || "[]");
 
+const imageUrl = images.length
+  ? `${BASE_IMAGE_URL}${images[0]}`
+  : `${BASE_IMAGE_URL}images/placeholder.jpg`;
+
 emailItems.push({
   name: product[0].name,
   quantity: item.quantity,
   price: unitPrice,
-  image: images[0]
-    ? BASE_IMAGE_URL + images[0]
-    : BASE_IMAGE_URL + "images/placeholder.jpg"
+  image: imageUrl
 });
-
 }
 
 const orderData = {
   orderId,
   ...customer,
-  items: emailItems, // ✅ دلوقتي متعرفة
+  items: emailItems,
+  subtotal: total - shippingFee,
+  shipping: shippingFee,
   total
 };
 
@@ -223,6 +230,7 @@ const orderData = {
        /* =========================
    EMAILS (NON-BLOCKING)
 ========================= */
+console.log("📧 EMAIL IMAGE:", imageUrl);
 
 try {
   const emailResults = await Promise.allSettled([

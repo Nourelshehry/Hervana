@@ -22,7 +22,9 @@ export function customerOrderEmail(order) {
           </p>
           <p style="margin:6px 0 0; color:#777; font-size:14px;">
             Quantity: ${i.quantity}<br/>
-            Price: ${i.price} EGP
+<p>Subtotal: ${order.subtotal} EGP</p>
+<p>Shipping: ${order.shipping} EGP</p>
+<h3>Total: ${order.total} EGP</h3>
           </p>
         </td>
       </tr>
