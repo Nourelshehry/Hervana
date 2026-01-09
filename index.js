@@ -212,17 +212,36 @@ const orderData = {
 
 
         // Emails (failure won't break order)
-        await sendEmail(env, {
-          to: customer.email,
-          subject: "Your Hervana Order 💖",
-          html: customerOrderEmail(orderData)
-        });
+       /* =========================
+   EMAILS (NON-BLOCKING)
+========================= */
 
-        await sendEmail(env, {
-          to: "hervanacontact@gmail.com",
-          subject: "🛒 New Order - Hervana",
-          html: adminOrderEmail(orderData)
-        });
+try {
+  const emailResults = await Promise.allSettled([
+    sendEmail(env, {
+      to: customer.email,
+      subject: "Your Hervana Order 💖",
+      html: customerOrderEmail(orderData)
+    }),
+    sendEmail(env, {
+      to: "hervanacontact@gmail.com",
+      subject: "🛒 New Order - Hervana",
+      html: adminOrderEmail(orderData)
+    })
+  ]);
+
+  emailResults.forEach((res, i) => {
+    if (res.status === "rejected" || res.value === false) {
+      console.error(
+        `📧 Email ${i === 0 ? "customer" : "admin"} failed`,
+        res.reason || res.value
+      );
+    }
+  });
+} catch (err) {
+  // ⛔ مستحيل يكسر الأوردر
+  console.error("📧 Email system crashed:", err);
+}
 
         return json({ success: true, orderId, total });
       }
