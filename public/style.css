@@ -958,14 +958,23 @@ footer a:hover {
 #cart-sidebar .sale-badge {
   display: none !important;
 }
+/* ===== Our Story Section ===== */
 .our-story {
-  background: #fff5f2; /* لون ناعم يناسب هيرفانا */
+  background: #fff5f2; /* لون ناعم يناسب ثيم هيرفانا */
   padding: 60px 20px;
   text-align: center;
   border-radius: 14px;
   max-width: 1000px;
   margin: 40px auto;
   box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  opacity: 0; /* يبدأ مخفي */
+  transform: translateY(30px); /* تحرك بسيط للأعلى عند ظهور */
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.our-story.visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .our-story .section-title {
