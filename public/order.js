@@ -190,22 +190,21 @@ if (!confirmBtn) {
     }
 
     try {
-      const res = await fetch(
-        "https://hervanastore.nourthranduil.workers.dev/order",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            userId,
-            customer,
-            shipping: SHIPPING_COST,
-            items: cart.map(i => ({
-              id: i.id,
-              quantity: i.quantity
-            }))
-          })
-        }
-      );
+     const res = await fetch("/order", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    userId,
+    customer,
+    shipping: SHIPPING_COST,
+    items: cart.map(i => ({
+      id: i.id,
+      quantity: i.quantity
+    }))
+  })
+});
+
+        
 
       const result = await res.json();
 
