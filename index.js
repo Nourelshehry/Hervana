@@ -153,10 +153,10 @@ const shippingFee = Number(shipping) || 0;
             : product[0].price;
 
           total += unitPrice * item.quantity;
-          total += shippingFee;
+         
 
         }
-
+ total += shippingFee;
         // update stock
         for (const item of items) {
           await env.DB.prepare(
@@ -200,11 +200,12 @@ for (const item of items) {
 
  const BASE_IMAGE_URL = "https://hervana-store.com/";
 
-const images = JSON.parse(product[0].images || "[]");
+const images = typeof product[0].images === "string"
+  ? JSON.parse(product[0].images)
+  : Array.isArray(product[0].images)
+    ? product[0].images
+    : [];
 
-const imageUrl = images.length
-  ? `${BASE_IMAGE_URL}${images[0]}`
-  : `${BASE_IMAGE_URL}images/placeholder.jpg`;
 
 emailItems.push({
   name: product[0].name,
@@ -230,7 +231,7 @@ const orderData = {
        /* =========================
    EMAILS (NON-BLOCKING)
 ========================= */
-console.log("📧 EMAIL IMAGE:", imageUrl);
+
 
 try {
   const emailResults = await Promise.allSettled([
