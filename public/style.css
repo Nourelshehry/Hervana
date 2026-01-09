@@ -960,58 +960,96 @@ footer a:hover {
 }
 /* ===== Our Story Section ===== */
 /* ================= Our Story ================= */
+/* Our Story Section */
 .our-story {
-  background: #fff7f2; /* لون هادي دافئ */
-  color: #5a3d2b;      /* لون الكتابة دافيء ومرتب */
-  padding: 60px 20px;   /* padding من فوق وتحت + من الجوانب */
+  background-color: #fde8ee; /* baby pink */
+  padding: 70px 20px;
   text-align: center;
-  border-radius: 16px;
-  max-width: 1000px;
-  margin: 60px auto;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  line-height: 1.7;
+  font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
 
-.our-story h2 {
-  font-size: 2.5rem;
-  margin-bottom: 24px;
-  color: #d38c7c; /* لون هدية وردي لطيف */
-  font-family: 'Cursive', sans-serif;
+/* Section Title */
+.section-title {
+  font-size: 2.2rem;
+  color: #c0392b; /* نفس الأحمر بتاع البراند */
+  margin-bottom: 25px;
+  position: relative;
+  display: inline-block;
 }
 
-.our-story p {
-  font-size: 1.15rem;
-  margin-bottom: 30px;
-  color: #5a3d2b;
+.section-title::after {
+  content: "";
+  display: block;
+  width: 60%;
+  height: 4px;
+  background-color: #f4a9b8;
+  margin: 10px auto 0;
+  border-radius: 10px;
+}
+
+/* Story Card */
+.story-content {
   max-width: 850px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 35px;
+  background-color: #fff;
+  padding: 35px 30px;
+  border-radius: 25px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
+.story-content p {
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #555;
+  white-space: pre-line; /* علشان يحترم السطور */
+}
+
+/* Highlight feeling */
+.story-content p strong {
+  color: #c0392b;
+}
+
+/* Button */
 .btn-our-story {
   display: inline-block;
-  background: #d38c7c; /* لون يطابق العنوان */
+  padding: 14px 32px;
+  background-color: #c0392b;
   color: #fff;
-  padding: 14px 28px;
-  border-radius: 30px;
-  font-weight: 600;
   text-decoration: none;
+  border-radius: 30px;
+  font-size: 1rem;
   transition: all 0.3s ease;
 }
 
 .btn-our-story:hover {
-  background: #b76b5b;
+  background-color: #a93226;
   transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(192, 57, 43, 0.3);
 }
 
-/* Fade-in effect */
+/* Fade In Animation */
 .fade-in-section {
   opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.8s ease-out;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
 
 .fade-in-section.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .story-content {
+    padding: 25px 20px;
+  }
+
+  .story-content p {
+    font-size: 0.95rem;
+  }
 }
