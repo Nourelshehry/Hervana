@@ -35,7 +35,7 @@ const json = (data, status = 200) =>
     status,
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
+     "Access-Control-Allow-Origin": "https://hervana-store.com",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization"
     }
@@ -98,7 +98,8 @@ export default {
     if (pathname === "/order" && method === "POST") {
       try {
         const body = await request.json();
-        const { customer, items } = body;
+       // const { customer, items } = body;
+const { customer, items } = await request.json();
 
         if (!customer || !Array.isArray(items) || !items.length) {
           return json({ success: false, message: "Invalid order data" }, 400);
@@ -191,10 +192,17 @@ export default {
     }
 
     // POST /api/restock/:id
-    if (pathname.startsWith("/restock/") && method === "POST") {
-      const id = Number(pathname.split("/")[2]);
-      const body = await request.json();
-      const { amount } = body;
+   if (pathname.startsWith("/restock/") && method === "POST") {
+  const auth = request.headers.get("authorization");
+
+  if (auth !== `Bearer ${env.ADMIN_TOKEN}`) {
+    return json({ success: false, message: "Unauthorized" }, 401);
+  }
+
+  const id = Number(pathname.split("/")[2]);
+  const body = await request.json();
+  const { amount } = body;
+
 
       if (!Number.isInteger(amount) || amount <= 0) {
         return json({ success: false, message: "Invalid amount" }, 400);
