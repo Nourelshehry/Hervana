@@ -1053,3 +1053,20 @@ footer a:hover {
     font-size: 0.95rem;
   }
 }
+.our-story {
+  background-color: #fde8ee !important;
+  padding: 70px 20px !important;
+  text-align: center !important;
+}
+
+.story-content {
+  background: #fff !important;
+  padding: 35px !important;
+  border-radius: 25px !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+}
+
+.story-content p {
+  color: #555 !important;
+  line-height: 1.9 !important;
+}
