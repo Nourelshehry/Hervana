@@ -194,11 +194,19 @@ for (const item of items) {
     ? product[0].sale_price
     : product[0].price;
 
-  emailItems.push({
-    name: product[0].name,
-    quantity: item.quantity,
-    price: unitPrice
-  });
+ const BASE_IMAGE_URL = "https://hervana-store.com/";
+
+const images = JSON.parse(product[0].images || "[]");
+
+emailItems.push({
+  name: product[0].name,
+  quantity: item.quantity,
+  price: unitPrice,
+  image: images[0]
+    ? BASE_IMAGE_URL + images[0]
+    : BASE_IMAGE_URL + "images/placeholder.jpg"
+});
+
 }
 
 const orderData = {
