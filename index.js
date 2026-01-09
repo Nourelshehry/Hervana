@@ -10,45 +10,35 @@ import {
 ================================ */
 
 async function sendEmail(env, { to, subject, html }) {
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${env.RESEND_API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from: "Hervana <onboarding@resend.dev>",
-      to,
-      subject,
-      html
-    })
-  });
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: "Hervana orders@hervana-store.com",
+        to,
+        subject,
+        html
+      })
+    });
 
-  const data = await res.text();
+    const text = await res.text();
 
-  if (!res.ok) {
-    console.error("RESEND ERROR:", data);
-    throw new Error("Email sending failed");
-  }
-
-  return data;
-}
-
-
-const json = (data, status = 200) =>
-  new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json",
-     "Access-Control-Allow-Origin": "https://hervana-store.com",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization"
+    if (!res.ok) {
+      console.error("❌ RESEND ERROR:", text);
+      return false;
     }
-  });
-async function queryDB(env, sql, bindings = []) {
-  const res = await env.DB.prepare(sql).bind(...bindings).all();
-  return res.results;
+
+    return true;
+  } catch (err) {
+    console.error("❌ RESEND FETCH FAILED:", err);
+    return false;
+  }
 }
+
 
 /* ===============================
    Worker
@@ -178,18 +168,18 @@ export default {
           total
         };
 
-       /* await sendEmail(env, {
-          to: customer.email,
-          subject: "Your Hervana Order 💖",
-          html: customerOrderEmail(orderData)
-        });
+       await sendEmail(env, {
+  to: customer.email,
+  subject: "Your Hervana Order 💖",
+  html: customerOrderEmail(orderData)
+});
 
-        await sendEmail(env, {
-          to: "hervanacontact@gmail.com",
-          subject: "🛒 New Order - Hervana",
-          html: adminOrderEmail(orderData)
-        });
-*/
+await sendEmail(env, {
+  to: "hervanacontact@gmail.com",
+  subject: "🛒 New Order - Hervana",
+  html: adminOrderEmail(orderData)
+});
+
         return json({
           success: true,
           orderId,
