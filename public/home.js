@@ -64,6 +64,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.error("❌ FETCH ERROR", err);
     return;
   }
+// ================= Our Story Fade-In =================
+const storySection = document.querySelector(".fade-in-section");
+if(storySection){
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add("visible");
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+  observer.observe(storySection);
+}
 
   /* ===============================
      HERO SLIDER
