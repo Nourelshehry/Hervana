@@ -1,7 +1,9 @@
 export function customerOrderEmail(order) {
-  const itemsHtml = order.items.map(
-    i => `<li>${i.name} × ${i.quantity} — ${i.price} EGP</li>`
-  ).join("");
+  const itemsHtml = order.items
+    .map(
+      i => `<li>${i.name} × ${i.quantity} — ${i.price} EGP</li>`
+    )
+    .join("");
 
   return `
     <div style="font-family:Arial">
@@ -23,9 +25,9 @@ export function customerOrderEmail(order) {
 }
 
 export function adminOrderEmail(order) {
-  const itemsHtml = order.items.map(
-    i => `<li>${i.name} × ${i.quantity}</li>`
-  ).join("");
+  const itemsHtml = order.items
+    .map(i => `<li>${i.name} × ${i.quantity}</li>`)
+    .join("");
 
   return `
     <h2>🛒 New Order</h2>
