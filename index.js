@@ -1,4 +1,4 @@
-// index.js — FINAL FIXED (Cloudflare Worker API only)
+// index.js — FINAL CLEAN & SAFE (Cloudflare Worker API only)
 
 import {
   customerOrderEmail,
@@ -9,16 +9,37 @@ import {
    Helpers
 ================================ */
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "https://hervana-store.com",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization"
+};
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      ...corsHeaders
+    }
+  });
+}
+
+async function queryDB(env, sql, params = []) {
+  const { results } = await env.DB.prepare(sql).bind(...params).all();
+  return results;
+}
+
 async function sendEmail(env, { to, subject, html }) {
   try {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+        Authorization: `Bearer ${env.RESEND_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        from: "Hervana orders@hervana-store.com",
+        from: "Hervana Orders <orders@hervana-store.com>",
         to,
         subject,
         html
@@ -39,7 +60,6 @@ async function sendEmail(env, { to, subject, html }) {
   }
 }
 
-
 /* ===============================
    Worker
 ================================ */
@@ -48,63 +68,63 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     const method = request.method;
-
-    // 👇 IMPORTANT: strip /api
     const pathname = url.pathname.replace(/^\/api/, "");
 
     /* =========================
-       CORS
+       CORS preflight
     ========================= */
     if (method === "OPTIONS") {
       return new Response(null, {
         status: 204,
-        headers: {
-     "Access-Control-Allow-Origin": "https://hervana-store.com",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, Authorization",
-          "Access-Control-Max-Age": "86400"
-        }
+        headers: corsHeaders
       });
     }
 
-    /* =========================
-       API ROUTES
-    ========================= */
-
-    // GET /api/products
-    if (pathname === "/products" && method === "GET") {
-      const products = await queryDB(env, "SELECT * FROM products");
-      return json(products);
-    }
-
-    // GET /api/product/:id
-    if (pathname.startsWith("/product/") && method === "GET") {
-      const id = Number(pathname.split("/")[2]);
-      const prod = await queryDB(
-        env,
-        "SELECT * FROM products WHERE id = ?",
-        [id]
-      );
-
-      if (!prod.length) {
-        return json({ success: false, message: "Product not found" }, 404);
+    try {
+      /* =========================
+         GET /api/products
+      ========================= */
+      if (pathname === "/products" && method === "GET") {
+        const products = await queryDB(env, "SELECT * FROM products");
+        return json(products);
       }
 
-      return json({ success: true, product: prod[0] });
-    }
+      /* =========================
+         GET /api/product/:id
+      ========================= */
+      if (pathname.startsWith("/product/") && method === "GET") {
+        const id = Number(pathname.split("/")[2]);
 
-    // POST /api/order
-  if (pathname === "/order" && method === "POST") {
-  try {
-    const body = await request.json();
-    const { customer, items } = body;
+        const prod = await queryDB(
+          env,
+          "SELECT * FROM products WHERE id = ?",
+          [id]
+        );
 
-    if (!customer || !Array.isArray(items) || !items.length) {
-      return json({ success: false, message: "Invalid order data" }, 400);
-    }
+        if (!prod.length) {
+          return json({ success: false, message: "Product not found" }, 404);
+        }
 
-    // باقي الكود زي ما هو
+        return json({ success: true, product: prod[0] });
+      }
 
+      /* =========================
+         POST /api/order
+      ========================= */
+      if (pathname === "/order" && method === "POST") {
+        let body;
+
+        try {
+          body = await request.json();
+        } catch {
+          return json({ success: false, message: "Invalid JSON body" }, 400);
+        }
+
+        const { customer, items } = body;
+
+        if (!customer || !Array.isArray(items) || !items.length) {
+          return json({ success: false, message: "Invalid order data" }, 400);
+        }
 
         let total = 0;
 
@@ -168,56 +188,60 @@ export default {
           total
         };
 
-       await sendEmail(env, {
-  to: customer.email,
-  subject: "Your Hervana Order 💖",
-  html: customerOrderEmail(orderData)
-});
-
-await sendEmail(env, {
-  to: "hervanacontact@gmail.com",
-  subject: "🛒 New Order - Hervana",
-  html: adminOrderEmail(orderData)
-});
-
-        return json({
-          success: true,
-          orderId,
-          total
+        // Emails (failure won't break order)
+        await sendEmail(env, {
+          to: customer.email,
+          subject: "Your Hervana Order 💖",
+          html: customerOrderEmail(orderData)
         });
 
-      } catch (err) {
-        console.error(err);
-        return json({ success: false, error: err.message }, 500);
-      }
-    }
+        await sendEmail(env, {
+          to: "hervanacontact@gmail.com",
+          subject: "🛒 New Order - Hervana",
+          html: adminOrderEmail(orderData)
+        });
 
-    // POST /api/restock/:id
-   if (pathname.startsWith("/restock/") && method === "POST") {
-  const auth = request.headers.get("authorization");
-
-  if (auth !== `Bearer ${env.ADMIN_TOKEN}`) {
-    return json({ success: false, message: "Unauthorized" }, 401);
-  }
-
-  const id = Number(pathname.split("/")[2]);
-  const body = await request.json();
-  const { amount } = body;
-
-
-      if (!Number.isInteger(amount) || amount <= 0) {
-        return json({ success: false, message: "Invalid amount" }, 400);
+        return json({ success: true, orderId, total });
       }
 
-      await env.DB.prepare(
-        "UPDATE products SET stock = stock + ? WHERE id = ?"
-      )
-        .bind(amount, id)
-        .run();
+      /* =========================
+         POST /api/restock/:id
+      ========================= */
+      if (pathname.startsWith("/restock/") && method === "POST") {
+        const auth = request.headers.get("authorization");
 
-      return json({ success: true, message: "Product restocked" });
+        if (auth !== `Bearer ${env.ADMIN_TOKEN}`) {
+          return json({ success: false, message: "Unauthorized" }, 401);
+        }
+
+        const id = Number(pathname.split("/")[2]);
+
+        let body;
+        try {
+          body = await request.json();
+        } catch {
+          return json({ success: false, message: "Invalid JSON body" }, 400);
+        }
+
+        const { amount } = body;
+
+        if (!Number.isInteger(amount) || amount <= 0) {
+          return json({ success: false, message: "Invalid amount" }, 400);
+        }
+
+        await env.DB.prepare(
+          "UPDATE products SET stock = stock + ? WHERE id = ?"
+        )
+          .bind(amount, id)
+          .run();
+
+        return json({ success: true, message: "Product restocked" });
+      }
+
+      return json({ message: "API route not found" }, 404);
+    } catch (err) {
+      console.error("🔥 WORKER ERROR:", err);
+      return json({ success: false, error: "Internal Server Error" }, 500);
     }
-
-    return json({ message: "API route not found" }, 404);
   }
 };
