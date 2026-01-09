@@ -178,7 +178,7 @@ export default {
           total
         };
 
-        await sendEmail(env, {
+       /* await sendEmail(env, {
           to: customer.email,
           subject: "Your Hervana Order 💖",
           html: customerOrderEmail(orderData)
@@ -189,7 +189,7 @@ export default {
           subject: "🛒 New Order - Hervana",
           html: adminOrderEmail(orderData)
         });
-
+*/
         return json({
           success: true,
           orderId,
