@@ -171,7 +171,7 @@ display: flex;
 /*Buttons*/ 
 .add-to-cart {
   /*background: #c0392b;*/
-  color: #c0392b;
+  color: #f5e5e3;
     background: linear-gradient(135deg, #fa6453, #c0392b);
   border: none;
   padding: 14px 20px;
