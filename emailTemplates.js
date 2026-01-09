@@ -4,32 +4,28 @@
 
 export function customerOrderEmail(order) {
   const itemsHtml = order.items
-    .map(
-      i => `
+    .map(i => {
+      const imageUrl = i.image || 'https://hervana-store.com/images/placeholder.jpg';
+      return `
       <tr>
         <td style="padding:12px 0; border-bottom:1px solid #eee;">
           <img
-            src="${i.image}"
+            src="${imageUrl}"
             alt="${i.name}"
             width="80"
             style="border-radius:10px; display:block;"
           />
         </td>
-
         <td style="padding-left:12px; border-bottom:1px solid #eee;">
-          <p style="margin:0; font-weight:600; font-size:15px;">
-            ${i.name}
-          </p>
-          <p style="margin:6px 0 0; color:#777; font-size:14px;">
-            Quantity: ${i.quantity}<br/>
-<p>Subtotal: ${order.subtotal} EGP</p>
-<p>Shipping: ${order.shipping} EGP</p>
-<h3>Total: ${order.total} EGP</h3>
-          </p>
+          <p style="margin:0; font-weight:600; font-size:15px;">${i.name}</p>
+          <p style="margin:6px 0 0; color:#777; font-size:14px;">Quantity: ${i.quantity}</p>
+          <p style="margin:6px 0 0; color:#777; font-size:14px;">Subtotal: ${i.subtotal} EGP</p>
+          <p style="margin:6px 0 0; color:#777; font-size:14px;">Shipping: ${i.shipping} EGP</p>
+          <p style="margin:6px 0 0; font-weight:600; font-size:15px;">Total: ${i.total} EGP</p>
         </td>
       </tr>
-    `
-    )
+      `;
+    })
     .join("");
 
   return `
@@ -51,9 +47,7 @@ export function customerOrderEmail(order) {
       <tr>
         <td style="text-align:center;">
           <h2 style="margin:0 0 8px;">Thank you for your order 💖</h2>
-          <p style="margin:0; color:#777;">
-            Hi ${order.name}, we’re so happy you chose Hervana 🌸
-          </p>
+          <p style="margin:0; color:#777;">Hi ${order.name}, we’re so happy you chose Hervana 🌸</p>
         </td>
       </tr>
 
@@ -61,9 +55,7 @@ export function customerOrderEmail(order) {
 
       <tr>
         <td>
-          <p style="margin:0 0 14px;">
-            Your order has been received successfully and is being prepared with love ✨
-          </p>
+          <p style="margin:0 0 14px;">Your order has been received successfully and is being prepared with love ✨</p>
         </td>
       </tr>
 
@@ -80,8 +72,13 @@ export function customerOrderEmail(order) {
       <tr>
         <td style="text-align:right;">
           <p style="margin:0; font-size:16px;">
-            <strong>Total:</strong>
-            <span style="color:#d38c7c;">${order.total} EGP</span>
+            <strong>Subtotal:</strong> ${order.subtotal} EGP
+          </p>
+          <p style="margin:0; font-size:16px;">
+            <strong>Shipping:</strong> ${order.shipping} EGP
+          </p>
+          <p style="margin:0; font-size:16px; font-weight:600;">
+            <strong>Total:</strong> ${order.total} EGP
           </p>
         </td>
       </tr>
@@ -90,14 +87,8 @@ export function customerOrderEmail(order) {
 
       <tr>
         <td>
-          <p style="margin:0;">
-            We’ll contact you soon to confirm delivery 💬
-          </p>
-
-          <p style="margin:12px 0 0;">
-            With love,<br/>
-            <strong>Hervana</strong> 🌸
-          </p>
+          <p style="margin:0;">We’ll contact you soon to confirm delivery 💬</p>
+          <p style="margin:12px 0 0;">With love,<br/><strong>Hervana</strong> 🌸</p>
         </td>
       </tr>
     </table>
@@ -111,15 +102,19 @@ export function customerOrderEmail(order) {
 
 export function adminOrderEmail(order) {
   const itemsHtml = order.items
-    .map(
-      i => `
+    .map(i => {
+      const imageUrl = i.image || 'https://hervana-store.com/images/placeholder.jpg';
+      return `
       <tr>
-        <td style="padding:6px 0;">${i.name}</td>
+        <td style="padding:6px 0;">
+          <img src="${imageUrl}" alt="${i.name}" width="50" style="border-radius:6px; display:block;"/>
+          ${i.name}
+        </td>
         <td align="center">${i.quantity}</td>
         <td align="right">${i.price} EGP</td>
       </tr>
-    `
-    )
+      `;
+    })
     .join("");
 
   return `

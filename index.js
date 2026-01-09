@@ -111,157 +111,133 @@ export default {
       /* =========================
          POST /api/order
       ========================= */
-      if (pathname === "/order" && method === "POST") {
-        let body;
+      /* =========================
+   POST /api/order — FINAL
+========================= */
+if (pathname === "/order" && method === "POST") {
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ success: false, message: "Invalid JSON body" }, 400);
+  }
 
-        try {
-          body = await request.json();
-        } catch {
-          return json({ success: false, message: "Invalid JSON body" }, 400);
-        }
+  const { customer, items, shipping } = body;
+  if (!customer || !Array.isArray(items) || !items.length) {
+    return json({ success: false, message: "Invalid order data" }, 400);
+  }
 
- const { customer, items, shipping } = body;
+  const shippingFee = Number(shipping) || 0;
+  let subtotal = 0;
 
+  // Prepare email items
+  const emailItems = [];
+  const BASE_IMAGE_URL = "https://hervana-store.com/";
 
-        if (!customer || !Array.isArray(items) || !items.length) {
-          return json({ success: false, message: "Invalid order data" }, 400);
-        }
+  for (const item of items) {
+    const product = await queryDB(env, "SELECT * FROM products WHERE id = ?", [item.id]);
+    if (!product.length) {
+      return json({ success: false, message: `Product not found (ID: ${item.id})` }, 404);
+    }
 
-let total = 0;
-const shippingFee = Number(shipping) || 0;
+    if (product[0].stock < item.quantity) {
+      return json({ success: false, message: `Not enough stock for ${product[0].name}` }, 400);
+    }
 
-        for (const item of items) {
-          const product = await queryDB(
-            env,
-            "SELECT * FROM products WHERE id = ?",
-            [item.id]
-          );
+    const unitPrice = product[0].on_sale ? product[0].sale_price : product[0].price;
+    const lineTotal = unitPrice * item.quantity;
+    subtotal += lineTotal;
 
-          if (!product.length) {
-            return json({ success: false, message: "Product not found" }, 404);
-          }
+    // Parse images safely
+    let images = [];
+    try {
+      images = typeof product[0].images === "string" ? JSON.parse(product[0].images) : Array.isArray(product[0].images) ? product[0].images : [];
+    } catch (err) {
+      console.error("⚠️ Failed to parse images for product:", product[0].name, err);
+      images = [];
+    }
 
-          if (product[0].stock < item.quantity) {
-            return json(
-              { success: false, message: `Not enough stock for ${product[0].name}` },
-              400
-            );
-          }
+    const imageUrl = images.length ? `${BASE_IMAGE_URL}${images[0]}` : `${BASE_IMAGE_URL}images/placeholder.jpg`;
 
-          const unitPrice = product[0].on_sale
-            ? product[0].sale_price
-            : product[0].price;
+    emailItems.push({
+      name: product[0].name,
+      quantity: item.quantity,
+      price: unitPrice,
+      image: imageUrl
+    });
+  }
 
-          total += unitPrice * item.quantity;
-         
+  // Total including shipping
+  const total = subtotal + shippingFee;
 
-        }
- total += shippingFee;
-        // update stock
-        for (const item of items) {
-          await env.DB.prepare(
-            "UPDATE products SET stock = stock - ? WHERE id = ?"
-          )
-            .bind(item.quantity, item.id)
-            .run();
-        }
+  // Update stock
+  for (const item of items) {
+    await env.DB.prepare("UPDATE products SET stock = stock - ? WHERE id = ?")
+      .bind(item.quantity, item.id)
+      .run();
+  }
 
-        const orderId = "order_" + Date.now();
+  // Insert order
+  const orderId = "order_" + Date.now();
+  await env.DB.prepare(
+    `INSERT INTO orders
+     (id, name, phone, email, address, items, total, created_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+  ).bind(
+    orderId,
+    customer.name,
+    customer.phone,
+    customer.email,
+    customer.address,
+    JSON.stringify(items),
+    total,
+    new Date().toISOString()
+  ).run();
 
-        await env.DB.prepare(
-          `INSERT INTO orders
-           (id, name, phone, email, address, items, total, created_at)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-        )
-          .bind(
-            orderId,
-            customer.name,
-            customer.phone,
-            customer.email,
-            customer.address,
-            JSON.stringify(items),
-            total,
-            new Date().toISOString()
-          )
-          .run();
+  const orderData = {
+    orderId,
+    ...customer,
+    items: emailItems,
+    subtotal,
+    shipping: shippingFee,
+    total
+  };
 
- const emailItems = [];
+  // Send emails (non-blocking, errors won't break the order)
+  try {
+    const emailResults = await Promise.allSettled([
+      sendEmail(env, {
+        to: customer.email,
+        subject: "Your Hervana Order 💖",
+        html: customerOrderEmail(orderData)
+      }),
+      sendEmail(env, {
+        to: "hervanacontact@gmail.com",
+        subject: "🛒 New Order - Hervana",
+        html: adminOrderEmail(orderData)
+      })
+    ]);
 
-for (const item of items) {
-  const product = await queryDB(
-    env,
-    "SELECT name, price, sale_price, on_sale FROM products WHERE id = ?",
-    [item.id]
-  );
+    emailResults.forEach((res, i) => {
+      if (res.status === "rejected" || res.value === false) {
+        console.error(
+          `📧 Email ${i === 0 ? "customer" : "admin"} failed`,
+          res.reason || res.value
+        );
+      }
+    });
+  } catch (err) {
+    console.error("📧 Email system crashed:", err);
+  }
 
-  const unitPrice = product[0].on_sale
-    ? product[0].sale_price
-    : product[0].price;
-
- const BASE_IMAGE_URL = "https://hervana-store.com/";
-
-const images = typeof product[0].images === "string"
-  ? JSON.parse(product[0].images)
-  : Array.isArray(product[0].images)
-    ? product[0].images
-    : [];
-
-
-emailItems.push({
-  name: product[0].name,
-  quantity: item.quantity,
-  price: unitPrice,
-  image: imageUrl
-});
+  return json({ success: true, orderId, subtotal, shipping: shippingFee, total });
 }
-
-const orderData = {
-  orderId,
-  ...customer,
-  items: emailItems,
-  subtotal: total - shippingFee,
-  shipping: shippingFee,
-  total
-};
-
-
 
 
         // Emails (failure won't break order)
        /* =========================
    EMAILS (NON-BLOCKING)
 ========================= */
-
-
-try {
-  const emailResults = await Promise.allSettled([
-    sendEmail(env, {
-      to: customer.email,
-      subject: "Your Hervana Order 💖",
-      html: customerOrderEmail(orderData)
-    }),
-    sendEmail(env, {
-      to: "hervanacontact@gmail.com",
-      subject: "🛒 New Order - Hervana",
-      html: adminOrderEmail(orderData)
-    })
-  ]);
-
-  emailResults.forEach((res, i) => {
-    if (res.status === "rejected" || res.value === false) {
-      console.error(
-        `📧 Email ${i === 0 ? "customer" : "admin"} failed`,
-        res.reason || res.value
-      );
-    }
-  });
-} catch (err) {
-  // ⛔ مستحيل يكسر الأوردر
-  console.error("📧 Email system crashed:", err);
-}
-
-        return json({ success: true, orderId, total });
-      }
 
       /* =========================
          POST /api/restock/:id
