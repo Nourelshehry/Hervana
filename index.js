@@ -209,23 +209,7 @@ const orderData = {
 };
 
 
-for (const item of items) {
-  const product = await queryDB(
-    env,
-    "SELECT name, price, sale_price, on_sale FROM products WHERE id = ?",
-    [item.id]
-  );
 
-  const unitPrice = product[0].on_sale
-    ? product[0].sale_price
-    : product[0].price;
-
-  emailItems.push({
-    name: product[0].name,
-    quantity: item.quantity,
-    price: unitPrice
-  });
-}
 
         // Emails (failure won't break order)
         await sendEmail(env, {
