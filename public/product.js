@@ -19,13 +19,11 @@ if (backBtn) {
       return;
     }
 
-    // fallback حقيقي للهيستوري
     if (window.history.length > 1) {
       window.history.back();
       return;
     }
 
-    // آخر حل
     window.location.href = "all-products.html";
   });
 }
