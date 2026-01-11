@@ -115,40 +115,48 @@
        products
   .filter(p => p.category?.toLowerCase() === CATEGORY)
   .forEach(product => {
-    const imgs = normalizeImages(product.images);
-    if (!imgs.length) return;
+ const imagesArr = normalizeImages(product.images);
+const imgSrc = imagesArr.length
+  ? getImageUrl(imagesArr[0])
+  : "/images/placeholder.png";
 
-    const card = document.createElement("div");
+const isOut = Number(product.stock) <= 0;
+
+const card = document.createElement("div");
+card.classList.add("product-card");
+if (isOut) card.classList.add("out-of-stock");
+
     card.className = "product-card";
 
     card.innerHTML = `
-      ${product.on_sale ? `
-        <span class="sale-badge">-${product.sale_percent}%</span>
-      ` : ""}
+  ${product.on_sale ? `
+    <span class="sale-badge">-${product.sale_percent}%</span>
+  ` : ""}
 
-      <img src="${getImageUrl(imgs[0])}" alt="${product.name}">
+  ${isOut ? `<span class="out-badge">Out of stock</span>` : ""}
 
-      <h3>${product.name}</h3>
+  <img src="${imgSrc}" alt="${product.name}">
 
-      <p class="price">
-        ${
-          product.on_sale
-            ? `<span class="old-price">${product.price} EGP</span>
-               <span class="sale-price">${product.sale_price} EGP</span>`
-            : `${product.price} EGP`
-        }
-      </p>
+  <h3>${product.name}</h3>
 
-      <button
-        class="add-to-cart"
-        data-id="${product.id}"
-        data-name="${product.name}"
-        data-price="${product.on_sale ? product.sale_price : product.price}">
-        Add to Cart
-      </button>
+  <p class="price">
+    ${
+      product.on_sale
+        ? `<span class="old-price">${product.price} EGP</span>
+           <span class="sale-price">${product.sale_price} EGP</span>`
+        : `${product.price} EGP`
+    }
+  </p>
 
-    
-    `;
+  <button
+    class="add-to-cart"
+    ${isOut ? "disabled" : ""}
+    data-id="${product.id}"
+    data-name="${product.name}"
+    data-price="${product.on_sale ? product.sale_price : product.price}">
+    ${isOut ? "Out of stock" : "Add to Cart"}
+  </button>
+`;
 
     // الكارد كله يفتح صفحة المنتج
      card.addEventListener("click", () => {

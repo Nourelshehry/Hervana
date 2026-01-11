@@ -142,20 +142,27 @@
         }
 
         decorProducts.forEach(product => {
-          const imagesArr = normalizeImages(product.images);
-          if (!imagesArr.length) return;
+        const imagesArr = normalizeImages(product.images);
+const imgSrc = imagesArr.length
+  ? getImageUrl(imagesArr[0])
+  : "/images/placeholder.png";
 
-          const card = document.createElement("div");
+const isOut = Number(product.stock) <= 0;
+
+const card = document.createElement("div");
+card.classList.add("product-card");
+if (isOut) card.classList.add("out-of-stock");
+
         card.  className = "product-card";
 
-          card.innerHTML = card.innerHTML = `
+         card.innerHTML = `
   ${product.on_sale ? `
-    <span class="sale-badge">
-      -${product.sale_percent}%
-    </span>
+    <span class="sale-badge">-${product.sale_percent}%</span>
   ` : ""}
 
-  <img src="${getImageUrl(imagesArr[0])}" alt="${product.name}">
+  ${isOut ? `<span class="out-badge">Out of stock</span>` : ""}
+
+  <img src="${imgSrc}" alt="${product.name}">
 
   <h3>${product.name}</h3>
 
@@ -170,13 +177,12 @@
 
   <button
     class="add-to-cart"
+    ${isOut ? "disabled" : ""}
     data-id="${product.id}"
     data-name="${product.name}"
     data-price="${product.on_sale ? product.sale_price : product.price}">
-    Add to Cart
+    ${isOut ? "Out of stock" : "Add to Cart"}
   </button>
-
-
 `;
 
  // ✅ الكارد كله clickable

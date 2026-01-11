@@ -844,3 +844,23 @@ text-align: center;
 .all-products .product-card img {
   transition: transform 0.3s ease;
 }
+.product-card.out-of-stock {
+  opacity: 0.6;
+}
+
+.out-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #444;
+  color: white;
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.add-to-cart:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
