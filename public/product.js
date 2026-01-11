@@ -3,25 +3,32 @@ document.addEventListener("DOMContentLoaded", async () => {
   /* ===============================
      Back Button Logic
   =============================== */
-  const params = new URLSearchParams(window.location.search);
-  const from = params.get("from");
+/* ===============================
+   Smart Back Button
+=============================== */
 
-  const backBtn = document.getElementById("back-btn");
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-  if (from) {
-    window.location.href = from;
-    return;
-  }
+const params = new URLSearchParams(window.location.search);
+const backBtn = document.getElementById("back-btn");
 
-  if (document.referrer) {
-    window.location.href = document.referrer;
-    return;
-  }
+if (backBtn) {
+  backBtn.addEventListener("click", () => {
+    const from = params.get("from");
 
-  window.location.href = "all-products.html";
-});
-  }
+    if (from) {
+      window.location.href = decodeURIComponent(from);
+      return;
+    }
+
+    // fallback حقيقي للهيستوري
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    // آخر حل
+    window.location.href = "all-products.html";
+  });
+}
 
   /* ===============================
      Product Logic
