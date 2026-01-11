@@ -137,7 +137,7 @@ if (isOutOfStock) {
             <span class="out-badge">Out of Stock</span>
           ` : ""}
 
-          <img src="${img}" alt="${product.name}">
+<img src="${img}" alt="${product.name}" loading="lazy">
 
           <h3>${product.name}</h3>
 

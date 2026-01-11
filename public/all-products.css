@@ -850,7 +850,7 @@ text-align: center;
   opacity: 0.6;
 }
 .product-card.out-of-stock img {
-  filter: grayscale(40%);
+  filter: grayscale(10%);
 }
 
 .out-badge {
@@ -919,4 +919,16 @@ text-align: center;
   cursor: not-allowed !important;
   box-shadow: none !important;
   transform: none !important;
+}
+.product-card {
+  cursor: pointer;
+}
+
+.product-card.out-of-stock {
+  opacity: 0.6;
+  cursor: pointer; /* مهم */
+}
+
+.product-card.out-of-stock .add-to-cart {
+  cursor: not-allowed;
 }
