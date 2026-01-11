@@ -137,7 +137,12 @@ if (isOutOfStock) {
             <span class="out-badge">Out of Stock</span>
           ` : ""}
 
-<img src="${img}" alt="${product.name}" loading="lazy">
+<img
+  src="${img}"
+  alt="${product.name}"
+  loading="lazy"
+  decoding="async"
+/>
 
           <h3>${product.name}</h3>
 
@@ -150,15 +155,16 @@ if (isOutOfStock) {
             }
           </p>
 
-       <button
+   <button
   class="add-to-cart ${isOutOfStock ? "out-of-stock" : ""}"
-  ${isOutOfStock ? "disabled" : ""}
+  data-disabled="${isOutOfStock ? "true" : "false"}"
   data-id="${product.id}"
   data-name="${product.name}"
   data-price="${isOnSale ? product.sale_price : product.price}"
 >
   ${isOutOfStock ? "Out of stock" : "Add to Cart"}
 </button>
+
 
         `;
 
@@ -170,18 +176,20 @@ if (isOutOfStock) {
 
         // Add to cart
         const addBtn = card.querySelector(".add-to-cart");
-        addBtn.addEventListener("click", e => {
-          e.stopPropagation();
-          if (isOutOfStock) return;
+      addBtn.addEventListener("click", e => {
+  e.stopPropagation(); // مهم جدًا
 
-          if (typeof addToCart === "function") {
-            addToCart(
-              addBtn.dataset.id,
-              addBtn.dataset.name,
-              addBtn.dataset.price
-            );
-          }
-        });
+  if (isOutOfStock) return;
+
+  if (typeof addToCart === "function") {
+    addToCart(
+      addBtn.dataset.id,
+      addBtn.dataset.name,
+      addBtn.dataset.price
+    );
+  }
+});
+
 
         grid.appendChild(card);
       } catch (err) {

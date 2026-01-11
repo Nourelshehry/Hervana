@@ -1,32 +1,29 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
   /* ===============================
-     Back Button Logic
+     Smart Back Button
   =============================== */
-/* ===============================
-   Smart Back Button
-=============================== */
 
-const params = new URLSearchParams(window.location.search);
-const backBtn = document.getElementById("back-btn");
+  const params = new URLSearchParams(window.location.search);
+  const backBtn = document.getElementById("back-btn");
 
-if (backBtn) {
-  backBtn.addEventListener("click", () => {
-    const from = params.get("from");
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      const from = params.get("from");
 
-    if (from) {
-      window.location.href = decodeURIComponent(from);
-      return;
-    }
+      if (from) {
+        window.location.href = decodeURIComponent(from);
+        return;
+      }
 
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
+      if (window.history.length > 1) {
+        window.history.back();
+        return;
+      }
 
-    window.location.href = "all-products.html";
-  });
-}
+      window.location.href = "all-products.html";
+    });
+  }
 
   /* ===============================
      Product Logic
@@ -42,6 +39,7 @@ if (backBtn) {
   /* ===============================
      Helpers
   =============================== */
+
   function parseImages(images) {
     try {
       if (Array.isArray(images)) return images;
@@ -64,6 +62,7 @@ if (backBtn) {
   /* ===============================
      Fetch Product
   =============================== */
+
   try {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/api/products"
@@ -72,29 +71,66 @@ if (backBtn) {
     if (!res.ok) throw new Error("Failed to load products");
 
     const products = await res.json();
-   const product = products.find(p => String(p.id) === String(productId));
 
-if (!product) {
-  document.querySelector(".product-details").innerHTML =
-    "<p>Product not found.</p>";
-  return;
-}
+    const product = products.find(
+      p => String(p.id) === String(productId)
+    );
 
-/* دلوقتي نشتغل بأمان */
-const stock = Number(product.stock);
-const isOut = isNaN(stock) || stock <= 0;
+    /* ======== IMPORTANT CHECK ======== */
+    if (!product) {
+      document.querySelector(".product-details").innerHTML =
+        "<p>Product not found.</p>";
+      return;
+    }
 
-const addBtn = document.getElementById("add-to-cart");
+    const addBtn = document.getElementById("add-to-cart");
 
-if (isOut) {
-  addBtn.textContent = "Out of stock";
-  addBtn.disabled = true;
-  addBtn.classList.add("out-of-stock");
-}
+    /* ===============================
+       Stock Logic
+    =============================== */
+
+    const stock = Number(product.stock);
+    const isOut = isNaN(stock) || stock <= 0;
+
+    if (isOut && addBtn) {
+      addBtn.textContent = "Out of stock";
+      addBtn.disabled = true;
+      addBtn.classList.add("out-of-stock");
+    }
+
+    /* ===============================
+       Bind Add To Cart
+    =============================== */
+
+    if (addBtn) {
+      const finalPrice =
+        product.on_sale && product.sale_price
+          ? product.sale_price
+          : product.price;
+
+      addBtn.dataset.id = product.id;
+      addBtn.dataset.name = product.name;
+      addBtn.dataset.price = finalPrice;
+
+      addBtn.addEventListener("click", () => {
+        if (addBtn.disabled) return;
+
+        if (typeof addToCart === "function") {
+          addToCart(
+            addBtn.dataset.id,
+            addBtn.dataset.name,
+            addBtn.dataset.price
+          );
+        } else {
+          console.error("❌ addToCart not found");
+        }
+      });
+    }
 
     /* ===============================
        Product Info
     =============================== */
+
     document.getElementById("product-name").textContent = product.name;
     document.getElementById("product-description").textContent =
       product.description || "";
@@ -102,20 +138,19 @@ if (isOut) {
     const priceEl = document.getElementById("product-price");
 
     if (product.on_sale && !isOut) {
-  priceEl.innerHTML = `
-    <span class="old-price">${product.price} EGP</span>
-    <span class="sale-price">${product.sale_price} EGP</span>
-    <span class="sale-badge">-${product.sale_percent}%</span>
-  `;
-} else {
-  priceEl.textContent = `${product.price} EGP`;
-}
-
-   
+      priceEl.innerHTML = `
+        <span class="old-price">${product.price} EGP</span>
+        <span class="sale-price">${product.sale_price} EGP</span>
+        <span class="sale-badge">-${product.sale_percent}%</span>
+      `;
+    } else {
+      priceEl.textContent = `${product.price} EGP`;
+    }
 
     /* ===============================
        Image Slider
     =============================== */
+
     const slider = document.getElementById("slider");
     const dotsContainer = document.getElementById("slider-dots");
 
@@ -148,6 +183,7 @@ if (isOut) {
 /* ===============================
    Slider Logic
 =============================== */
+
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");
   const dots = dotsContainer.querySelectorAll(".dot");

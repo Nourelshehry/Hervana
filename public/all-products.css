@@ -932,3 +932,11 @@ text-align: center;
 .product-card.out-of-stock .add-to-cart {
   cursor: not-allowed;
 }
+.product-card {
+  cursor: pointer;
+}
+
+.add-to-cart.out-of-stock {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
