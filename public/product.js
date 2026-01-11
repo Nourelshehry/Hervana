@@ -1,21 +1,27 @@
-const params = new URLSearchParams(window.location.search);
-const from = params.get("from");
+document.addEventListener("DOMContentLoaded", async () => {
 
-document.addEventListener("DOMContentLoaded", () => {
+  /* ===============================
+     Back Button Logic (CLEAN)
+  =============================== */
+  const params = new URLSearchParams(window.location.search);
+  const from = params.get("from");
+
   const backBtn = document.getElementById("back-btn");
 
-  if (!backBtn) return;
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
+      if (from) {
+        window.location.href = `${from}.html`;
+      } else {
+        window.location.href = "all-products.html";
+      }
+    });
+  }
 
-  backBtn.addEventListener("click", () => {
-    if (from) {
-      window.location.href = `${from}.html`;
-    } else {
-      window.location.href = "all-products.html";
-    }
-  });
-});
+  /* ===============================
+     Product Logic
+  =============================== */
 
-document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
   if (!productId) {
