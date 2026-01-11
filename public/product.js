@@ -9,18 +9,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   const backBtn = document.getElementById("back-btn");
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      if (from) {
-        window.location.href = `${from}.html`;
-        return;
-      }
+  if (from) {
+    window.location.href = from;
+    return;
+  }
 
-      if (document.referrer) {
-        window.location.href = document.referrer;
-        return;
-      }
+  if (document.referrer) {
+    window.location.href = document.referrer;
+    return;
+  }
 
-      window.location.href = "all-products.html";
-    });
+  window.location.href = "all-products.html";
+});
   }
 
   /* ===============================
