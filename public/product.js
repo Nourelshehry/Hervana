@@ -76,7 +76,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       p => String(p.id) === String(productId)
     );
 
-    /* ======== IMPORTANT CHECK ======== */
     if (!product) {
       document.querySelector(".product-details").innerHTML =
         "<p>Product not found.</p>";
@@ -99,12 +98,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* ===============================
-       Bind Add To Cart
+       Bind Add To Cart  ✅ FIX HERE
     =============================== */
 
     if (addBtn) {
       const finalPrice =
-        product.on_sale && product.sale_price
+        product.on_sale && !isOut
           ? product.sale_price
           : product.price;
 
@@ -112,7 +111,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       addBtn.dataset.name = product.name;
       addBtn.dataset.price = finalPrice;
 
-      addBtn.addEventListener("click", () => {
+      addBtn.addEventListener("click", e => {
+        e.preventDefault();   // 🔴 يمنع reload
+        e.stopPropagation(); // 🔴 أمان إضافي
+
         if (addBtn.disabled) return;
 
         if (typeof addToCart === "function") {
