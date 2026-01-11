@@ -3,7 +3,7 @@
 ================================ */
 
 export function customerOrderEmail(order) {
-  const itemsHtml = order.items.map(i => 
+  const itemsHtml = order.items.map(i => `
 <tr>
   <td style="padding:12px 0; border-bottom:1px solid #eee;">
     <img
@@ -25,7 +25,7 @@ export function customerOrderEmail(order) {
     </p>
   </td>
 </tr>
-).join("");
+`).join("");
 
   return `
   <div style="background:#f9f6f4; padding:20px;">
