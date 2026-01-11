@@ -3,30 +3,29 @@
 ================================ */
 
 export function customerOrderEmail(order) {
-  const itemsHtml = order.items
-    .map(i => {
-      const imageUrl = i.image || 'https://hervana-store.com/images/placeholder.jpg';
-      return `
-      <tr>
-        <td style="padding:12px 0; border-bottom:1px solid #eee;">
-          <img
-            src="${imageUrl}"
-            alt="${i.name}"
-            width="80"
-            style="border-radius:10px; display:block;"
-          />
-        </td>
-        <td style="padding-left:12px; border-bottom:1px solid #eee;">
-          <p style="margin:0; font-weight:600; font-size:15px;">${i.name}</p>
-          <p style="margin:6px 0 0; color:#777; font-size:14px;">Quantity: ${i.quantity}</p>
-          <p style="margin:6px 0 0; color:#777; font-size:14px;">Subtotal: ${i.subtotal} EGP</p>
-          <p style="margin:6px 0 0; color:#777; font-size:14px;">Shipping: ${i.shipping} EGP</p>
-          <p style="margin:6px 0 0; font-weight:600; font-size:15px;">Total: ${i.total} EGP</p>
-        </td>
-      </tr>
-      `;
-    })
-    .join("");
+  const itemsHtml = order.items.map(i => 
+<tr>
+  <td style="padding:12px 0; border-bottom:1px solid #eee;">
+    <img
+      src="${i.image}"
+      alt="${i.name}"
+      width="80"
+      style="border-radius:10px; display:block;"
+    />
+  </td>
+  <td style="padding-left:12px; border-bottom:1px solid #eee;">
+    <p style="margin:0; font-weight:600; font-size:15px;">
+      ${i.name}
+    </p>
+    <p style="margin:6px 0 0; color:#777; font-size:14px;">
+      Quantity: ${i.quantity}
+    </p>
+    <p style="margin:6px 0 0; color:#777; font-size:14px;">
+      Price: ${i.price} EGP
+    </p>
+  </td>
+</tr>
+).join("");
 
   return `
   <div style="background:#f9f6f4; padding:20px;">
@@ -69,19 +68,19 @@ export function customerOrderEmail(order) {
 
       <tr><td style="height:20px;"></td></tr>
 
-      <tr>
-        <td style="text-align:right;">
-          <p style="margin:0; font-size:16px;">
-            <strong>Subtotal:</strong> ${order.subtotal} EGP
-          </p>
-          <p style="margin:0; font-size:16px;">
-            <strong>Shipping:</strong> ${order.shipping} EGP
-          </p>
-          <p style="margin:0; font-size:16px; font-weight:600;">
-            <strong>Total:</strong> ${order.total} EGP
-          </p>
-        </td>
-      </tr>
+ <tr>
+  <td style="text-align:right; padding-top:16px;">
+    <p style="margin:4px 0;">
+      <strong>Subtotal:</strong> ${order.subtotal} EGP
+    </p>
+    <p style="margin:4px 0;">
+      <strong>Shipping:</strong> ${order.shipping} EGP
+    </p>
+    <p style="margin:6px 0; font-size:18px; font-weight:700;">
+      Total: ${order.total} EGP
+    </p>
+  </td>
+</tr>
 
       <tr><td style="height:24px;"></td></tr>
 
