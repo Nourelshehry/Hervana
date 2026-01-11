@@ -147,15 +147,17 @@
         Add to Cart
       </button>
 
-      <a href="product.html?id=${product.id}" class="view-btn">
-        View Details
-      </a>
+    
     `;
 
     // الكارد كله يفتح صفحة المنتج
-    card.addEventListener("click", () => {
-      window.location.href = `product.html?id=${product.id}`;
-    });
+     card.addEventListener("click", () => {
+const currentPage = window.location.href;
+
+window.location.href =
+  `product.html?id=${product.id}&from=${encodeURIComponent(currentPage)}`;
+  });
+
 
     // زرار Add يشتغل لوحده
     const addBtn = card.querySelector(".add-to-cart");

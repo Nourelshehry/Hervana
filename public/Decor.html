@@ -176,15 +176,17 @@
     Add to Cart
   </button>
 
-  <a href="product.html?id=${product.id}" class="view-btn">
-    View Details
-  </a>
+
 `;
 
  // ✅ الكارد كله clickable
-  card.addEventListener("click", () => {
-    window.location.href = `product.html?id=${product.id}`;
+   card.addEventListener("click", () => {
+const currentPage = window.location.href;
+
+window.location.href =
+  `product.html?id=${product.id}&from=${encodeURIComponent(currentPage)}`;
   });
+
 
   // 🛑 خلي زرار الكارت مايفتحش المنتج
 const addBtn = card.querySelector(".add-to-cart");
