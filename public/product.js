@@ -1,20 +1,25 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
   /* ===============================
-     Back Button Logic (CLEAN)
+     Back Button Logic
   =============================== */
   const params = new URLSearchParams(window.location.search);
   const from = params.get("from");
 
   const backBtn = document.getElementById("back-btn");
-
   if (backBtn) {
     backBtn.addEventListener("click", () => {
       if (from) {
         window.location.href = `${from}.html`;
-      } else {
-        window.location.href = "all-products.html";
+        return;
       }
+
+      if (document.referrer) {
+        window.location.href = document.referrer;
+        return;
+      }
+
+      window.location.href = "all-products.html";
     });
   }
 
@@ -22,7 +27,7 @@ document.addEventListener("DOMContentLoaded", async () => {
      Product Logic
   =============================== */
 
-  const productId = new URLSearchParams(window.location.search).get("id");
+  const productId = params.get("id");
 
   if (!productId) {
     console.error("❌ No product id in URL");
@@ -39,8 +44,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const parsed = JSON.parse(images);
         return Array.isArray(parsed) ? parsed : [];
       }
-    } catch (e) {
-      console.warn("Invalid images JSON", images);
+    } catch {
+      return [];
     }
     return [];
   }
@@ -80,14 +85,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const priceEl = document.getElementById("product-price");
 
     if (product.on_sale) {
-  priceEl.innerHTML = `
-    <span class="old-price">${product.price} EGP</span>
-    <span class="sale-price">${product.sale_price} EGP</span>
-    <span class="sale-badge">-${product.sale_percent}%</span>
-  `;
-} else {
-  priceEl.textContent = `${product.price} EGP`;
-}
+      priceEl.innerHTML = `
+        <span class="old-price">${product.price} EGP</span>
+        <span class="sale-price">${product.sale_price} EGP</span>
+        <span class="sale-badge">-${product.sale_percent}%</span>
+      `;
+    } else {
+      priceEl.textContent = `${product.price} EGP`;
+    }
 
     /* ===============================
        Image Slider
@@ -105,7 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
       const image = document.createElement("img");
       image.src = buildImageURL(img);
       image.alt = product.name;
-      image.loading = "lazy";
       if (index === 0) image.classList.add("active");
       slider.appendChild(image);
 
@@ -117,24 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     initSlider(slider, dotsContainer);
 
-    /* ===============================
-       Add To Cart
-    =============================== */
-    const addBtn = document.querySelector(".add-to-cart");
-
-    if (addBtn) {
-      if (product.stock <= 0) {
-        addBtn.disabled = true;
-        addBtn.textContent = "Out of Stock";
-        addBtn.classList.add("out-of-stock");
-      } else {
-        addBtn.dataset.id = product.id;
-        addBtn.dataset.name = product.name;
-        addBtn.dataset.price = product.on_sale
-          ? product.sale_price
-          : product.price;
-      }
-    }
   } catch (err) {
     console.error("❌ Error loading product:", err);
   }
