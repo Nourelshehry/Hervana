@@ -115,11 +115,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const isOnSale = Number(product.on_sale) === 1;
         const salePercent = Number(product.sale_percent);
 
-        const stock = Number(product.stock ?? 0);
-        const isOutOfStock = stock === 0;
+      const stock = Number(product.stock);
+const isOutOfStock = isNaN(stock) || stock <= 0;
 
-        const card = document.createElement("div");
-        card.className = "product-card";
+
+       const card = document.createElement("div");
+card.className = "product-card";
+
+if (isOutOfStock) {
+  card.classList.add("out-of-stock");
+}
+
 
         card.innerHTML = `
          ${isOnSale && salePercent && !isOutOfStock ? `
@@ -144,15 +150,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
           </p>
 
-          <button
-            class="add-to-cart"
-            ${isOutOfStock ? "disabled" : ""}
-            data-id="${product.id}"
-            data-name="${product.name}"
-            data-price="${isOnSale ? product.sale_price : product.price}"
-          >
-            ${isOutOfStock ? "Out of Stock" : "Add to Cart"}
-          </button>
+       <button
+  class="add-to-cart ${isOutOfStock ? "out-of-stock" : ""}"
+  ${isOutOfStock ? "disabled" : ""}
+  data-id="${product.id}"
+  data-name="${product.name}"
+  data-price="${isOnSale ? product.sale_price : product.price}"
+>
+  ${isOutOfStock ? "Out of stock" : "Add to Cart"}
+</button>
+
         `;
 
         // فتح صفحة المنتج

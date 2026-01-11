@@ -844,6 +844,8 @@ text-align: center;
 .all-products .product-card img {
   transition: transform 0.3s ease;
 }
+
+
 .product-card.out-of-stock {
   opacity: 0.6;
 }
@@ -863,4 +865,27 @@ text-align: center;
 .add-to-cart:disabled {
   background: #aaa;
   cursor: not-allowed;
+}
+/* زرار Out of stock يتحول لبادج */
+.add-to-cart.out-of-stock {
+  background: #9e9e9e !important;
+  color: #fff !important;
+  cursor: default !important;
+  pointer-events: none;
+
+  border-radius: 999px;      /* شكل badge */
+  padding: 10px 0;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* امنع hover */
+.add-to-cart.out-of-stock:hover {
+  background: #9e9e9e !important;
+  transform: none !important;
+  box-shadow: none !important;
 }
