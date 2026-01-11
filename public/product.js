@@ -1,3 +1,20 @@
+const params = new URLSearchParams(window.location.search);
+const from = params.get("from");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const backBtn = document.getElementById("back-btn");
+
+  if (!backBtn) return;
+
+  backBtn.addEventListener("click", () => {
+    if (from) {
+      window.location.href = `${from}.html`;
+    } else {
+      window.location.href = "all-products.html";
+    }
+  });
+});
+
 document.addEventListener("DOMContentLoaded", async () => {
   const productId = new URLSearchParams(window.location.search).get("id");
 
