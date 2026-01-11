@@ -140,8 +140,8 @@ header .header-actions button.back-btn:hover {
 /* Products Grid */
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
+  /*grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+ */ gap: 25px;
   justify-items: center;
   padding: 30px 20px;
 }
@@ -423,8 +423,8 @@ footer {
     justify-content: space-between;
   }
   .product-grid {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    gap: 15px;
+   /* grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    */gap: 15px;
   }
   .product-card img {
     height: 150px;
@@ -849,6 +849,9 @@ text-align: center;
 .product-card.out-of-stock {
   opacity: 0.6;
 }
+.product-card.out-of-stock img {
+  filter: grayscale(40%);
+}
 
 .out-badge {
   position: absolute;
@@ -866,6 +869,11 @@ text-align: center;
   background: #aaa;
   cursor: not-allowed;
 }
+/* ❌ لو المنتج Out of Stock، اخفي Sale */
+.product-card.out-of-stock .sale-badge {
+  display: none !important;
+}
+
 /* زرار Out of stock يتحول لبادج */
 .add-to-cart.out-of-stock {
   background: #9e9e9e !important;
@@ -888,4 +896,27 @@ text-align: center;
   background: #9e9e9e !important;
   transform: none !important;
   box-shadow: none !important;
+}
+/* 📱 موبايل = عمودين دايمًا */
+@media (max-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 14px;
+  }
+}
+
+/* 💻 ديسكتوب */
+@media (min-width: 769px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+/* 🔒 override زرار Out of stock */
+.all-products .add-to-cart:disabled,
+.all-products .add-to-cart.out-of-stock {
+  background: #bdbdbd !important;
+  color: #555 !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  transform: none !important;
 }
