@@ -72,13 +72,25 @@ if (backBtn) {
     if (!res.ok) throw new Error("Failed to load products");
 
     const products = await res.json();
-    const product = products.find(p => String(p.id) === String(productId));
+   const product = products.find(p => String(p.id) === String(productId));
 
-    if (!product) {
-      document.querySelector(".product-details").innerHTML =
-        "<p>Product not found.</p>";
-      return;
-    }
+if (!product) {
+  document.querySelector(".product-details").innerHTML =
+    "<p>Product not found.</p>";
+  return;
+}
+
+/* دلوقتي نشتغل بأمان */
+const stock = Number(product.stock);
+const isOut = isNaN(stock) || stock <= 0;
+
+const addBtn = document.getElementById("add-to-cart");
+
+if (isOut) {
+  addBtn.textContent = "Out of stock";
+  addBtn.disabled = true;
+  addBtn.classList.add("out-of-stock");
+}
 
     /* ===============================
        Product Info
@@ -89,15 +101,17 @@ if (backBtn) {
 
     const priceEl = document.getElementById("product-price");
 
-    if (product.on_sale) {
-      priceEl.innerHTML = `
-        <span class="old-price">${product.price} EGP</span>
-        <span class="sale-price">${product.sale_price} EGP</span>
-        <span class="sale-badge">-${product.sale_percent}%</span>
-      `;
-    } else {
-      priceEl.textContent = `${product.price} EGP`;
-    }
+    if (product.on_sale && !isOut) {
+  priceEl.innerHTML = `
+    <span class="old-price">${product.price} EGP</span>
+    <span class="sale-price">${product.sale_price} EGP</span>
+    <span class="sale-badge">-${product.sale_percent}%</span>
+  `;
+} else {
+  priceEl.textContent = `${product.price} EGP`;
+}
+
+   
 
     /* ===============================
        Image Slider

@@ -137,9 +137,9 @@ if (isOut) card.classList.add("out-of-stock");
           card.className = "product-card";
 
          card.innerHTML = `
-  ${product.on_sale ? `
-    <span class="sale-badge">-${product.sale_percent}%</span>
-  ` : ""}
+${product.on_sale && !isOut ? `
+  <span class="sale-badge">-${product.sale_percent}%</span>
+` : ""}
 
   ${isOut ? `<span class="out-badge">Out of stock</span>` : ""}
 
