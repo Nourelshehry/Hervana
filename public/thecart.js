@@ -1,208 +1,307 @@
-document.addEventListener("DOMContentLoaded", async () => {
+console.log("✅ CART CF VERSION – FINAL CLEAN –", Date.now());
 
-  /* ===============================
-     URL & Back Button
-  =============================== */
+/* =========================
+   GLOBAL USER & CART KEY
+========================= */
+if (!window.cartKey) {
+  const id = (() => {
+    let stored = localStorage.getItem("userId");
+    if (!stored) {
+      stored = "user_" + Date.now();
+      localStorage.setItem("userId", stored);
+    }
+    return stored;
+  })();
 
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get("id");
-  const backBtn = document.getElementById("back-btn");
-
-  if (backBtn) {
-    backBtn.addEventListener("click", () => {
-      const from = params.get("from");
-      if (from) return (window.location.href = decodeURIComponent(from));
-      if (window.history.length > 1) return window.history.back();
-      window.location.href = "all-products.html";
-    });
-  }
-
-  if (!productId) {
-    console.error("❌ No product id in URL");
-    return;
-  }
-
-  /* ===============================
-     Helpers
-  =============================== */
-
-  function parseImages(images) {
-    try {
-      if (Array.isArray(images)) return images;
-      if (typeof images === "string") {
-        const parsed = JSON.parse(images);
-        return Array.isArray(parsed) ? parsed : [];
-      }
-    } catch {}
-    return [];
-  }
-
-  function buildImageURL(path) {
-    if (!path) return "/images/placeholder.png";
-    if (path.startsWith("http")) return path;
-    return `https://hervana.pages.dev/${path.replace(/^\/+/, "")}`;
-  }
-
-  /* ===============================
-     Fetch Product
-  =============================== */
-
-  try {
-    const res = await fetch(
-      "https://hervanastore.nourthranduil.workers.dev/api/products"
-    );
-    if (!res.ok) throw new Error("Failed to load products");
-
-    const products = await res.json();
-
-    const product = products.find(p => String(p.id) === String(productId));
-    if (!product) {
-      document.querySelector(".product-details").innerHTML =
-        "<p>Product not found</p>";
-      return;
-    }
-
-    const stock = Number(product.stock);
-    const isOut = isNaN(stock) || stock <= 0;
-
-    /* ===============================
-       Product Info
-    =============================== */
-
-    document.getElementById("product-name").textContent = product.name;
-    document.getElementById("product-description").textContent =
-      product.description || "";
-
-    const priceEl = document.getElementById("product-price");
-
-    if (product.on_sale && !isOut) {
-      priceEl.innerHTML = `
-        <span class="old-price">${product.price} EGP</span>
-        <span class="sale-price">${product.sale_price} EGP</span>
-        <span class="sale-badge">-${product.sale_percent}%</span>
-      `;
-    } else {
-      priceEl.textContent = `${product.price} EGP`;
-    }
-
-    /* ===============================
-       Add To Cart (CORRECT VERSION)
-    =============================== */
-
-    const addBtn = document.getElementById("add-to-cart");
-
-    if (isOut && addBtn) {
-      addBtn.textContent = "Out of stock";
-      addBtn.disabled = true;
-      addBtn.classList.add("out-of-stock");
-    }
-
-    if (addBtn) {
-      const finalPrice = Number(
-        product.on_sale && !isOut
-          ? product.sale_price
-          : product.price
-      );
-
-      addBtn.addEventListener("click", e => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (addBtn.disabled) return;
-
-        // ⚠️ THIS MUST MATCH thecart.js
-        addToCart(
-          Number(product.id),
-          String(product.name),
-          Number(finalPrice)
-        );
-      });
-    }
-
-    /* ===============================
-       Image Slider
-    =============================== */
-
-    const slider = document.getElementById("slider");
-    const dotsContainer = document.getElementById("slider-dots");
-
-    slider.innerHTML = "";
-    dotsContainer.innerHTML = "";
-
-    let images = parseImages(product.images);
-    if (!images.length) images = ["/images/placeholder.png"];
-
-    images.forEach((img, index) => {
-      const image = document.createElement("img");
-      image.src = buildImageURL(img);
-      image.alt = product.name;
-      if (index === 0) image.classList.add("active");
-      slider.appendChild(image);
-
-      const dot = document.createElement("span");
-      dot.className = "dot";
-      if (index === 0) dot.classList.add("active");
-      dotsContainer.appendChild(dot);
-    });
-
-    initSlider(slider, dotsContainer);
-
-  } catch (err) {
-    console.error("❌ Product page error:", err);
-  }
-});
-
-/* ===============================
-   Slider
-=============================== */
-
-function initSlider(slider, dotsContainer) {
-  const slides = slider.querySelectorAll("img");
-  const dots = dotsContainer.querySelectorAll(".dot");
-  let index = 0;
-  let auto;
-
-  function show(i) {
-    slides.forEach((img, idx) => img.classList.toggle("active", idx === i));
-    dots.forEach((d, idx) => d.classList.toggle("active", idx === i));
-    index = i;
-  }
-
-  function next() {
-    show((index + 1) % slides.length);
-  }
-
-  function prev() {
-    show((index - 1 + slides.length) % slides.length);
-  }
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener("click", () => {
-      show(i);
-      reset();
-    });
-  });
-
-  function start() {
-    auto = setInterval(next, 4000);
-  }
-
-  function reset() {
-    clearInterval(auto);
-    start();
-  }
-
-  let startX = 0;
-  slider.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-  });
-
-  slider.addEventListener("touchend", e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
-    reset();
-  });
-
-  show(0);
-  start();
+  window.cartKey = `cart_${id}`;
 }
+
+/* =========================
+   Storage helpers
+========================= */
+function loadCart() {
+  return JSON.parse(localStorage.getItem(window.cartKey)) || [];
+}
+
+function saveCart(cart) {
+  localStorage.setItem(window.cartKey, JSON.stringify(cart));
+  updateCartCount();
+}
+
+/* =========================
+   UI helpers
+========================= */
+function showCartMessage(text) {
+  const msg = document.getElementById("cart-message");
+  if (!msg) return;
+
+  msg.textContent = text;
+  msg.classList.add("show");
+  setTimeout(() => msg.classList.remove("show"), 2000);
+}
+
+/* =========================
+   Add To Cart (GLOBAL)
+========================= */
+async function addToCart(id, name, price) {
+  let cart = loadCart();
+
+  id = Number(id);
+  price = Number(price);
+
+  if (!id || !name || price <= 0) {
+    showCartMessage("❌ Invalid product");
+    return;
+  }
+
+  try {
+    const res = await fetch(
+     "https://hervanastore.nourthranduil.workers.dev/api/products"
+
+    );
+    const products = await res.json();
+    const product = products.find(p => Number(p.id) === id);
+
+    if (!product || product.stock <= 0) {
+      showCartMessage("❌ Out of stock");
+      return;
+    }
+
+    const existing = cart.find(i => i.id === id);
+
+    if (existing) {
+      if (existing.quantity + 1 > product.stock) {
+        showCartMessage("❌ Not enough stock");
+        return;
+      }
+      existing.quantity++;
+    } else {
+      cart.push({ id, name, price, quantity: 1 });
+    }
+
+    saveCart(cart);
+    renderCart();
+    showCartMessage("Added to cart ❤️");
+  } catch (err) {
+    console.error(err);
+    showCartMessage("❌ Error adding to cart");
+  }
+}
+
+window.addToCart = addToCart;
+
+/* =========================
+   Render Cart
+========================= */
+function renderCart() {
+  const cartItems = document.getElementById("cart-items");
+  if (!cartItems) return;
+
+  const cart = loadCart();
+  cartItems.innerHTML = "";
+
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price * item.quantity;
+
+    const li = document.createElement("li");
+    li.innerHTML = `
+      <div class="cart-item">
+        <span>${item.name} - ${item.price} EGP</span>
+        <div class="quantity-controls">
+          <button class="decrease" data-index="${index}">-</button>
+          <span>${item.quantity}</span>
+          <button class="increase" data-index="${index}">+</button>
+        </div>
+      </div>
+    `;
+    cartItems.appendChild(li);
+  });
+
+  // ✅ TOTAL PRICE
+  const totalEl = document.getElementById("cart-total");
+  if (totalEl) {
+    totalEl.textContent = `Total: ${total} EGP`;
+  }
+
+  updateCartCount();
+
+  const giftBox = document.querySelector(".cart-gifts");
+  if (giftBox) giftBox.style.display = cart.length ? "block" : "none";
+}
+
+/* =========================
+   Gift Suggestions (CLICKABLE)
+========================= */
+async function renderGiftSuggestionsInCart() {
+  const container = document.getElementById("cart-gift-list");
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  try {
+    const res = await fetch(
+"https://hervanastore.nourthranduil.workers.dev/api/products"
+    );
+    const products = await res.json();
+
+    const gifts = products.filter(
+      p => p.category && p.category.toLowerCase() === "gift"
+    );
+
+    if (!gifts.length) return;
+
+    const selected = gifts
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+
+    selected.forEach(product => {
+      let images = [];
+      try {
+        images = JSON.parse(product.images || "[]");
+      } catch {}
+
+      const img = images[0] || "/images/placeholder.png";
+
+      const isOnSale = Number(product.on_sale) === 1;
+      const salePercent = Number(product.sale_percent);
+
+      const div = document.createElement("div");
+      div.className = "cart-gift-item";
+      div.style.cursor = "pointer";
+
+      div.innerHTML = `
+        ${
+          isOnSale && salePercent
+            ? `<span class="sale-badge">-${salePercent}%</span>`
+            : ""
+        }
+
+        <img src="${img}">
+        <div>${product.name}</div>
+
+        <strong>
+          ${
+            isOnSale
+              ? `<span class="old-price">${product.price} EGP</span>
+                 <span class="sale-price">${product.sale_price} EGP</span>`
+              : `${product.price} EGP`
+          }
+        </strong>
+
+        <button
+          class="add-to-cart"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${isOnSale ? product.sale_price : product.price}">
+          + Add
+        </button>
+      `;
+
+      // فتح صفحة المنتج
+      div.addEventListener("click", e => {
+        if (e.target.closest(".add-to-cart")) return;
+        window.location.href = `product.html?id=${product.id}`;
+      });
+
+      // Add to cart فقط
+      const addBtn = div.querySelector(".add-to-cart");
+      addBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        addToCart(
+          addBtn.dataset.id,
+          addBtn.dataset.name,
+          addBtn.dataset.price
+        );
+      });
+
+      container.appendChild(div);
+    });
+  } catch (err) {
+    console.error("Gift cart error:", err);
+  }
+}
+
+/* =========================
+   Cart Count
+========================= */
+function updateCartCount() {
+  const cartCount = document.getElementById("cart-count");
+  if (!cartCount) return;
+
+  const cart = loadCart();
+  const qty = cart.reduce((s, i) => s + i.quantity, 0);
+
+  cartCount.textContent = qty;
+  cartCount.style.display = qty ? "inline-block" : "none";
+}
+
+/* =========================
+   UI EVENTS
+========================= */
+document.addEventListener("DOMContentLoaded", () => {
+  const cartBtn = document.getElementById("cart-btn");
+  const cartSidebar = document.getElementById("cart-sidebar");
+  const closeCart = document.getElementById("close-cart");
+  const checkoutBtn = document.getElementById("checkout-btn");
+  const cartItems = document.getElementById("cart-items");
+
+  cartBtn?.addEventListener("click", () => {
+    cartSidebar.classList.add("active");
+    document.body.classList.add("cart-open");
+  });
+
+  closeCart?.addEventListener("click", () => {
+    cartSidebar.classList.remove("active");
+    document.body.classList.remove("cart-open");
+  });
+
+  document.body.addEventListener("click", e => {
+    const btn = e.target.closest(".add-to-cart");
+    if (!btn) return;
+
+    addToCart(btn.dataset.id, btn.dataset.name, btn.dataset.price);
+  });
+
+  cartItems?.addEventListener("click", async e => {
+    const idx = Number(e.target.dataset.index);
+    if (Number.isNaN(idx)) return;
+
+    let cart = loadCart();
+    const item = cart[idx];
+    if (!item) return;
+
+    if (e.target.classList.contains("increase")) {
+      const res = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/api/products"
+
+      );
+      const products = await res.json();
+      const product = products.find(p => Number(p.id) === item.id);
+
+      if (item.quantity + 1 > product.stock) {
+        showCartMessage("❌ Not enough stock");
+        return;
+      }
+      item.quantity++;
+    }
+
+    if (e.target.classList.contains("decrease")) {
+      
+item.quantity--;
+      if (item.quantity <= 0) cart.splice(idx, 1);
+    }
+
+    saveCart(cart);
+    renderCart();
+  });
+
+  checkoutBtn?.addEventListener("click", () => {
+    window.location.href = "order.html";
+  });
+
+  renderCart();
+  renderGiftSuggestionsInCart();
+  updateCartCount();
+});
