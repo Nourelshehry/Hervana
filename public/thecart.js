@@ -44,49 +44,49 @@ function showCartMessage(text) {
    Add To Cart (GLOBAL)
 ========================= */
 async function addToCart(id, name, price) {
-  let cart = loadCart();
+  let cart = loadCart();
 
-  id = Number(id);
-  price = Number(price);
+  id = Number(id);
+  price = Number(price);
 
-  if (!id || !name || price <= 0) {
-    showCartMessage("❌ Invalid product");
-    return;
-  }
+  if (!Number.isFinite(id) || !name || !Number.isFinite(price) || price <= 0) {
+    showCartMessage("❌ Invalid product");
+    return;
+  }
 
-  try {
-    const res = await fetch(
-     "https://hervanastore.nourthranduil.workers.dev/api/products"
+  try {
+    const res = await fetch(
+      "https://hervanastore.nourthranduil.workers.dev/api/products"
+    );
+    const products = await res.json();
+    const product = products.find(p => Number(p.id) === id);
 
-    );
-    const products = await res.json();
-    const product = products.find(p => Number(p.id) === id);
+    if (!product || product.stock <= 0) {
+      showCartMessage("❌ Out of stock");
+      return;
+    }
 
-    if (!product || product.stock <= 0) {
-      showCartMessage("❌ Out of stock");
-      return;
-    }
+    const existing = cart.find(i => i.id === id);
 
-    const existing = cart.find(i => i.id === id);
+    if (existing) {
+      if (existing.quantity + 1 > product.stock) {
+        showCartMessage("❌ Not enough stock");
+        return;
+      }
+      existing.quantity++;
+    } else {
+      cart.push({ id, name, price, quantity: 1 });
+    }
 
-    if (existing) {
-      if (existing.quantity + 1 > product.stock) {
-        showCartMessage("❌ Not enough stock");
-        return;
-      }
-      existing.quantity++;
-    } else {
-      cart.push({ id, name, price, quantity: 1 });
-    }
-
-    saveCart(cart);
-    renderCart();
-    showCartMessage("Added to cart ❤️");
-  } catch (err) {
-    console.error(err);
-    showCartMessage("❌ Error adding to cart");
-  }
+    saveCart(cart);
+    renderCart();
+    showCartMessage("Added to cart ❤️");
+  } catch (err) {
+    console.error(err);
+    showCartMessage("❌ Error adding to cart");
+  }
 }
+
 
 window.addToCart = addToCart;
 
