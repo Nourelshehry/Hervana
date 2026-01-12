@@ -102,16 +102,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     =============================== */
 
     if (addBtn) {
-      const finalPrice =
-        product.on_sale && !isOut
-          ? product.sale_price
-          : product.price;
+      const finalPrice = Number(
+  product.on_sale && !isOut
+    ? product.sale_price
+    : product.price
+);
 
-      addBtn.dataset.id = product.id;
-      addBtn.dataset.name = product.name;
-      addBtn.dataset.price = finalPrice;
-
-      addBtn.addEventListener("click", e => {
+addBtn.addEventListener("click", e => {
   e.preventDefault();
   e.stopPropagation();
 
@@ -121,11 +118,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     addToCart({
       id: product.id,
       name: product.name,
-      price: Number(finalPrice),
+      price: finalPrice,
       image: buildImageURL(parseImages(product.images)[0]),
       stock: Number(product.stock) || 0
     });
-  } else {
+  }
+});
+ else {
     console.error("❌ addToCart not found");
   }
 });
