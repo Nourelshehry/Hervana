@@ -115,12 +115,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (typeof addToCart === "function") {
           addToCart({
-            id: product.id,
-            name: product.name,
-            price: finalPrice,
-            image: buildImageURL(parseImages(product.images)[0]),
-            stock: Number(product.stock) || 0
-          });
+  id: Number(product.id),
+  name: String(product.name),
+  price: Number(finalPrice),
+  image: buildImageURL(parseImages(product.images)[0]),
+  stock: Number(product.stock) || 0
+});
+
         } else {
           console.error("❌ addToCart not found");
         }
