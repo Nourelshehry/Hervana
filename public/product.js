@@ -72,9 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const products = await res.json();
 
-    const product = products.find(
-      p => String(p.id) === String(productId)
-    );
+    const product = products.find(p => String(p.id) === String(productId));
 
     if (!product) {
       document.querySelector(".product-details").innerHTML =
@@ -98,37 +96,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     /* ===============================
-       Bind Add To Cart  ✅ FIX HERE
+       Bind Add To Cart
     =============================== */
 
     if (addBtn) {
       const finalPrice = Number(
-  product.on_sale && !isOut
-    ? product.sale_price
-    : product.price
-);
+        product.on_sale && !isOut
+          ? product.sale_price
+          : product.price
+      );
 
-addBtn.addEventListener("click", e => {
-  e.preventDefault();
-  e.stopPropagation();
+      addBtn.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
 
-  if (addBtn.disabled) return;
+        if (addBtn.disabled) return;
 
-  if (typeof addToCart === "function") {
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: finalPrice,
-      image: buildImageURL(parseImages(product.images)[0]),
-      stock: Number(product.stock) || 0
-    });
-  }
-});
- else {
-    console.error("❌ addToCart not found");
-  }
-});
-
+        if (typeof addToCart === "function") {
+          addToCart({
+            id: product.id,
+            name: product.name,
+            price: finalPrice,
+            image: buildImageURL(parseImages(product.images)[0]),
+            stock: Number(product.stock) || 0
+          });
+        } else {
+          console.error("❌ addToCart not found");
+        }
+      });
     }
 
     /* ===============================
