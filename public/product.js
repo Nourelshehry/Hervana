@@ -112,21 +112,24 @@ document.addEventListener("DOMContentLoaded", async () => {
       addBtn.dataset.price = finalPrice;
 
       addBtn.addEventListener("click", e => {
-        e.preventDefault();   // 🔴 يمنع reload
-        e.stopPropagation(); // 🔴 أمان إضافي
+  e.preventDefault();
+  e.stopPropagation();
 
-        if (addBtn.disabled) return;
+  if (addBtn.disabled) return;
 
-        if (typeof addToCart === "function") {
-          addToCart(
-            addBtn.dataset.id,
-            addBtn.dataset.name,
-            addBtn.dataset.price
-          );
-        } else {
-          console.error("❌ addToCart not found");
-        }
-      });
+  if (typeof addToCart === "function") {
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: Number(finalPrice),
+      image: buildImageURL(parseImages(product.images)[0]),
+      stock: Number(product.stock) || 0
+    });
+  } else {
+    console.error("❌ addToCart not found");
+  }
+});
+
     }
 
     /* ===============================
