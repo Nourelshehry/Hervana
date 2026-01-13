@@ -86,7 +86,7 @@ export function customerOrderEmail(order) {
 
       <tr>
         <td>
-          <p style="margin:0;">We’ll contact you soon to confirm delivery 💬</p>
+          <p style="margin:0;">Delivery will take from 3 to 7 work days. Stay Tuned 🌸</p>
           <p style="margin:12px 0 0;">With love,<br/><strong>Hervana</strong> 🌸</p>
         </td>
       </tr>
