@@ -63,6 +63,8 @@ async function addToCart(id, name, price) {
   id = Number(id);
   price = Number(price);
 
+  console.log("ADD", id, name, price);
+
   if (!Number.isFinite(id) || !name || !Number.isFinite(price) || price <= 0) {
     showCartMessage("❌ Invalid product");
     return;
@@ -70,6 +72,8 @@ async function addToCart(id, name, price) {
 
   try {
     const products = await getProducts();
+    console.log("PRODUCTS", products);
+
     const product = products.find(p => Number(p.id) === id);
 
     if (!product || product.stock <= 0) {
@@ -92,11 +96,13 @@ async function addToCart(id, name, price) {
     saveCart(cart);
     renderCart();
     showCartMessage("Added to cart ❤️");
+
   } catch (err) {
-    console.error(err);
+    console.error("ADD ERROR", err);
     showCartMessage("❌ Error adding to cart");
   }
 }
+
 
 window.addToCart = addToCart;
 
