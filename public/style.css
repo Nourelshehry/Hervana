@@ -508,7 +508,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #c0392b; /* اللون البراند */
+  color: #cdb4db; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -547,12 +547,12 @@ color: #fff;
 
 /* Hover ناعم */
 .product-item:hover .product-info h3 {
-  color: #c0392b;        /* لون البراند */
+  color: #cdb4db;        /* لون البراند */
 }
 
 /* ===================== Footer ===================== */
 footer {
-  background:#c0392b;
+  background:#cdb4db;
   color:#fff;
   text-align:center;
   padding:20px;
@@ -811,7 +811,7 @@ footer a:hover {
   background: none;
   border: none;
   cursor: pointer;
-  color: #fff;
+  color: #cdb4db;
 }
 
 .logo {
@@ -867,7 +867,7 @@ footer a:hover {
   align-items: center;
   font-size: 22px;
   font-weight: 700;
-  color: #c0392b;
+  color: #cdb4db;
   border-bottom: 1px solid #eee;
 }
 
@@ -971,7 +971,7 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-  color: #c0392b; /* نفس الأحمر بتاع البراند */
+  color: #cdb4db; /* نفس الأحمر بتاع البراند */
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
@@ -1013,7 +1013,7 @@ footer a:hover {
 .btn-our-story {
   display: inline-block;
   padding: 14px 32px;
-  background-color: #c0392b;
+  background-color: #cdb4db;
   color: #fff;
   text-decoration: none;
   border-radius: 30px;
