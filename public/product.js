@@ -1,35 +1,21 @@
 document.addEventListener("DOMContentLoaded", async () => {
 
   /* ===============================
-     Smart Back Button
+     URL & Back Button
   =============================== */
 
   const params = new URLSearchParams(window.location.search);
+  const productId = params.get("id");
   const backBtn = document.getElementById("back-btn");
 
   if (backBtn) {
     backBtn.addEventListener("click", () => {
       const from = params.get("from");
-
-      if (from) {
-        window.location.href = decodeURIComponent(from);
-        return;
-      }
-
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
-
+      if (from) return (window.location.href = decodeURIComponent(from));
+      if (window.history.length > 1) return window.history.back();
       window.location.href = "all-products.html";
     });
   }
-
-  /* ===============================
-     Product Logic
-  =============================== */
-
-  const productId = params.get("id");
 
   if (!productId) {
     console.error("❌ No product id in URL");
@@ -47,9 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const parsed = JSON.parse(images);
         return Array.isArray(parsed) ? parsed : [];
       }
-    } catch {
-      return [];
-    }
+    } catch {}
     return [];
   }
 
@@ -67,67 +51,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const res = await fetch(
       "https://hervanastore.nourthranduil.workers.dev/products"
     );
-
     if (!res.ok) throw new Error("Failed to load products");
 
     const products = await res.json();
 
-    const product = products.find(
-      p => String(p.id) === String(productId)
-    );
-
+    const product = products.find(p => String(p.id) === String(productId));
     if (!product) {
       document.querySelector(".product-details").innerHTML =
-        "<p>Product not found.</p>";
+        "<p>Product not found</p>";
       return;
     }
 
-    const addBtn = document.getElementById("add-to-cart");
-
-    /* ===============================
-       Stock Logic
-    =============================== */
-
     const stock = Number(product.stock);
     const isOut = isNaN(stock) || stock <= 0;
-
-    if (isOut && addBtn) {
-      addBtn.textContent = "Out of stock";
-      addBtn.disabled = true;
-      addBtn.classList.add("out-of-stock");
-    }
-
-    /* ===============================
-       Bind Add To Cart  ✅ FIX HERE
-    =============================== */
-
-    if (addBtn) {
-      const finalPrice =
-        product.on_sale && !isOut
-          ? product.sale_price
-          : product.price;
-
-      addBtn.dataset.id = product.id;
-      addBtn.dataset.name = product.name;
-      addBtn.dataset.price = finalPrice;
-
-      addBtn.addEventListener("click", e => {
-        e.preventDefault();   // 🔴 يمنع reload
-        e.stopPropagation(); // 🔴 أمان إضافي
-
-        if (addBtn.disabled) return;
-
-        if (typeof addToCart === "function") {
-          addToCart(
-            addBtn.dataset.id,
-            addBtn.dataset.name,
-            addBtn.dataset.price
-          );
-        } else {
-          console.error("❌ addToCart not found");
-        }
-      });
-    }
 
     /* ===============================
        Product Info
@@ -147,6 +83,40 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
     } else {
       priceEl.textContent = `${product.price} EGP`;
+    }
+
+    /* ===============================
+       Add To Cart (CORRECT VERSION)
+    =============================== */
+
+    const addBtn = document.getElementById("add-to-cart");
+
+    if (isOut && addBtn) {
+      addBtn.textContent = "Out of stock";
+      addBtn.disabled = true;
+      addBtn.classList.add("out-of-stock");
+    }
+
+    if (addBtn) {
+      const finalPrice = Number(
+        product.on_sale && !isOut
+          ? product.sale_price
+          : product.price
+      );
+
+      addBtn.addEventListener("click", e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (addBtn.disabled) return;
+
+        // ⚠️ THIS MUST MATCH thecart.js
+        addToCart(
+          Number(product.id),
+          String(product.name),
+          Number(finalPrice)
+        );
+      });
     }
 
     /* ===============================
@@ -178,27 +148,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     initSlider(slider, dotsContainer);
 
   } catch (err) {
-    console.error("❌ Error loading product:", err);
+    console.error("❌ Product page error:", err);
   }
 });
 
 /* ===============================
-   Slider Logic
+   Slider
 =============================== */
 
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");
   const dots = dotsContainer.querySelectorAll(".dot");
   let index = 0;
-  let autoSlide;
+  let auto;
 
   function show(i) {
-    slides.forEach((img, idx) =>
-      img.classList.toggle("active", idx === i)
-    );
-    dots.forEach((d, idx) =>
-      d.classList.toggle("active", idx === i)
-    );
+    slides.forEach((img, idx) => img.classList.toggle("active", idx === i));
+    dots.forEach((d, idx) => d.classList.toggle("active", idx === i));
     index = i;
   }
 
@@ -210,30 +176,20 @@ function initSlider(slider, dotsContainer) {
     show((index - 1 + slides.length) % slides.length);
   }
 
-  document.querySelector(".next")?.addEventListener("click", () => {
-    next();
-    resetAuto();
-  });
-
-  document.querySelector(".prev")?.addEventListener("click", () => {
-    prev();
-    resetAuto();
-  });
-
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
       show(i);
-      resetAuto();
+      reset();
     });
   });
 
-  function startAuto() {
-    autoSlide = setInterval(next, 4000);
+  function start() {
+    auto = setInterval(next, 4000);
   }
 
-  function resetAuto() {
-    clearInterval(autoSlide);
-    startAuto();
+  function reset() {
+    clearInterval(auto);
+    start();
   }
 
   let startX = 0;
@@ -243,12 +199,10 @@ function initSlider(slider, dotsContainer) {
 
   slider.addEventListener("touchend", e => {
     const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? next() : prev();
-      resetAuto();
-    }
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+    reset();
   });
 
   show(0);
-  startAuto();
+  start();
 }
