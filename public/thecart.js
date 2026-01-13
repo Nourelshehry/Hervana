@@ -25,7 +25,7 @@ async function getProducts() {
   if (PRODUCTS_CACHE) return PRODUCTS_CACHE;
 
   const res = await fetch(
-    "https://hervanastore.nourthranduil.workers.dev/api/products"
+    "https://hervanastore.nourthranduil.workers.dev/products"
   );
   PRODUCTS_CACHE = await res.json();
   return PRODUCTS_CACHE;
