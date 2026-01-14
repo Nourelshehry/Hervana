@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #fcdfd7;
+  background: #f0bfb4;
   color: #333;
 }
 
@@ -384,7 +384,7 @@ color: #fff;
 .hero-content button {
   margin-top:25px;
   padding:12px 25px;
-  background:#cdb4db;
+  background:#dddabf;
   color:#fff;
   border:none;
   cursor:pointer;
@@ -508,7 +508,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #cdb4db; /* اللون البراند */
+  color: #f3e8c1; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -521,7 +521,7 @@ color: #fff;
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(135deg, #cdb4db, #cba7e0);
+  background: linear-gradient(135deg, #f3e8c1, #f3e8c1);
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -547,12 +547,12 @@ color: #fff;
 
 /* Hover ناعم */
 .product-item:hover .product-info h3 {
-  color: #cdb4db;        /* لون البراند */
+  color: #dddabf;        /* لون البراند */
 }
 
 /* ===================== Footer ===================== */
 footer {
-  background:#cdb4db;
+  background:#dddabf;
   color:#fff;
   text-align:center;
   padding:20px;
@@ -811,7 +811,7 @@ footer a:hover {
   background: none;
   border: none;
   cursor: pointer;
-  color: #cdb4db;
+  color: #dddabf;
 }
 
 .logo {
@@ -971,7 +971,7 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-  color: #cdb4db; /* نفس الأحمر بتاع البراند */
+  color: #f3e8c1; /* نفس الأحمر بتاع البراند */
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
@@ -982,7 +982,7 @@ footer a:hover {
   display: block;
   width: 60%;
   height: 4px;
-  background-color: #e9f1ef;
+  background-color: #f3e8c1;
   margin: 10px auto 0;
   border-radius: 10px;}
 
@@ -1011,7 +1011,7 @@ footer a:hover {
 .btn-our-story {
   display: inline-block;
   padding: 14px 32px;
-  background-color: #cdb4db;
+  background-color: #dddabf;
   color: #fff;
   text-decoration: none;
   border-radius: 30px;
@@ -1052,7 +1052,7 @@ footer a:hover {
   }
 }
 .our-story {
-  background-color: #fcdfd7!important;
+  background-color: #f0bfb4!important;
   padding: 70px 20px !important;
   text-align: center !important;
 }
