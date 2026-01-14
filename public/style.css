@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #f0bfb4;
+  background: #ce6876;
   color: #333;
 }
 
@@ -384,7 +384,7 @@ color: #fff;
 .hero-content button {
   margin-top:25px;
   padding:12px 25px;
-  background:#dddabf;
+  background:#f1dadd;
   color:#fff;
   border:none;
   cursor:pointer;
@@ -508,7 +508,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #ffefb4; /* اللون البراند */
+  color: #f1dadd; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -521,7 +521,7 @@ color: #fff;
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(135deg, #ffefb4, #ffefb4);
+  background: linear-gradient(135deg, #f1dadd, #f1dadd);
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -1052,7 +1052,7 @@ footer a:hover {
   }
 }
 .our-story {
-  background-color: #f0bfb4!important;
+  background-color: #ce6876!important;
   padding: 70px 20px !important;
   text-align: center !important;
 }
