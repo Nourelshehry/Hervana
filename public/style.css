@@ -508,7 +508,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #f3e8c1; /* اللون البراند */
+  color: #f8ebba; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -521,7 +521,7 @@ color: #fff;
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(135deg, #f3e8c1, #f3e8c1);
+  background: linear-gradient(135deg, #f8ebba, #f8ebba);
   margin: 10px auto 0;
   border-radius: 2px;
 }
