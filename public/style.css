@@ -104,7 +104,7 @@ header {
   padding: 20px;
   font-weight: 800;
   font-size: 22px;
-  color: #b53a2d;
+  color: #ce6876;
 }
 .menu-links {
   list-style: none;
@@ -384,7 +384,7 @@ color: #fff;
 .hero-content button {
   margin-top:25px;
   padding:12px 25px;
-  background:#f1dadd;
+  background:#ce6876;
   color:#fff;
   border:none;
   cursor:pointer;
@@ -508,7 +508,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #f1dadd; /* اللون البراند */
+  color: #f1dadd !important; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -552,7 +552,7 @@ color: #fff;
 
 /* ===================== Footer ===================== */
 footer {
-  background:#dddabf;
+  background:#ce6876;
   color:#fff;
   text-align:center;
   padding:20px;
@@ -811,7 +811,7 @@ footer a:hover {
   background: none;
   border: none;
   cursor: pointer;
-  color: #dddabf;
+  color: #ce6876;
 }
 
 .logo {
@@ -971,7 +971,7 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-  color: #f3e8c1; /* نفس الأحمر بتاع البراند */
+   color: #f1dadd; /* نفس الأحمر بتاع البراند */
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
@@ -982,7 +982,7 @@ footer a:hover {
   display: block;
   width: 60%;
   height: 4px;
-  background-color: #f3e8c1;
+  background-color: #f1dadd;
   margin: 10px auto 0;
   border-radius: 10px;}
 
@@ -1020,7 +1020,7 @@ footer a:hover {
 }
 
 .btn-our-story:hover {
-  background-color: #cdb4db;
+  background-color: #f1dadd;
   transform: translateY(-3px);
   box-shadow: 0 8px 18px rgba(192, 57, 43, 0.3);
 }
