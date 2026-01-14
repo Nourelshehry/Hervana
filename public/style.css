@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #ffe6f0;
+  background: #ffedd1;
   color: #333;
 }
 
@@ -521,7 +521,7 @@ color: #fff;
   display: block;
   width: 60px;
   height: 3px;
-  background: linear-gradient(135deg, #c0392b, #e75480);
+  background: linear-gradient(135deg, #cdb4db, #cba7e0);
   margin: 10px auto 0;
   border-radius: 2px;
 }
@@ -773,7 +773,7 @@ footer a:hover {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    color: white;
+    color: #cdb4db;
     font-weight: bold;
   }
 
@@ -817,7 +817,7 @@ footer a:hover {
 .logo {
   font-size: 22px;
   font-weight: 700;
-  color: #fff;
+  color: #cdb4db;
   text-decoration: none;
 }
 
@@ -984,8 +984,7 @@ footer a:hover {
   height: 4px;
   background-color: #f4a9b8;
   margin: 10px auto 0;
-  border-radius: 10px;
-}
+  border-radius: 10px;}
 
 /* Story Card */
 .story-content {
@@ -1006,9 +1005,8 @@ footer a:hover {
 
 /* Highlight feeling */
 .story-content p strong {
-  color: #c0392b;
+  color: #cdb4db;
 }
-
 /* Button */
 .btn-our-story {
   display: inline-block;
