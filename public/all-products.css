@@ -3,7 +3,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-    background: #ffe6f0;
+    background: #ce6876;
   color: #333;
 }
 
@@ -204,13 +204,13 @@ header .header-actions button.back-btn:hover {
 }
 
 .product-card button {
-  background: #c0392b;
+  background: #ce6876;
   color: #fff;
   margin: 8px;
 }
 
 .product-card button:hover {
-  background: #a93226;
+  background: #ff546b;
   transform: scale(1.05);
 }
 
@@ -319,7 +319,7 @@ header .header-actions button.back-btn:hover {
 #checkout-btn {
   width: 100%;
   padding: 14px;
-  background: linear-gradient(135deg, #c0392b, #e75480);
+  background:linear-gradient(135deg, #ce6876, #da124e);
   color: #fff;
   border: none;
   border-radius: 30px;
