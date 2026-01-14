@@ -104,7 +104,7 @@ header {
   padding: 20px;
   font-weight: 800;
   font-size: 22px;
-  color: #ce6876;
+  color: #f88695;
 }
 .menu-links {
   list-style: none;
@@ -651,7 +651,7 @@ footer a:hover {
 #checkout-btn {
   width:100%;
   padding:14px;
-  background:linear-gradient(135deg, #ce6876, #e75480);
+  background:linear-gradient(135deg, #ce6876, #da124e);
   color:#fff;
   border:none;
   border-radius:30px;
@@ -973,7 +973,7 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-   color: #f3d8c1; /* نفس الأحمر بتاع البراند */
+   color: #fff; /* نفس الأحمر بتاع البراند */
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
@@ -1013,7 +1013,7 @@ footer a:hover {
 .btn-our-story {
   display: inline-block;
   padding: 14px 32px;
-  background-color: #f3d8c1 !important;
+  background-color: #ce6876 !important;
   color: #fff;
   text-decoration: none;
   border-radius: 30px;
