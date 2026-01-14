@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #edd3b4;
+  background: #e9f1ef;
   color: #333;
 }
 
@@ -773,7 +773,7 @@ footer a:hover {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    color: #cdb4db;
+    color: #fff;
     font-weight: bold;
   }
 
@@ -817,7 +817,7 @@ footer a:hover {
 .logo {
   font-size: 22px;
   font-weight: 700;
-  color: #cdb4db;
+  color: #fff;
   text-decoration: none;
 }
 
@@ -962,7 +962,7 @@ footer a:hover {
 /* ================= Our Story ================= */
 /* Our Story Section */
 .our-story {
-  background-color: #edd3b4; /* baby pink */
+  background-color: #e9f1ef; /* baby pink */
   padding: 70px 20px;
   text-align: center;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
@@ -982,7 +982,7 @@ footer a:hover {
   display: block;
   width: 60%;
   height: 4px;
-  background-color: #f4a9b8;
+  background-color: #e9f1ef;
   margin: 10px auto 0;
   border-radius: 10px;}
 
