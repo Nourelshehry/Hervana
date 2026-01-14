@@ -490,11 +490,11 @@ footer {
 /* تأكيد إن زرار Add to Cart ظاهر */
 .all-products .add-to-cart {
   display: block !important;
-  background: #c0392b;
+  background: #b3635a;
   color: #fff;
   border: none;
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 55px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -593,12 +593,12 @@ width: 100%;
   font-size: 30px;
   font-weight: 700;
   letter-spacing: 1px;
-  color: #ce6876;
+  color: #ffebee;
   margin-bottom: 8px;
   position: relative;
 }
 
-.page-title::after {
+/*.page-title::after {
   content: "";
   display: block;
   width: 60px;
@@ -607,10 +607,10 @@ width: 100%;
   margin: 10px auto 0;
   border-radius: 3px;
 }
-
+*/
 .page-subtitle {
   font-size: 14px;
-  color: #db6a6a;
+  color: #9e0b0b;
   font-style: italic;
   max-width: 280px;
   margin: 8px auto 0;
@@ -627,7 +627,7 @@ v.catalog-header {
 }
 
 .catalog-title {
-  color: #c23b2d;
+  color: #ffe7e4;
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 6px;
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #c29a5b;
+  color: #f78773;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
