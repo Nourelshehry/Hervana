@@ -12,7 +12,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background: #eff5f3;
+  background: #e3eae2;
   color: #333;
 }
 
@@ -962,8 +962,9 @@ footer a:hover {
 /* ================= Our Story ================= */
 /* Our Story Section */
 .our-story {
-  background-color: #e9f1ef; /* baby pink */
+  background-color: #e3eae2; /* baby  */
   padding: 70px 20px;
+  background: #e3eae2;
   text-align: center;
   font-family: 'Poppins', 'Segoe UI', sans-serif;
 }
@@ -1020,7 +1021,7 @@ footer a:hover {
 }
 
 .btn-our-story:hover {
-  background-color: #a93226;
+  background-color: #cdb4db;
   transform: translateY(-3px);
   box-shadow: 0 8px 18px rgba(192, 57, 43, 0.3);
 }
