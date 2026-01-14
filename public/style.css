@@ -311,7 +311,7 @@ z-index: 1;}
 }
 
 .sale-price {
-  color: #c0392b;
+  color: #f4d7db;
   font-weight: bold;
 }
 
@@ -484,7 +484,7 @@ color: #fff;
 }
 
 .price {
-  color: #c0392b;
+  color: #f4d7db;
   font-weight: 600;
   font-size: 14px;
 }
@@ -494,9 +494,9 @@ color: #fff;
   opacity: 0.9;
 }
 
-.product-item:hover h3 {
+/*.product-item:hover h3 {
   text-decoration: underline;
-}
+}*/
 
 /* ❌ Hide buttons completely */
 .product-actions,
@@ -508,14 +508,14 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #f1dadd !important; /* اللون البراند */
+  color: #f3d8c1 !important; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
   letter-spacing: 0.5px;
 }
 
-/* خط تحت العنوان */
+/* خط تحت العنوان 
 .section-title::after {
   content: "";
   display: block;
@@ -524,13 +524,13 @@ color: #fff;
   background: linear-gradient(135deg, #f1dadd, #f1dadd);
   margin: 10px auto 0;
   border-radius: 2px;
-}
+}*/
 /*dd*/
 /* اسم البرودكت في Featured (HOME) */
 .product-item .product-info h3 {
   font-size: 13.5px;
   font-weight: 500;
-  color: #333;        /* بني أنثوي */
+  color: #f8eaea;        /* بني أنثوي */
   line-height: 1.4;
   margin: 6px 0 2px;
   letter-spacing: 0.2px;
@@ -552,7 +552,7 @@ color: #fff;
 
 /* ===================== Footer ===================== */
 footer {
-  background:#ce6876;
+  background:#f1dadd;
   color:#fff;
   text-align:center;
   padding:20px;
@@ -971,13 +971,13 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-   color: #f1dadd; /* نفس الأحمر بتاع البراند */
+   color: #f3d8c1; /* نفس الأحمر بتاع البراند */
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
 }
 
-.section-title::after {
+/*.section-title::after {
   content: "";
   display: block;
   width: 60%;
@@ -985,7 +985,7 @@ footer a:hover {
   background-color: #f1dadd;
   margin: 10px auto 0;
   border-radius: 10px;}
-
+*/
 /* Story Card */
 .story-content {
   max-width: 850px;
@@ -1011,7 +1011,7 @@ footer a:hover {
 .btn-our-story {
   display: inline-block;
   padding: 14px 32px;
-  background-color: #dddabf;
+  background-color: #f1dadd !important;
   color: #fff;
   text-decoration: none;
   border-radius: 30px;
