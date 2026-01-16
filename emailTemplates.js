@@ -99,14 +99,25 @@ export function customerOrderEmail(order) {
    ADMIN ORDER EMAIL
 ================================ */
 
+/* ===============================
+   ADMIN ORDER EMAIL
+================================ */
+
 export function adminOrderEmail(order) {
   const itemsHtml = order.items
     .map(i => {
-      const imageUrl = i.image || 'https://hervana-store.com/images/placeholder.jpg';
+      const imageUrl =
+        i.image || "https://hervana-store.com/images/placeholder.jpg";
+
       return `
       <tr>
         <td style="padding:6px 0;">
-          <img src="${imageUrl}" alt="${i.name}" width="50" style="border-radius:6px; display:block;"/>
+          <img
+            src="${imageUrl}"
+            alt="${i.name}"
+            width="50"
+            style="border-radius:6px; display:block;"
+          />
           ${i.name}
         </td>
         <td align="center">${i.quantity}</td>
@@ -124,6 +135,8 @@ export function adminOrderEmail(order) {
       <strong>Name:</strong> ${order.name}<br/>
       <strong>Phone:</strong> ${order.phone}<br/>
       <strong>Email:</strong> ${order.email}<br/>
+      <strong>Governorate:</strong> ${order.governorate}<br/>
+      <strong>Area:</strong> ${order.area}<br/>
       <strong>Address:</strong> ${order.address}
     </p>
 
@@ -149,3 +162,5 @@ export function adminOrderEmail(order) {
   </div>
   `;
 }
+
+
