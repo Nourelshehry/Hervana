@@ -150,7 +150,7 @@ if (!confirmBtn) {
 
     areasData[gov].forEach(area => {
       const option = document.createElement("option");
-      option.value = area.toLowerCase();
+      option.value = area;
       option.textContent = area;
       areaSelect.appendChild(option);
     });
@@ -193,11 +193,11 @@ if (!confirmBtn) {
       name: document.getElementById("name")?.value.trim(),
       phone: document.getElementById("phone")?.value.trim(),
       email: document.getElementById("email")?.value.trim(),
-      governorate: governorateSelect?.value,
+      governorate: governorateSelect?.value.trim(),
       area:
         areaSelect?.value === "other"
           ? manualAreaInput?.value.trim()
-          : areaSelect?.value,
+          : areaSelect?.value.trim(),
       address: document.getElementById("address")?.value.trim()
     };
 
