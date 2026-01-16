@@ -18,7 +18,7 @@
 .checkout-page header .logo a {
   font-size: 22px;
   font-weight: 800;
-  color: #c0392b;
+  color: #ce6876;
   text-decoration: none;
   letter-spacing: 0.5px;
 }
@@ -92,7 +92,7 @@
 
 /* Form */
 .checkout-page .form-group label {
-  color: #c0392b;
+  color: #ce6876;
   font-weight: bold;
 }
 
@@ -129,10 +129,10 @@
 
 /* Submit */
 .checkout-page button[type="submit"] {
-  background: #c0392b;
+  background: #ce6876;
   color: #fff;
   padding: 12px;
-  border-radius: 6px;
+  border-radius: 55px;
   border: none;
   width: 100%;
   position:static;
@@ -321,7 +321,7 @@ select {
   max-width: 440px;
   margin: 35px auto 40px;
   padding: 16px;
-  background:linear-gradient(135deg, #ce6876, #fa9eba);
+  background:linear-gradient(135deg, #ce6876, #fa9eba) !important;
   color: #fff;
   border: none;
   border-radius: 55px !important;
