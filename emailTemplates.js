@@ -135,7 +135,7 @@ export function adminOrderEmail(order) {
       <strong>Name:</strong> ${order.name}<br/>
       <strong>Phone:</strong> ${order.phone}<br/>
       <strong>Email:</strong> ${order.email}<br/>
-      <strong>Governorate:</strong> ${order.governorate}<br/>
+      <strong>Governorate:</strong> ${order.customer.governorate}<br/>
       <strong>Area:</strong> ${order.area}<br/>
       <strong>Address:</strong> ${order.address}
     </p>

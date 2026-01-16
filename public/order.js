@@ -90,31 +90,51 @@ if (!confirmBtn) {
   const manualAreaInput = document.getElementById("manual-area");
 
   const areasData = {
-    cairo: [
-      "Nasr City",
-      "New Cairo",
-      "Heliopolis",
-      "Maadi",
-      "Downtown",
-      "Other"
-    ],
-    giza: [
-      "Dokki",
-      "Mohandessin",
-      "Haram",
-      "Faisal",
-      "Sheikh Zayed",
-      "Other"
-    ],
-    qalyubia: [
-     "Obour",
-      "Benha",
-      "Qalyub",
-      "Shubra El Kheima",
-      "Tukh",
-      "Other"
-    ]
-  };
+  cairo: [
+    "Nasr City",
+    "Heliopolis",
+    "Maadi",
+    "Zamalek",
+    "Garden City",
+    "Downtown",
+    "Shubra",
+    "Ain Shams",
+    "El Marg",
+    "El Matareya",
+    "Helwan",
+    "Mokattam",
+    "Sayeda Zeinab",
+    "Rod El Farag",
+    "Bulaq",
+    "Other"
+  ],
+
+  new_cairo: [
+    "Fifth Settlement",
+    "First Settlement",
+    "Third Settlement",
+    "Rehab City",
+    "Madinaty",
+    "Shorouk City",
+    "Badr City",
+    "Future City",
+    "Other"
+  ],
+
+  qalyubia: [
+    "Banha",
+    "Qalyub",
+    "Shubra El Kheima",
+    "Obour",
+    "Khosous",
+    "Qanater El Khairia",
+    "Tukh",
+    "Shebin El Qanater",
+    "Kafr Shukr",
+    "Other"
+  ]
+};
+
 
   governorateSelect?.addEventListener("change", () => {
     const gov = governorateSelect.value;
