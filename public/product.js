@@ -159,12 +159,23 @@ document.addEventListener("DOMContentLoaded", async () => {
 function initSlider(slider, dotsContainer) {
   const slides = slider.querySelectorAll("img");
   const dots = dotsContainer.querySelectorAll(".dot");
+
+  const container = slider.closest(".slider-container");
+  const nextBtn = container.querySelector(".next");
+  const prevBtn = container.querySelector(".prev");
+
   let index = 0;
   let auto;
 
+  if (!slides.length) return;
+
   function show(i) {
-    slides.forEach((img, idx) => img.classList.toggle("active", idx === i));
-    dots.forEach((d, idx) => d.classList.toggle("active", idx === i));
+    slides.forEach((img, idx) =>
+      img.classList.toggle("active", idx === i)
+    );
+    dots.forEach((d, idx) =>
+      d.classList.toggle("active", idx === i)
+    );
     index = i;
   }
 
@@ -176,6 +187,20 @@ function initSlider(slider, dotsContainer) {
     show((index - 1 + slides.length) % slides.length);
   }
 
+  /* ✅ ARROWS */
+  nextBtn?.addEventListener("click", e => {
+    e.stopPropagation();
+    next();
+    reset();
+  });
+
+  prevBtn?.addEventListener("click", e => {
+    e.stopPropagation();
+    prev();
+    reset();
+  });
+
+  /* DOTS */
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
       show(i);
@@ -192,6 +217,7 @@ function initSlider(slider, dotsContainer) {
     start();
   }
 
+  /* SWIPE */
   let startX = 0;
   slider.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
