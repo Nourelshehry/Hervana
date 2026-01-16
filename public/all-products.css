@@ -384,7 +384,7 @@ header .header-actions button.back-btn:hover {
 }
 
 .sale-price {
-  color: #e63946;
+  color: #ce6876;
   font-weight: bold;
   font-size: 1.2em;
 }
@@ -494,7 +494,7 @@ footer {
   color: #fff;
   border: none;
   padding: 10px;
-  border-radius: 55px;
+  border-radius: 65px;
   cursor: pointer;
   font-weight: bold;
 }
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #fcd2cb;
+  color: #fccec6;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
@@ -820,7 +820,7 @@ text-align: center;
   background: linear-gradient(135deg, #c0392b, #e75480);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 55px;
 
   font-size: 14px;
   font-weight: bold;
