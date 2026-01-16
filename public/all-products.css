@@ -147,7 +147,7 @@ header .header-actions button.back-btn:hover {
 }
 
 .product-card {
-  background: #fff;
+  background: #faf3f3;
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0,0,0,0.08);
   overflow: hidden;
@@ -178,7 +178,7 @@ header .header-actions button.back-btn:hover {
 }
 
 .product-card p.price {
-  color: #c0392b;
+  color: #ce6876;
   font-weight: bold;
   margin: 5px 0 10px;
 }
@@ -204,7 +204,7 @@ header .header-actions button.back-btn:hover {
 }
 
 .product-card button {
-  background: #ce6876;
+  background: #ce6876 !important;
   color: #fff;
   margin: 8px;
 }
@@ -627,7 +627,7 @@ v.catalog-header {
 }
 
 .catalog-title {
-  color: rgb(255, 245, 249);
+  color: rgb(250, 236, 240);
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 6px;
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #f76b52;
+  color: #fcac9e;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
@@ -925,7 +925,7 @@ text-align: center;
 }
 
 .product-card.out-of-stock {
-  opacity: 0.2;
+  opacity: 0.8;
   cursor: pointer; /* مهم */
 }
 
