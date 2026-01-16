@@ -35,6 +35,7 @@ display: flex;
   font-weight: bold;
 }
 
+
 /* cart */
 #cart-btn {
   font-size: 20px;
@@ -487,4 +488,8 @@ transform: translateY(-50%);
 }
 #cart-sidebar .sale-badge {
   display: none !important;
+}
+
+footer{
+  padding: 10px;
 }
