@@ -196,7 +196,7 @@ header .header-actions button.back-btn:hover {
   flex: 1;
   padding: 8px;
   border: none;
-  border-radius: 35px;
+  border-radius: 65px;
   cursor: pointer;
   font-weight: bold;
   font-size: 13px;
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #fcac9e;
+  color: #fcd2cb;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
@@ -662,7 +662,7 @@ text-align: center;
 #category {
   background: #fff;
 }
-.catalog-title::after {
+/*.catalog-title::after {
   content: "";
   display: block;
   width: 50px;
@@ -670,7 +670,7 @@ text-align: center;
   background: #f6dcdc;
   margin: 8px auto 0;
   border-radius: 2px;
-}
+}*/
 #search-input,
 #category {
   box-shadow: 0 6px 15px rgba(0,0,0,0.08);
