@@ -357,7 +357,7 @@ header .header-actions button.back-btn:hover {
 /* Toast */
 .cart-message {
   position: fixed;
-  top: 20px;
+  top: 55px;
   right: 20px;
   background: #FFB6C1;
   color: #fff;
