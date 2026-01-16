@@ -627,7 +627,7 @@ v.catalog-header {
 }
 
 .catalog-title {
-  color: #f35692;
+  color: rgb(255, 245, 249);
   font-size: 30px;
   font-weight: 700;
   margin-bottom: 6px;
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #fd6246;
+  color: #f76b52;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
@@ -925,7 +925,7 @@ text-align: center;
 }
 
 .product-card.out-of-stock {
-  opacity: 0.6;
+  opacity: 0.2;
   cursor: pointer; /* مهم */
 }
 
