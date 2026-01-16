@@ -4,6 +4,7 @@ html, body {
   font-family: 'Arial', sans-serif; /* خط موحد */
   font-size: 16px;
   line-height: 1.5;
+  background: #fff;
 }
 
 /* Header Grid Fix */
@@ -172,7 +173,7 @@ display: flex;
 .add-to-cart {
   /*background: #c0392b;*/
   color: #f5e5e3;
-    background: linear-gradient(135deg, #fa6453, #c0392b);
+  background:linear-gradient(135deg, #ce6876, #fa9eba);
   border: none;
   padding: 14px 20px;
   border-radius: 6px;
