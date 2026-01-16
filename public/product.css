@@ -248,7 +248,7 @@ position: sticky;
 
 .cart-gift-item button {
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 11px !important;
   padding: 4px 6px;
   background: #c0392b;
   color: #fff;
