@@ -18,7 +18,7 @@ if (!confirmBtn) {
   /* =========================
      CONSTANTS
   ========================= */
-  const SHIPPING_COST = 55;
+  const SHIPPING_COST = 65;
 
   let isSubmitting = false;
   let baseTotal = 0;
