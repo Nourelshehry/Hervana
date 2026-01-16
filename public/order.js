@@ -188,7 +188,7 @@ if (!confirmBtn) {
       confirmBtn.textContent = "Confirm Order";
       return;
     }
-
+/*customer*/
     const customer = {
       name: document.getElementById("name")?.value.trim(),
       phone: document.getElementById("phone")?.value.trim(),
