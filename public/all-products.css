@@ -130,10 +130,10 @@ header .header-actions button.back-btn:hover {
   margin-top: 4px;
   font-size: 11px;
   padding: 4px 6px;
-  background: #ce6876;
+  background: #c0392b;
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 4px !important;
   cursor: pointer;
 }
 
