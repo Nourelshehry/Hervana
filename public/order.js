@@ -200,6 +200,7 @@ if (!confirmBtn) {
           : areaSelect?.value.trim(),
       address: document.getElementById("address")?.value.trim()
     };
+console.log("Customer object before submit:", customer);
 
     if (Object.values(customer).some(v => !v)) {
       alert("Please fill in all fields");
