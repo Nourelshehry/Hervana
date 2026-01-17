@@ -79,6 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     ).slice(0, 5);
 
     let current = 0;
+heroSlider.addEventListener("click", () => {
+  const product = sliderProducts[current];
+  if (!product) return;
+  window.location.href = `product.html?id=${product.id}`;
+});
 
     sliderProducts.forEach((product, index) => {
       const slide = document.createElement("div");
@@ -89,10 +94,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
       `;
 
-      slide.querySelector("img").addEventListener("click", () => {
-  window.location.href = `product.html?id=${product.id}`;
-});
-
+     /* slide.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });*/
 
       heroSlider.appendChild(slide);
 
