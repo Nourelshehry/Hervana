@@ -72,44 +72,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     heroSlider.innerHTML = "";
     dotsContainer.innerHTML = "";
 
-   const sliderProducts = products
-  .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
-  .filter(p => p.imagesArr.length);
+    const sliderProducts = shuffleArray(
+      products
+        .map(p => ({ ...p, imagesArr: normalizeImages(p) }))
+        .filter(p => p.imagesArr.length)
+    ).slice(0, 5);
 
-let slidesData = [];
-sliderProducts.forEach(product => {
-  product.imagesArr.forEach(img => {
-    slidesData.push({
-      productId: product.id,
-      imgSrc: getImageUrl(img),
-      productName: product.name,
+    let current = 0;
+
+    sliderProducts.forEach((product, index) => {
+      const slide = document.createElement("div");
+      slide.className = "slide";
+      if (index === 0) slide.classList.add("active");
+
+      slide.innerHTML = `
+        <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
+      `;
+
+      slide.addEventListener("click", () => {
+        window.location.href = `product.html?id=${product.id}`;
+      });
+
+      heroSlider.appendChild(slide);
+
+      const dot = document.createElement("span");
+      if (index === 0) dot.classList.add("active");
+
+      dot.addEventListener("click", () => goTo(index));
+      dotsContainer.appendChild(dot);
     });
-  });
-});
-
-// اختياري: لو عايزة بس 5 slides عشوائية
-slidesData = shuffleArray(slidesData).slice(0, 5);
-
-
-slidesData.forEach((data, index) => {
-  const slide = document.createElement("div");
-  slide.className = "slide";
-  if (index === 0) slide.classList.add("active");
-
-  slide.innerHTML = `<img src="${data.imgSrc}" alt="${data.productName}">`;
-
-  slide.addEventListener("click", () => {
-    window.location.href = `product.html?id=${data.productId}`;
-  });
-
-  heroSlider.appendChild(slide);
-
-  const dot = document.createElement("span");
-  if (index === 0) dot.classList.add("active");
-  dot.addEventListener("click", () => goTo(index));
-  dotsContainer.appendChild(dot);
-});
-
 
     const slides = heroSlider.querySelectorAll(".slide");
     const dots = dotsContainer.querySelectorAll("span");
