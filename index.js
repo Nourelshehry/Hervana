@@ -193,15 +193,18 @@ if (pathname === "/order" && method === "POST") {
     total,
     new Date().toISOString()
   ).run();
+const fullAddress = `${customer.governorate} - ${customer.area} - ${customer.address}`;
 
   const orderData = {
-    orderId,
-    ...customer,
-    items: emailItems,
-    subtotal,
-    shipping: shippingFee,
-    total
-  };
+  orderId,
+  ...customer,
+  address: fullAddress,   // ✅ السطر الجديد
+  items: emailItems,
+  subtotal,
+  shipping: shippingFee,
+  total
+};
+
 
   // Send emails (non-blocking, errors won't break the order)
   try {

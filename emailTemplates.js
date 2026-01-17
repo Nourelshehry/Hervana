@@ -131,14 +131,15 @@ export function adminOrderEmail(order) {
   <div style="font-family:Arial, Helvetica, sans-serif; max-width:600px;">
     <h2>🛒 New Hervana Order</h2>
 
-    <p>
-      <strong>Name:</strong> ${order.name}<br/>
-      <strong>Phone:</strong> ${order.phone}<br/>
-      <strong>Email:</strong> ${order.email}<br/>
-      <strong>Governorate:</strong> ${order.customer.governorate}<br/>
-      <strong>Area:</strong> ${order.area}<br/>
-      <strong>Address:</strong> ${order.address}
-    </p>
+ <p>
+  <strong>Name:</strong> ${order.name}<br/>
+  <strong>Phone:</strong> ${order.phone}<br/>
+  <strong>Email:</strong> ${order.email}<br/>
+  <strong>Governorate:</strong> ${order.governorate}<br/>
+  <strong>Area:</strong> ${order.area}<br/>
+  <strong>Address:</strong> ${order.address}
+</p>
+
 
     <table
       width="100%"
