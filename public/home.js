@@ -79,20 +79,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     ).slice(0, 5);
 
     let current = 0;
-heroSlider.addEventListener("click", () => {
+/*heroSlider.addEventListener("click", () => {
   const product = sliderProducts[current];
   if (!product) return;
   window.location.href = `product.html?id=${product.id}`;
-});
+});*/
 
     sliderProducts.forEach((product, index) => {
       const slide = document.createElement("div");
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
-      slide.innerHTML = `
-        <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
-      `;
+     slide.dataset.productId = product.id;
+
+slide.innerHTML = `
+  <img 
+    src="${getImageUrl(product.imagesArr[0])}" 
+    alt="${product.name}"
+    draggable="false"
+  >
+`;
+
 
      /* slide.addEventListener("click", () => {
         window.location.href = `product.html?id=${product.id}`;
@@ -103,12 +110,21 @@ heroSlider.addEventListener("click", () => {
       const dot = document.createElement("span");
       if (index === 0) dot.classList.add("active");
 
-      dot.addEventListener("click", () => goTo(index));
-      dotsContainer.appendChild(dot);
+     /* dot.addEventListener("click", () => goTo(index));
+      */dotsContainer.appendChild(dot);
     });
 
     const slides = heroSlider.querySelectorAll(".slide");
     const dots = dotsContainer.querySelectorAll("span");
+heroSlider.addEventListener("click", e => {
+  const slide = e.target.closest(".slide");
+  if (!slide) return;
+
+  const productId = slide.dataset.productId;
+  if (!productId) return;
+
+  window.location.href = `product.html?id=${productId}`;
+});
 
     function goTo(i) {
       slides[current].classList.remove("active");
