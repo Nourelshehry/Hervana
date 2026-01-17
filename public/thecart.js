@@ -156,9 +156,13 @@ async function renderGiftSuggestionsInCart() {
   try {
     const products = await getProducts();
 
-    const gifts = products.filter(
-      p => p.category && p.category.toLowerCase() === "gift"
-    );
+   const gifts = products.filter(
+  p =>
+    p.category &&
+    p.category.toLowerCase() === "gift" &&
+    Number(p.stock) > 0
+);
+
 
     if (!gifts.length) return;
 
