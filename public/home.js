@@ -89,9 +89,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
       `;
 
-      slide.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
-      });
+      slide.querySelector("img").addEventListener("click", () => {
+  window.location.href = `product.html?id=${product.id}`;
+});
+
 
       heroSlider.appendChild(slide);
 
