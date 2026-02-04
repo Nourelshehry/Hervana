@@ -80,12 +80,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let current = 0;
 
-   sliderProducts.forEach((product, index) => {
+sliderProducts.slice(1).forEach((product, index) => {
   const isFirst = index === 0;
 
       const slide = document.createElement("div");
       slide.className = "slide";
-      if (index === 0) slide.classList.add("active");
 
   
  slide.innerHTML = `
@@ -144,7 +143,7 @@ const featuredProducts = products
 
 
   function renderFeatured(list = null) {
-    featuredGrid.innerHTML = "";
+featuredGrid.innerHTML = "<p class='loading'>Loading featured picks…</p>";
 
     const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
@@ -172,8 +171,10 @@ source.forEach((product, index) => {
 <img
   src="${imgSrc}"
   alt="${product.name}"
-  ${index < 2 ? '' : 'loading="lazy"'}
+  loading="lazy"
   decoding="async"
+  width="300"
+  height="300"
 >
 
 
