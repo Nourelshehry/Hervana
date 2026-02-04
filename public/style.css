@@ -510,7 +510,7 @@ color: #fff;
 .section-title {
   font-size: 26px;
   font-weight: 700;
-  color: #f1ddc9 !important; /* اللون البراند */
+  color: #f8efe6 !important; /* اللون البراند */
   text-align: center;
   margin: 40px 0 25px;
   position: relative;
@@ -973,7 +973,7 @@ footer a:hover {
 /* Section Title */
 .section-title {
   font-size: 2.2rem;
-   color: #f1ddc9 !important; 
+   color: #f8efe6 !important; 
   margin-bottom: 25px;
   position: relative;
   display: inline-block;
