@@ -32,8 +32,14 @@ function normalizeImages(product) {
 function getImageUrl(img) {
   if (!img) return "/images/placeholder.png";
   if (img.startsWith("http")) return img;
-  return `https://hervana.pages.dev/${img.replace(/^\/+/, "")}`;
+  return `https://hervana.pages.dev/${img.replace(/^\/+/, "")}?format=auto`;
 }
+
+function preloadImage(src) {
+  const img = new Image();
+  img.src = src;
+}
+
 
 /* ===============================
    DOMContentLoaded
@@ -59,6 +65,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!res.ok) throw new Error("Failed to fetch products");
 
     products = await res.json();
+    const firstHeroImage = products
+  .map(p => normalizeImages(p)[0])
+  .filter(Boolean)[0];
+
+if (firstHeroImage) {
+  preloadImage(getImageUrl(firstHeroImage));
+}
+
     console.log("✅ PRODUCTS LOADED:", products.length);
   } catch (err) {
     console.error("❌ FETCH ERROR", err);
@@ -87,15 +101,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
-    slide.innerHTML = `
- <img 
-  src="${getImageUrl(product.imagesArr[0])}" 
-  alt="${product.name}"
-  ${index === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
-  decoding="async"
-/>
-
+  slide.innerHTML = `
+  <img 
+    src="${getImageUrl(product.imagesArr[0])}" 
+    alt="${product.name}"
+    ${index === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
+    decoding="async"
+  >
 `;
+
 
 
       slide.addEventListener("click", () => {
@@ -172,7 +186,8 @@ const featuredProducts = products
   alt="${product.name}"
   loading="lazy"
   decoding="async"
-/>
+>
+
 
 
 
