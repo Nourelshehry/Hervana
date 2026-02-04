@@ -357,12 +357,12 @@ header .header-actions button.back-btn:hover {
 /* Toast */
 .cart-message {
   position: fixed;
-  top: 55px;
+  top: 65px;
   right: 20px;
   background: #e27382 !important;
   color: #fff;
   padding: 12px 20px;
-  border-radius: 8px;
+  border-radius: 18px !important;
   font-weight: bold;
   display: none;
   z-index: 3000;

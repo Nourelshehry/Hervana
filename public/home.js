@@ -175,7 +175,7 @@ const featuredProducts = products
       `;
 
       card.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
+  window.location.href = "all-products.html";
       });
 
       featuredGrid.appendChild(card);

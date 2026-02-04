@@ -355,12 +355,12 @@ transform: translateY(-50%);
 /* Cart toast message */
 .cart-message {
   position: fixed;
-  top: 55px;
+  top: 65px;
   right: 20px;
   background: #e27382 !important;
   color: #fff;
   padding: 10px 16px;
-  border-radius: 6px;
+  border-radius: 16px !important;
   font-size: 14px;
   opacity: 0;
   pointer-events: none;
