@@ -359,7 +359,7 @@ header .header-actions button.back-btn:hover {
   position: fixed;
   top: 55px;
   right: 20px;
-  background: #FFB6C1;
+  background: #e27382 !important;
   color: #fff;
   padding: 12px 20px;
   border-radius: 8px;

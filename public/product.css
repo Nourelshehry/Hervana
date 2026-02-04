@@ -357,7 +357,7 @@ transform: translateY(-50%);
   position: fixed;
   top: 55px;
   right: 20px;
-  background: #FFB6C1;
+  background: #e27382 !important;
   color: #fff;
   padding: 10px 16px;
   border-radius: 6px;
