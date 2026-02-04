@@ -170,10 +170,21 @@ header {
 
 .hero-slider .slide {
   opacity: 0;
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.8s ease-in-out;
 }
 
 .hero-slider .slide.active {
   opacity: 1;
+  z-index: 1;
+}
+.hero-slider .slide {
+  pointer-events: none;
+}
+
+.hero-slider .slide.active {
+  pointer-events: auto;
 }
 
 
