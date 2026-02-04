@@ -82,11 +82,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     sliderProducts.forEach((product, index) => {
       const slide = document.createElement("div");
+      slide.style.contentVisibility = "auto";
+
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
     slide.innerHTML = `
-  <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
+ <img 
+  src="${getImageUrl(product.imagesArr[0])}" 
+  alt="${product.name}"
+  ${index === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}
+  decoding="async"
+/>
+
 `;
 
 
@@ -159,7 +167,13 @@ const featuredProducts = products
             : ""
         }
 
-<img src="${imgSrc}" alt="${product.name}">
+<img 
+  src="${imgSrc}" 
+  alt="${product.name}"
+  loading="lazy"
+  decoding="async"
+/>
+
 
 
         <div class="product-info">
