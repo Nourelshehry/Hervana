@@ -80,14 +80,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let current = 0;
 
-    sliderProducts.forEach((product, index) => {
+   sliderProducts.forEach((product, index) => {
+  const isFirst = index === 0;
+
       const slide = document.createElement("div");
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
-    slide.innerHTML = `
-  <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
+  
+ slide.innerHTML = `
+  <img
+    src="${getImageUrl(product.imagesArr[0])}"
+    alt="${product.name}"
+    ${isFirst ? 'fetchpriority="high"' : 'loading="lazy"'}
+    decoding="async"
+  >
 `;
+
+
 
 
       slide.addEventListener("click", () => {
@@ -185,7 +195,7 @@ const featuredProducts = products
   }
 
   renderFeatured();
-  featuredInterval = setInterval(renderFeatured, 30000);
+  //featuredInterval = setInterval(renderFeatured, 30000);
 
   /* ===============================
      SEARCH (HOME)
