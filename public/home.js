@@ -90,12 +90,15 @@ if (index === 0) slide.classList.add("active");
 
   
  slide.innerHTML = `
-  <img
-    src="${getImageUrl(product.imagesArr[0])}"
-    alt="${product.name}"
-    ${isFirst ? 'fetchpriority="high"' : 'loading="lazy"'}
-    decoding="async"
-  >
+<img
+  src="${getImageUrl(product.imagesArr[0])}"
+  alt="${product.name}"
+  width="390"
+  height="520"
+  ${isFirst ? 'fetchpriority="high"' : 'loading="lazy"'}
+  decoding="async"
+/>
+
 `;
 
 
@@ -145,7 +148,7 @@ const featuredProducts = products
 
 
   function renderFeatured(list = null) {
-featuredGrid.innerHTML = "<p class='loading'>Loading featured picks…</p>";
+featuredGrid.innerHTML = "";
 
     const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
@@ -173,11 +176,12 @@ source.forEach((product, index) => {
 <img
   src="${imgSrc}"
   alt="${product.name}"
-  loading="lazy"
+  ${index < 2 ? '' : 'loading="lazy"'}
   decoding="async"
   width="300"
   height="300"
->
+/>
+
 
 
 
@@ -209,11 +213,10 @@ featuredGrid.innerHTML = `
   <div class="product-item skeleton"></div>
 `;
 
-if ("requestIdleCallback" in window) {
-  requestIdleCallback(() => renderFeatured());
-} else {
-  setTimeout(renderFeatured, 0);
-}
+setTimeout(() => {
+  renderFeatured();
+}, 50);
+
   //featuredInterval = setInterval(renderFeatured, 30000);
 
   /* ===============================
