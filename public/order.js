@@ -91,6 +91,7 @@ if (!confirmBtn) {
 
   const areasData = {
   cairo: [
+    "Obour",
     "Nasr City",
     "Heliopolis",
     "Maadi",
@@ -125,8 +126,9 @@ if (!confirmBtn) {
     "Banha",
     "Qalyub",
     "Shubra El Kheima",
-    "Obour",
     "Khosous",
+    "Khankah",
+    "Abu Zabal",
     "Qanater El Khairia",
     "Tukh",
     "Shebin El Qanater",
