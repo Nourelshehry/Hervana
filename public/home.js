@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
 
       slide.addEventListener("click", () => {
-        window.location.href = `product.html?id=${product.id}`;
+  window.location.href = "all-products.html";
       });
 
       heroSlider.appendChild(slide);
@@ -175,7 +175,7 @@ const featuredProducts = products
       `;
 
       card.addEventListener("click", () => {
-  window.location.href = "all-products.html";
+        window.location.href = `product.html?id=${product.id}`;
       });
 
       featuredGrid.appendChild(card);

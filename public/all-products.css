@@ -362,7 +362,7 @@ header .header-actions button.back-btn:hover {
   background: #e27382 !important;
   color: #fff;
   padding: 12px 20px;
-  border-radius: 18px !important;
+  border-radius: 8px !important;
   font-weight: bold;
   display: none;
   z-index: 3000;
