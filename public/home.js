@@ -85,14 +85,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       slide.className = "slide";
       if (index === 0) slide.classList.add("active");
 
-     const imgUrl = getImageUrl(product.imagesArr[0]);
-
-slide.innerHTML = `
-  <img 
-    ${index === 0 ? `src="${imgUrl}"` : `data-src="${imgUrl}" class="lazy"`}
-    alt="${product.name}"
-  >
+    slide.innerHTML = `
+  <img src="${getImageUrl(product.imagesArr[0])}" alt="${product.name}">
 `;
+
 
       slide.addEventListener("click", () => {
   window.location.href = "all-products.html";
@@ -163,7 +159,7 @@ const featuredProducts = products
             : ""
         }
 
-       <img data-src="${imgSrc}" class="lazy" alt="${product.name}">
+<img src="${imgSrc}" alt="${product.name}">
 
 
         <div class="product-info">
@@ -277,26 +273,5 @@ if (menu && openBtn && closeBtn && overlay) {
 } else {
   console.warn("⚠️ Mobile menu elements not found");
 }
-  
-/* ===============================
-   Lazy Images Observer
-================================ */
-
-const lazyImages = document.querySelectorAll("img.lazy");
-
-const imgObserver = new IntersectionObserver((entries, obs) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const img = entry.target;
-      img.src = img.dataset.src;
-      img.classList.remove("lazy");
-      obs.unobserve(img);
-    }
-  });
-}, {
-  rootMargin: "200px"
-});
-
-lazyImages.forEach(img => imgObserver.observe(img));
 
 });
