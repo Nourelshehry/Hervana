@@ -153,7 +153,7 @@ const featuredProducts = products
       return;
     }
 
-    source.forEach(product => {
+source.forEach((product, index) => {
       const imgSrc = getImageUrl(product.imagesArr[0]);
 
       const isOnSale = Number(product.on_sale) === 1;
@@ -169,7 +169,13 @@ const featuredProducts = products
             : ""
         }
 
-<img src="${imgSrc}" alt="${product.name}">
+<img
+  src="${imgSrc}"
+  alt="${product.name}"
+  ${index < 2 ? '' : 'loading="lazy"'}
+  decoding="async"
+>
+
 
 
         <div class="product-info">
@@ -193,8 +199,18 @@ const featuredProducts = products
       featuredGrid.appendChild(card);
     });
   }
+featuredGrid.innerHTML = `
+  <div class="product-item skeleton"></div>
+  <div class="product-item skeleton"></div>
+  <div class="product-item skeleton"></div>
+  <div class="product-item skeleton"></div>
+`;
 
-  renderFeatured();
+if ("requestIdleCallback" in window) {
+  requestIdleCallback(() => renderFeatured());
+} else {
+  setTimeout(renderFeatured, 0);
+}
   //featuredInterval = setInterval(renderFeatured, 30000);
 
   /* ===============================
