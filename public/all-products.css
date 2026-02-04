@@ -610,7 +610,7 @@ width: 100%;
 */
 .page-subtitle {
   font-size: 14px;
-  color: #f5d9d4;
+  color: #f8e7e4;
   font-style: italic;
   max-width: 280px;
   margin: 8px auto 0;
@@ -635,7 +635,7 @@ text-align: center;
 }
 
 .catalog-subtitle {
-  color: #fae2de;
+  color: #f8e7e4;
   font-size: 14px;
   font-style: italic;
   max-width: 300px;
@@ -937,6 +937,6 @@ text-align: center;
 }
 
 .add-to-cart.out-of-stock {
-  opacity: 0.5;
+  opacity: 0.5 !important;
   cursor: not-allowed;
 }
