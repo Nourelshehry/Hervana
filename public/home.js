@@ -145,7 +145,7 @@ const featuredProducts = products
 
 
   function renderFeatured(list = null) {
-featuredGrid.innerHTML = "<p class='loading'>Loading featured picks…</p>";
+featuredGrid.innerHTML = "";
 
     const source = list || shuffleArray(featuredProducts).slice(0, 8);
 
