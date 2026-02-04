@@ -159,8 +159,7 @@ const featuredProducts = products
             : ""
         }
 
-<img src="${imgSrc}" alt="${product.name}">
-
+<img src="/images/placeholder.png" data-src="${imgSrc}" class="lazy" alt="${product.name}">
 
         <div class="product-info">
           <h3>${product.name}</h3>
@@ -273,5 +272,24 @@ if (menu && openBtn && closeBtn && overlay) {
 } else {
   console.warn("⚠️ Mobile menu elements not found");
 }
+
+const lazyObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      img.classList.remove("lazy");
+      lazyObserver.unobserve(img);
+    }
+  });
+}, {
+  rootMargin: "100px"
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("img.lazy").forEach(img => {
+    lazyObserver.observe(img);
+  });
+});
 
 });
