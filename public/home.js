@@ -80,11 +80,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let current = 0;
 
-sliderProducts.slice(1).forEach((product, index) => {
+sliderProducts.forEach((product, index) => {
   const isFirst = index === 0;
 
       const slide = document.createElement("div");
-      slide.className = "slide";
+slide.className = "slide";
+if (index === 0) slide.classList.add("active");
+
 
   
  slide.innerHTML = `
