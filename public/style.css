@@ -1086,10 +1086,10 @@ footer a:hover {
   line-height: 1.9 !important;
 }
 
-.hero,
+/*.hero,
 .hero-slider {
   contain: layout paint;
-}
+}*/
 @media (max-width: 480px) {
   .hero-slider {
     height: 55vh;
