@@ -380,6 +380,7 @@ transform: translateY(-50%);
   }
   .back-btn, #cart-btn {
     font-size: 0.9rem;
+    color:#c0392b;
   }
 
   .slider-container {
