@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hejab - Hervana</title>
+  <link rel="stylesheet" href="/all-products.css"/>
+</head>
+<body class="all-products">
+
+  <!-- ================= Header ================= -->
+ <header class="main-header">
+  <!-- Menu button -->
+  <button id="menu-btn" class="menu-btn">☰</button>
+
+  <!-- Side Menu -->
+  <nav id="side-menu" class="side-menu">
+  <div class="menu-header">
+    <h2>Hervana</h2>
+    <button id="close-menu">✕</button>
+  </div>
+
+  <ul class="menu-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="all-products.html">All Products</a></li>
+
+    <li class="menu-section">Categories</li>
+    <li><a href="/Dolls&Plushies.html">🧸 Dolls & Plushies</a></li>
+    <li><a href="/Totebags.html">👜 Totebags</a></li>
+    <li><a href="/Hejab.html"> Hejab</a></li>
+    <li><a href="/Candles.html">🕯 Candles</a></li>
+    <li><a href="/Notebooks.html">📓 Notebooks</a></li>
+    <li><a href="/Decor.html">🪴 Decor</a></li>
+    <li><a href="/Stickers.html">✨ Stickers</a></li>
+    <li><a href="/Gift.html">🎁 Gift Supplies</a></li>
+     
+
+    <li class="menu-divider"></li>
+
+    <li><a href="contact.html" class="contact-link">Contact Us</a></li>
+  </ul>
+</nav>
+
+
+  <!-- Logo -->
+<div class="logo">
+    <a href="index.html">Hervana</a>
+  </div>
+  <!-- Cart -->
+  <div id="cart-btn" class="cart-btn">
+    🛒 <span id="cart-count">0</span>
+  </div>
+</header>
+
+<!-- Cart message -->
+<div id="cart-message" class="cart-message"></div>
+
+  <!-- ================= Products ================= -->
+  <section class="products">
+<div class="page-header">
+  <h2 class="page-title">Hejab</h2>
+  <p class="page-subtitle">Elegant pieces, just like you</p>
+</div>
+    <div class="product-grid" id="product-list"></div>
+  </section>
+
+  <!-- ================= Cart Message ================= -->
+  <div id="cart-message" class="cart-message">Added to cart!</div>
+
+  <!-- ================= Cart Sidebar ================= -->
+  <aside id="cart-sidebar" class="cart-sidebar">
+    <button id="close-cart" class="close-btn">✖</button>
+    <h2>Your Cart</h2>
+    <ul id="cart-items"></ul>
+    <div id="cart-total" class="cart-total"></div>
+
+ <div class="cart-gifts">
+  <h4>You may also like 🎁</h4>
+  <div id="cart-gift-list"></div>
+      <button id="checkout-btn" class="checkout-btn">Checkout</button>
+
+</div>
+
+  </aside>
+
+  <!-- ================= Footer ================= -->
+  <footer>
+    <p>&copy; 2025 Hervana. All rights reserved.</p>
+  </footer>
+
+  <!-- ================= Scripts ================= -->
+  <script src="/thecart.js"></script>
+
+  <script>
+    /* ===============================
+       CONFIG
+    ============================== */
+    const CATEGORY = "hejab";
+
+    /* ===============================
+       Helpers
+    ============================== */
+    function normalizeImages(images) {
+      if (!images) return [];
+      if (typeof images === "string") {
+        try {
+          return JSON.parse(images);
+        } catch {
+          return [];
+        }
+      }
+      return Array.isArray(images) ? images : [];
+    }
+
+    function getImageUrl(img) {
+      if (!img) return "/images/placeholder.png";
+      if (img.startsWith("http")) return img;
+      return `https://hervana.pages.dev/${img}`;
+    }
+
+    /* ===============================
+       Load Hejab Products
+    ============================== */
+    async function loadHejab() {
+      const grid = document.getElementById("product-list");
+      grid.innerHTML = "";
+
+      try {
+        const res = await fetch(
+          "https://hervanastore.nourthranduil.workers.dev/api/products"
+        );
+
+        if (!res.ok) throw new Error("Fetch failed");
+
+        const products = await res.json();
+
+        const hejabProducts = products.filter(
+          p => p.category?.toLowerCase() === CATEGORY
+        );
+
+        if (!hejabProducts.length) {
+          grid.innerHTML = "<p>No Hejab products found.</p>";
+          return;
+        }
+
+        hejabProducts.forEach(product => {
+        const imagesArr = normalizeImages(product.images);
+const imgSrc = imagesArr.length
+  ? getImageUrl(imagesArr[0])
+  : "/images/placeholder.png";
+
+const isOut = Number(product.stock) <= 0;
+
+const card = document.createElement("div");
+card.classList.add("product-card");
+if (isOut) card.classList.add("out-of-stock");
+
+        card.  className = "product-card";
+
+         card.innerHTML = `
+${product.on_sale && !isOut ? `
+  <span class="sale-badge">-${product.sale_percent}%</span>
+` : ""}
+
+
+  ${isOut ? `<span class="out-badge">Out of stock</span>` : ""}
+
+  <img src="${imgSrc}" alt="${product.name}">
+
+  <h3>${product.name}</h3>
+
+  <p class="price">
+    ${
+      product.on_sale
+        ? `<span class="old-price">${product.price} EGP</span>
+           <span class="sale-price">${product.sale_price} EGP</span>`
+        : `${product.price} EGP`
+    }
+  </p>
+
+  <button
+    class="add-to-cart"
+    ${isOut ? "disabled" : ""}
+    data-id="${product.id}"
+    data-name="${product.name}"
+    data-price="${product.on_sale ? product.sale_price : product.price}">
+    ${isOut ? "Out of stock" : "Add to Cart"}
+  </button>
+`;
+
+ // ✅ الكارد كله clickable
+   card.addEventListener("click", () => {
+const currentPage = window.location.href;
+
+window.location.href =
+  `product.html?id=${product.id}&from=${encodeURIComponent(currentPage)}`;
+  });
+
+
+  // 🛑 خلي زرار الكارت مايفتحش المنتج
+const addBtn = card.querySelector(".add-to-cart");
+
+if (addBtn) {
+  addBtn.addEventListener("click", function (e) {
+    e.stopPropagation(); // يمنع فتح صفحة المنتج
+    addToCart(
+      this.dataset.id,
+      this.dataset.name,
+      this.dataset.price
+    );
+  });
+}
+
+
+          grid.appendChild(card);
+        });
+
+      } catch (err) {
+        console.error("❌ Hejab load error:", err);
+        grid.innerHTML = "<p>⚠️ Failed to load hejab products.</p>";
+      }
+    }
+
+    loadHejab();
+/* ===============================
+   Mobile Side Menu (HOME STYLE)
+================================ */
+const menu = document.getElementById("side-menu");
+const openBtn = document.getElementById("menu-btn");
+const closeBtn = document.getElementById("close-menu");
+
+if (menu && openBtn && closeBtn) {
+  // فتح المنيو
+  openBtn.addEventListener("click", () => {
+    menu.classList.add("active");
+    document.body.classList.add("menu-open");
+  });
+
+  // قفل المنيو
+  closeBtn.addEventListener("click", () => {
+    menu.classList.remove("active");
+    document.body.classList.remove("menu-open");
+  });
+
+  // قفل المنيو لما أضغط على لينك
+  menu.addEventListener("click", e => {
+    if (e.target.tagName === "A") {
+      menu.classList.remove("active");
+      document.body.classList.remove("menu-open");
+    }
+  });
+}
+
+
+  </script>
+
+</body>
+</html>
