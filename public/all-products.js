@@ -97,105 +97,97 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   /* ===============================
-     RENDER PRODUCTS
+     RENDER PRODUCTS (OPTIMIZED)
   ============================== */
   function renderProducts(list) {
-    grid.innerHTML = "";
-
     if (!list || !list.length) {
       grid.innerHTML = "<p>No products found.</p>";
       return;
     }
 
-    list.forEach(product => {
-      try {
-        const images = normalizeImages(product.images);
-        const img = getImageUrl(images[0]);
+    const fragment = document.createDocumentFragment();
 
-        const isOnSale = Number(product.on_sale) === 1;
-        const salePercent = Number(product.sale_percent);
+    list.forEach((product, index) => {
+      const images = normalizeImages(product.images);
+      const img = getImageUrl(images[0]);
+
+      const isOnSale = Number(product.on_sale) === 1;
+      const salePercent = Number(product.sale_percent);
 
       const stock = Number(product.stock);
-const isOutOfStock = isNaN(stock) || stock <= 0;
+      const isOutOfStock = isNaN(stock) || stock <= 0;
 
+      const card = document.createElement("div");
+      card.className = "product-card";
 
-       const card = document.createElement("div");
-card.className = "product-card";
-
-if (isOutOfStock) {
-  card.classList.add("out-of-stock");
-}
-
-
-        card.innerHTML = `
-         ${isOnSale && salePercent && !isOutOfStock ? `
-  <span class="sale-badge">-${salePercent}%</span>
-` : ""}
-
-
-          ${isOutOfStock ? `
-            <span class="out-badge">Out of Stock</span>
-          ` : ""}
-
-<img
-  src="${img}"
-  alt="${product.name}"
-  loading="lazy"
-  decoding="async"
-/>
-
-          <h3>${product.name}</h3>
-
-          <p class="price">
-            ${
-              isOnSale
-                ? `<span class="old-price">${product.price} EGP</span>
-                   <span class="sale-price">${product.sale_price} EGP</span>`
-                : `${product.price} EGP`
-            }
-          </p>
-
-   <button
-  class="add-to-cart ${isOutOfStock ? "out-of-stock" : ""}"
-  data-disabled="${isOutOfStock ? "true" : "false"}"
-  data-id="${product.id}"
-  data-name="${product.name}"
-  data-price="${isOnSale ? product.sale_price : product.price}"
->
-  ${isOutOfStock ? "Out of stock" : "Add to Cart"}
-</button>
-
-
-        `;
-
-        // فتح صفحة المنتج
-        card.addEventListener("click", () => {
-          window.location.href =
-            `product.html?id=${product.id}&category=${product.category}`;
-        });
-
-        // Add to cart
-        const addBtn = card.querySelector(".add-to-cart");
-      addBtn.addEventListener("click", e => {
-  e.stopPropagation(); // مهم جدًا
-
-  if (isOutOfStock) return;
-
-  if (typeof addToCart === "function") {
-    addToCart(
-      addBtn.dataset.id,
-      addBtn.dataset.name,
-      addBtn.dataset.price
-    );
-  }
-});
-
-
-        grid.appendChild(card);
-      } catch (err) {
-        console.error("❌ Error rendering product:", product, err);
+      if (isOutOfStock) {
+        card.classList.add("out-of-stock");
       }
+
+      card.innerHTML = `
+        ${isOnSale && salePercent && !isOutOfStock ? `
+          <span class="sale-badge">-${salePercent}%</span>
+        ` : ""}
+
+        ${isOutOfStock ? `
+          <span class="out-badge">Out of Stock</span>
+        ` : ""}
+
+        <img
+          src="${img}"
+          alt="${product.name}"
+          width="300"
+          height="400"
+          ${index < 6 ? 'fetchpriority="high"' : 'loading="lazy"'}
+          decoding="async"
+        />
+
+        <h3>${product.name}</h3>
+
+        <p class="price">
+          ${
+            isOnSale
+              ? `<span class="old-price">${product.price} EGP</span>
+                 <span class="sale-price">${product.sale_price} EGP</span>`
+              : `${product.price} EGP`
+          }
+        </p>
+
+        <button
+          class="add-to-cart ${isOutOfStock ? "out-of-stock" : ""}"
+          data-disabled="${isOutOfStock ? "true" : "false"}"
+          data-id="${product.id}"
+          data-name="${product.name}"
+          data-price="${isOnSale ? product.sale_price : product.price}"
+        >
+          ${isOutOfStock ? "Out of stock" : "Add to Cart"}
+        </button>
+      `;
+
+      card.addEventListener("click", () => {
+        window.location.href =
+          `product.html?id=${product.id}&category=${product.category}`;
+      });
+
+      const addBtn = card.querySelector(".add-to-cart");
+      addBtn.addEventListener("click", e => {
+        e.stopPropagation();
+        if (isOutOfStock) return;
+
+        if (typeof addToCart === "function") {
+          addToCart(
+            addBtn.dataset.id,
+            addBtn.dataset.name,
+            addBtn.dataset.price
+          );
+        }
+      });
+
+      fragment.appendChild(card);
     });
+
+    grid.innerHTML = "";
+    grid.appendChild(fragment);
   }
 
   /* ===============================
